@@ -26,6 +26,15 @@ export interface DimensionMetric {
   rank?: number;
 }
 
+export interface ThreeRowItem {
+  itemType: string; // 'ประเด็นสุขภาพ' | 'จำนวนคัดกรอง (คน)' | 'จำนวนเสี่ยง (ร้อยละ)'
+  top1: string;
+  top2: string;
+  top3: string;
+  top4: string;
+  top5: string;
+}
+
 export interface ProvinceData {
   id: number;
   province: string;
@@ -38,6 +47,7 @@ export interface ProvinceData {
   top1RiskPct: number;
   dimensions: Record<DimensionKey, DimensionMetric>;
   rankedDimensions: DimensionMetric[];
+  threeRowBreakdown?: ThreeRowItem[];
 }
 
 export interface RegionData {
@@ -66,6 +76,8 @@ export interface HealthDataset {
   metadata: {
     title: string;
     source: string;
+    analyzedBy: string;
+    department: string;
     year: number;
     totalProvinces: number;
     totalRegions: number;

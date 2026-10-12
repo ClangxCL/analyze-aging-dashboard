@@ -100,10 +100,14 @@ export default function Home() {
         onExploreClick={handleScrollToDashboard}
       />
 
-      {/* 2. Hero Section */}
+      {/* 2. Hero Section (Noa Vale Motion Experience) */}
       <LandingHero
         national={dataset.national}
         onExploreDashboard={handleScrollToDashboard}
+        onSelectDimension={dimKey => {
+          setFilter(prev => ({ ...prev, dimension: dimKey }));
+          handleScrollToDashboard();
+        }}
       />
 
       {/* 3. Main Dashboard Workspace */}
@@ -249,8 +253,10 @@ export default function Home() {
                 แหล่งข้อมูลและการเผยแพร่
               </h4>
               <ul className="space-y-1.5 text-xs text-[#0b3558]">
-                <li>กระทรวงสาธารณสุข ประเทศไทย</li>
-                <li>ปีงบประมาณ 2569 (2026)</li>
+                <li>ระบบคลังข้อมูลด้านการแพทย์และสุขภาพ (HDC)</li>
+                <li>กลุ่มงานสารสนเทศระบบสุขภาพด้านผู้สูงอายุ</li>
+                <li>สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ</li>
+                <li>กรมการแพทย์ กระทรวงสาธารณสุข</li>
                 <li className="flex items-center gap-1 text-[#006bff] font-medium pt-1">
                   <span>พร้อมใช้งานบน Vercel</span>
                   <ExternalLink className="w-3 h-3" />
@@ -261,10 +267,10 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#476788]">
             <div>
-              © 2569 สำนักส่งเสริมสุขภาพ กรมอนามัย กระทรวงสาธารณสุข • All rights reserved.
+              วิเคราะห์และจัดทำข้อมูลโดย กลุ่มงานสารสนเทศระบบสุขภาพด้านผู้สูงอายุ สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข • ที่มาข้อมูล: ระบบคลังข้อมูลด้านการแพทย์และสุขภาพ หรือ HDC (Health Data Center)
             </div>
             <div className="flex items-center gap-4">
-              <span>Theme: Navy Ink on Cool Marble (DESIGN.md)</span>
+              <span>Theme: Noa Vale Motion & Navy Marble</span>
               <span>Next.js & Tailwind CSS</span>
             </div>
           </div>

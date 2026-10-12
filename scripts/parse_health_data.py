@@ -5,7 +5,9 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 EXCEL_PATH = r"C:\Users\Piyanut\Desktop\Data_Analysis_9_Dimensions_2026.xlsx"
-OUTPUT_JSON = r"C:\Users\Piyanut\Desktop\Code_Work\elderly_health_2026.json"
+OUTPUT_JSON_ROOT = r"C:\Users\Piyanut\Desktop\Code_Work\elderly_health_2026.json"
+OUTPUT_JSON_DASH = r"C:\Users\Piyanut\Desktop\Code_Work\health-9d-dashboard\src\data\elderly_health_2026.json"
+OUTPUT_JSON_PUB = r"C:\Users\Piyanut\Desktop\Code_Work\health-9d-dashboard\public\data\elderly_health_2026.json"
 
 DIMENSION_KEYS = [
     {"key": "vision", "name": "การมองเห็น", "col_pct": "D", "col_cnt_screened": "F", "col_cnt_normal": "H", "col_cnt_risk": "I"},
@@ -69,12 +71,86 @@ def parse_xlsx():
                 rows.append((r_idx, cols))
             return rows
 
+        sheet2_rows = read_rows('xl/worksheets/sheet2.xml') # ตารางแยก 3 บรรทัดต่อจังหวัด
         sheet3_rows = read_rows('xl/worksheets/sheet3.xml') # ภาพรวมรายเขตสุขภาพ 1-12
         sheet4_rows = read_rows('xl/worksheets/sheet4.xml') # ข้อมูลดิบ ร้อยละ
         sheet5_rows = read_rows('xl/worksheets/sheet5.xml') # ข้อมูลดิบจำนวน
 
+        # Parse Sheet 2: ตารางแยก 3 บรรทัดต่อจังหวัด
+        # Row 1 is Title, Row 2 is Header
+        # Row 3 onwards: 3 rows per province
+        sheet2_by_province = {}
+        current_zone = ""
+        current_province = ""
+
+        # Temporary buffer for the 3 rows of a province
+        prov_rows_buffer = []
+
+        for r_idx, cols in sheet2_rows:
+            if r_idx <= 2:
+                continue
+
+            zone_val = cols.get('A', '').strip()
+            if zone_val and "เขตสุขภาพ" in zone_val:
+                current_zone = zone_val
+
+            prov_val = cols.get('B', '').strip()
+            item_type = cols.get('C', '').strip()
+
+            if prov_val:
+                current_province = prov_val
+
+            if item_type:
+                prov_rows_buffer.append({
+                    "zone": current_zone,
+                    "province": current_province,
+                    "itemType": item_type,
+                    "top1": cols.get('D', '').strip(),
+                    "top2": cols.get('E', '').strip(),
+                    "top3": cols.get('F', '').strip(),
+                    "top4": cols.get('G', '').strip(),
+                    "top5": cols.get('H', '').strip()
+                })
+
+                # Every 3 rows constitutes a full province
+                if len(prov_rows_buffer) == 3:
+                    p_name = prov_rows_buffer[0]["province"]
+                    p_zone = prov_rows_buffer[0]["zone"]
+                    sheet2_by_province[p_name] = {
+                        "zone": p_zone,
+                        "province": p_name,
+                        "rows": [
+                            {
+                                "itemType": prov_rows_buffer[0]["itemType"], # ประเด็นสุขภาพ
+                                "top1": prov_rows_buffer[0]["top1"],
+                                "top2": prov_rows_buffer[0]["top2"],
+                                "top3": prov_rows_buffer[0]["top3"],
+                                "top4": prov_rows_buffer[0]["top4"],
+                                "top5": prov_rows_buffer[0]["top5"]
+                            },
+                            {
+                                "itemType": prov_rows_buffer[1]["itemType"], # จำนวนคัดกรอง (คน)
+                                "top1": prov_rows_buffer[1]["top1"],
+                                "top2": prov_rows_buffer[1]["top2"],
+                                "top3": prov_rows_buffer[1]["top3"],
+                                "top4": prov_rows_buffer[1]["top4"],
+                                "top5": prov_rows_buffer[1]["top5"]
+                            },
+                            {
+                                "itemType": prov_rows_buffer[2]["itemType"], # จำนวนเสี่ยง (ร้อยละ)
+                                "top1": prov_rows_buffer[2]["top1"],
+                                "top2": prov_rows_buffer[2]["top2"],
+                                "top3": prov_rows_buffer[2]["top3"],
+                                "top4": prov_rows_buffer[2]["top4"],
+                                "top5": prov_rows_buffer[2]["top5"]
+                            }
+                        ]
+                    }
+                    prov_rows_buffer = []
+
+        print(f"Parsed Sheet 2 successfully: {len(sheet2_by_province)} provinces.")
+
         # Parse sheet 4 (percentages)
-        # Row 2 is header, Row 3 to 78 are provinces
         provinces_pct = {}
         for r_idx, cols in sheet4_rows:
             if r_idx <= 2:
@@ -91,7 +167,6 @@ def parse_xlsx():
             }
 
         # Parse sheet 5 (counts)
-        # Row 1-2 headers, Row 3 to 78 are provinces
         provinces_counts = {}
         for r_idx, cols in sheet5_rows:
             if r_idx <= 2:
@@ -139,6 +214,7 @@ def parse_xlsx():
 
     for prov_name, pct_data in provinces_pct.items():
         cnt_data = provinces_counts.get(prov_name, {})
+        sheet2_data = sheet2_by_province.get(prov_name, {})
         zone = pct_data["zone"]
         zone_num = int(re.search(r'\d+', zone).group()) if re.search(r'\d+', zone) else 0
 
@@ -163,7 +239,6 @@ def parse_xlsx():
         for rank_idx, item in enumerate(dims_ranked, start=1):
             item["rank"] = rank_idx
 
-        # Map back by key with rank included
         dims_by_key = {item["key"]: item for item in dims_ranked}
 
         prov_obj = {
@@ -177,7 +252,9 @@ def parse_xlsx():
             "top1Issue": dims_ranked[0]["name"],
             "top1RiskPct": dims_ranked[0]["riskPct"],
             "dimensions": dims_by_key,
-            "rankedDimensions": dims_ranked
+            "rankedDimensions": dims_ranked,
+            # Sheet 2: ตารางแยก 3 บรรทัดต่อจังหวัด
+            "threeRowBreakdown": sheet2_data.get("rows", [])
         }
         all_provinces.append(prov_obj)
 
@@ -192,7 +269,6 @@ def parse_xlsx():
         provs = zone_province_map.get(zone_name, [])
         sheet3_info = regions_summary.get(zone_name, {})
 
-        # Compute or verify regional dimension totals
         reg_dims = {}
         for dim in DIMENSION_KEYS:
             d_key = dim["key"]
@@ -210,7 +286,6 @@ def parse_xlsx():
                 "riskPct": reg_risk_pct
             }
 
-        # Regional rankings 1 to 9
         reg_dims_ranked = sorted(list(reg_dims.values()), key=lambda x: x["riskPct"], reverse=True)
         for r_idx, item in enumerate(reg_dims_ranked, start=1):
             item["rank"] = r_idx
@@ -259,7 +334,9 @@ def parse_xlsx():
     final_payload = {
         "metadata": {
             "title": "การวิเคราะห์ข้อมูลคัดกรองสุขภาพผู้สูงอายุ 9 ด้าน ประจำปีงบประมาณ 2569",
-            "source": "Data_Analysis_9_Dimensions_2026.xlsx",
+            "source": "ระบบคลังข้อมูลด้านการแพทย์และสุขภาพ หรือ HDC (Health Data Center) กระทรวงสาธารณสุข",
+            "analyzedBy": "กลุ่มงานสารสนเทศระบบสุขภาพด้านผู้สูงอายุ สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข",
+            "department": "กรมการแพทย์ กระทรวงสาธารณสุข",
             "year": 2569,
             "totalProvinces": len(all_provinces),
             "totalRegions": len(regions_list),
@@ -279,11 +356,13 @@ def parse_xlsx():
         "provinces": all_provinces
     }
 
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(final_payload, f, ensure_ascii=False, indent=2)
+    for target_path in [OUTPUT_JSON_ROOT, OUTPUT_JSON_DASH, OUTPUT_JSON_PUB]:
+        Path(target_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(target_path, "w", encoding="utf-8") as f:
+            json.dump(final_payload, f, ensure_ascii=False, indent=2)
 
     print(f"Successfully processed {len(all_provinces)} provinces and {len(regions_list)} regions.")
-    print(f"Saved to {OUTPUT_JSON}")
+    print("Updated JSON files with Sheet 2 data and new Department attribution.")
 
 if __name__ == "__main__":
     parse_xlsx()

@@ -32,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <PillBadge variant="signal">ปี 2569</PillBadge>
             </div>
             <p className="text-[11px] text-[#476788] hidden sm:block">
-              ข้อมูลคัดกรอง 12 เขตสุขภาพ 76 จังหวัด • กระทรวงสาธารณสุข
+              กลุ่มงานสารสนเทศระบบสุขภาพด้านผู้สูงอายุ สถาบันเวชศาสตร์ผู้สูงอายุ กรมการแพทย์ • แหล่งข้อมูล HDC
             </p>
           </div>
         </div>
