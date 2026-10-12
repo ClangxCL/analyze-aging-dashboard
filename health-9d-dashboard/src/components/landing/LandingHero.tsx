@@ -1,16 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Play, 
   Pause, 
-  Volume2, 
-  VolumeX, 
   ChevronLeft, 
   ChevronRight, 
   ArrowRight, 
   ArrowDown, 
-  Sparkles, 
   Eye, 
   Smile, 
   Activity, 
@@ -19,9 +16,7 @@ import {
   Brain, 
   Droplet, 
   Apple, 
-  ShieldCheck,
-  Building2,
-  Users
+  ShieldCheck
 } from 'lucide-react';
 import { NationalData, DimensionKey } from '@/types/health';
 import { formatNumber, formatPercent } from '@/lib/analytics';
@@ -184,68 +179,82 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   };
 
   return (
-    <section className="relative overflow-hidden pt-4 pb-12 sm:pt-6 sm:pb-16 bg-[#eef0f3]">
-      {/* Outer Studio Frame (Inspired by Aura: Noa Vale — A Portfolio in Motion) */}
-      <div className="max-w-[1360px] mx-auto px-2 sm:px-4 lg:px-6">
-        <div className="relative rounded-[28px] sm:rounded-[36px] bg-[#f5f2eb] border border-[#e2dcd2] shadow-2xl shadow-stone-800/10 overflow-hidden p-4 sm:p-7 lg:p-9 transition-all">
+    <section className="relative overflow-hidden pt-4 pb-10 sm:pt-6 sm:pb-14 bg-gradient-to-b from-[#030914] via-[#071526] to-[#0a1b30]">
+      {/* Ambient Cool Cobalt & Cyan Aura Lighting (Navy Marble Palette) */}
+      <div 
+        className="absolute top-0 left-1/4 -translate-x-1/2 w-[520px] h-[520px] rounded-full blur-[140px] opacity-20 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, #006bff 0%, transparent 70%)' }}
+      />
+      <div 
+        className="absolute top-1/3 right-10 w-[420px] h-[420px] rounded-full blur-[130px] opacity-15 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, #0099ff 0%, transparent 70%)' }}
+      />
+
+      {/* Outer Studio Frame: Theme Noa Vale Motion & Navy Marble */}
+      <div className="max-w-[1360px] mx-auto px-2 sm:px-4 lg:px-6 relative z-10">
+        <div className="relative rounded-[28px] sm:rounded-[36px] bg-gradient-to-b from-[#0a1e36] via-[#071629] to-[#040e1b] border border-[#16365a] shadow-2xl shadow-black/70 overflow-hidden p-4 sm:p-7 lg:p-9 transition-all">
           
-          {/* Subtle marble canvas grain & ambient floor light */}
-          <div className="absolute inset-0 bg-radial-vignette pointer-events-none opacity-60" 
-               style={{ background: 'radial-gradient(circle at 50% 20%, rgba(255,255,255,0.8) 0%, rgba(240,235,225,0.4) 60%, rgba(225,218,206,0.6) 100%)' }} />
-          
-          {/* 1. TOP HEADER BAR: Noa Vale Studio Style */}
-          <header className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-4 mb-8 sm:mb-12">
-            {/* Left: Brand Identity with glowing dot */}
+          {/* Subtle Navy Marble Floor Reflection & Specular Vignette */}
+          <div 
+            className="absolute inset-0 pointer-events-none opacity-40" 
+            style={{ 
+              background: 'radial-gradient(circle at 50% 20%, rgba(0, 107, 255, 0.16) 0%, rgba(7, 22, 41, 0.7) 60%, rgba(4, 14, 27, 0.98) 100%)' 
+            }} 
+          />
+
+          {/* 1. TOP HEADER BAR: Navy Marble Minimal Studio Bar */}
+          <header className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-4 mb-6 sm:mb-10">
+            {/* Left: Brand Identity with Glowing Cyan Dot */}
             <div className="flex items-center gap-3 self-start md:self-auto">
-              <div className="flex items-center gap-1.5 font-bold tracking-tighter text-[#141b22] text-xl font-mono">
+              <div className="flex items-center gap-1.5 font-bold tracking-tighter text-white text-xl font-mono">
                 <span>DMS</span>
-                <span className="w-2 h-2 rounded-full bg-[#c07a38] animate-pulse" />
-                <span>9D</span>
+                <span className="w-2 h-2 rounded-full bg-[#0099ff] shadow-[0_0_8px_#0099ff] animate-pulse" />
+                <span className="text-cyan-400">9D</span>
               </div>
-              <div className="h-6 w-[1px] bg-[#d5cec2]" />
+              <div className="h-6 w-[1px] bg-[#1a3c63]" />
               <div>
-                <h2 className="text-xs font-bold text-[#1a232c] tracking-tight uppercase">
+                <h2 className="text-xs font-bold text-slate-100 tracking-tight uppercase">
                   สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ
                 </h2>
-                <p className="text-[10px] text-[#78716c] font-medium">
+                <p className="text-[10px] text-slate-400 font-medium">
                   กรมการแพทย์ กระทรวงสาธารณสุข • กลุ่มงานสารสนเทศระบบสุขภาพด้านผู้สูงอายุ
                 </p>
               </div>
             </div>
 
-            {/* Center: Floating Glassmorphism Pill Menu */}
-            <nav className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-[#dcd6cc] shadow-sm text-xs text-[#44403c] font-medium">
+            {/* Center: Floating Navy Glassmorphism Pill Menu */}
+            <nav className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-[#0b213b]/85 backdrop-blur-xl border border-[#1a3d66] shadow-lg text-xs text-slate-300 font-medium">
               <button 
                 onClick={onExploreDashboard}
-                className="px-2.5 py-1 rounded-full hover:bg-stone-100 hover:text-[#1c1917] transition-all flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full hover:bg-white/10 hover:text-white transition-all flex items-center gap-1"
               >
-                <span className="text-[10px] opacity-70">⊡</span>
+                <span className="text-[10px] text-cyan-400">⊡</span>
                 <span>ภาพรวม 9 มิติ</span>
               </button>
               <a 
                 href="#geo-map" 
-                className="px-2.5 py-1 rounded-full hover:bg-stone-100 hover:text-[#1c1917] transition-all flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full hover:bg-white/10 hover:text-white transition-all flex items-center gap-1"
               >
-                <span className="text-[10px] opacity-70">☍</span>
+                <span className="text-[10px] text-cyan-400">☍</span>
                 <span>แผนที่ 76 จว.</span>
               </a>
               <a 
                 href="#data-table" 
-                className="px-2.5 py-1 rounded-full hover:bg-stone-100 hover:text-[#1c1917] transition-all flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full hover:bg-white/10 hover:text-white transition-all flex items-center gap-1"
               >
-                <span className="text-[10px] opacity-70">▤</span>
+                <span className="text-[10px] text-cyan-400">▤</span>
                 <span>ตาราง 3 บรรทัด</span>
               </a>
             </nav>
 
-            {/* Right: Tactile Amber/Bronze Metallic Button */}
+            {/* Right: Electric Cobalt Jewel Button */}
             <div className="flex items-center gap-3 self-end md:self-auto">
               <button
                 onClick={onExploreDashboard}
-                className="relative group px-5 py-2 rounded-full text-xs font-semibold text-white tracking-wide shadow-md transition-all active:scale-95 overflow-hidden flex items-center gap-2"
+                className="relative group px-5 py-2 rounded-full text-xs font-semibold text-white tracking-wide shadow-lg transition-all active:scale-95 overflow-hidden flex items-center gap-2 border border-white/20"
                 style={{
-                  background: 'linear-gradient(135deg, #c07a38 0%, #a25f23 50%, #874917 100%)',
-                  boxShadow: '0 4px 14px rgba(162, 95, 35, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4)'
+                  background: 'linear-gradient(135deg, #006bff 0%, #0052cc 60%, #003d99 100%)',
+                  boxShadow: '0 4px 18px rgba(0, 107, 255, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4)'
                 }}
               >
                 <span>สำรวจแดชบอร์ด 9 ด้าน</span>
@@ -254,20 +263,20 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
           </header>
 
-          {/* Top Right Metadata Header: Exact Noa Vale style */}
-          <div className="relative z-10 flex items-center justify-between text-[11px] font-mono tracking-wider text-[#78716c] uppercase mb-4 sm:mb-6 px-1">
+          {/* Top Right Metadata Header */}
+          <div className="relative z-10 flex items-center justify-between text-[11px] font-mono tracking-wider text-slate-400 uppercase mb-4 sm:mb-6 px-1">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#16a34a]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34d399]" />
               <span>ข้อมูลประมวลผล HDC Health Data Center</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-[#c07a38]" />
-              <span className="font-semibold text-[#44403c]">SELECTED DIMENSIONS • 01–09 / 2569</span>
+              <span className="w-2 h-2 bg-[#006bff] shadow-[0_0_6px_#006bff]" />
+              <span className="font-semibold text-cyan-300">SELECTED DIMENSIONS • 01–09 / 2569</span>
             </div>
           </div>
 
-          {/* 2. THE 3D KINETIC MOTION STAGE (Noa Vale Cylindrical Rotating Carousel) */}
-          <div className="relative z-10 my-4 sm:my-8">
+          {/* 2. THE 3D KINETIC MOTION STAGE (Navy Marble 3D Perspective) */}
+          <div className="relative z-10 my-2 sm:my-6">
             <div className="relative w-full h-[460px] sm:h-[520px] lg:h-[560px] flex items-center justify-center [perspective:1400px] overflow-hidden select-none">
               
               {/* Carousel Cards Layer */}
@@ -284,12 +293,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                   const Icon = meta.icon;
                   const isActive = normalizedOffset === 0;
 
-                  // 3D Transform calculations based on Noa Vale template
+                  // 3D Transform calculations
                   let translateX = normalizedOffset * 220; // px
                   let translateZ = -Math.abs(normalizedOffset) * 140; // px
                   let rotateY = -normalizedOffset * 28; // deg
                   let scale = isActive ? 1.04 : 0.88 - Math.abs(normalizedOffset) * 0.08;
-                  let opacity = isActive ? 1 : Math.max(0.45, 0.85 - Math.abs(normalizedOffset) * 0.25);
+                  let opacity = isActive ? 1 : Math.max(0.4, 0.82 - Math.abs(normalizedOffset) * 0.25);
                   let zIndex = 30 - Math.abs(normalizedOffset) * 10;
 
                   return (
@@ -304,14 +313,14 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                       }}
                       className={`absolute w-[290px] sm:w-[340px] md:w-[380px] h-[410px] sm:h-[460px] rounded-[24px] sm:rounded-[28px] cursor-pointer transition-shadow ${
                         isActive
-                          ? 'shadow-2xl shadow-stone-900/30 ring-1 ring-stone-900/10'
-                          : 'shadow-lg shadow-stone-900/10 hover:opacity-95'
+                          ? 'shadow-[0_20px_50px_rgba(0,0,0,0.8),0_0_40px_rgba(0,107,255,0.35)] ring-1 ring-cyan-500/30'
+                          : 'shadow-xl shadow-black/40 hover:opacity-95'
                       }`}
                     >
                       {/* CARD CONTENT */}
                       {isActive ? (
-                        /* === ACTIVE CENTER CARD: PROCEDURAL CLINICAL MOTION ANIMATION === */
-                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-stone-950 border border-white/20 flex flex-col justify-between text-white">
+                        /* === ACTIVE CENTER CARD: PROCEDURAL CLINICAL MOTION CONSOLE === */
+                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#020710] border border-cyan-400/40 flex flex-col justify-between text-white">
                           
                           {/* Themed Procedural 60fps Animation for this Dimension */}
                           <DimensionMotionCanvas
@@ -319,18 +328,18 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                             isPlaying={isPlaying}
                           />
 
-                          {/* Subtle Vignette Overlay for Crisp Readability */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-stone-900/40 pointer-events-none" />
+                          {/* Vignette Overlay for Crisp Readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#020710] via-[#020710]/20 to-black/40 pointer-events-none" />
 
                           {/* Top Card Controls Bar */}
                           <div className="relative z-10 p-4 sm:p-5 flex items-center justify-between">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-widest uppercase">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-cyan-500/25 text-[10px] font-mono tracking-widest uppercase text-cyan-300">
                               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                               <span>CLINICAL MOTION • 0{dim.rank} {dim.name}</span>
                             </div>
 
                             {/* Animation Playback Controls */}
-                            <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md rounded-full p-1 border border-white/15">
+                            <div className="flex items-center gap-1.5 bg-black/70 backdrop-blur-md rounded-full p-1 border border-white/15">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -347,7 +356,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                                   setIsAutoRotate(prev => !prev);
                                 }}
                                 className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold transition-all ${
-                                  isAutoRotate ? 'bg-amber-500/30 text-amber-300' : 'text-stone-400 hover:text-white'
+                                  isAutoRotate ? 'bg-cyan-500/30 text-cyan-300 border border-cyan-400/30' : 'text-slate-400 hover:text-white'
                                 }`}
                                 title="สลับการหมุนมิติอัตโนมัติ"
                               >
@@ -358,16 +367,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
                           {/* Center Graphic Watermark / Subtle Pulse */}
                           <div className="relative z-10 flex-1 flex items-center justify-center pointer-events-none">
-                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm animate-pulse">
-                              <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white/90 drop-shadow-lg" />
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-cyan-400/30 flex items-center justify-center bg-cyan-950/20 backdrop-blur-sm shadow-[0_0_20px_rgba(0,153,255,0.25)] animate-pulse">
+                              <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-cyan-300 drop-shadow-lg" />
                             </div>
                           </div>
 
                           {/* Bottom Card Editorial Metadata */}
-                          <div className="relative z-10 p-5 sm:p-6 bg-gradient-to-t from-black/90 via-black/70 to-transparent backdrop-blur-[2px]">
-                            <div className="flex items-center justify-between text-xs text-amber-300/90 font-mono mb-1.5">
+                          <div className="relative z-10 p-5 sm:p-6 bg-gradient-to-t from-black/95 via-black/85 to-transparent backdrop-blur-[2px] border-t border-white/10">
+                            <div className="flex items-center justify-between text-xs text-cyan-300 font-mono mb-1.5">
                               <span>0{dim.rank} / 09 • RANKING TOP {dim.rank}</span>
-                              <span className="bg-amber-500/20 px-2 py-0.5 rounded text-[10px] font-semibold text-amber-200">
+                              <span className="bg-cyan-500/20 border border-cyan-400/30 px-2 py-0.5 rounded text-[10px] font-semibold text-cyan-200">
                                 เสี่ยง {formatPercent(dim.riskPct)}
                               </span>
                             </div>
@@ -376,12 +385,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                               {dim.name}
                             </h3>
 
-                            <p className="text-[11px] text-stone-300 line-clamp-2 leading-relaxed mb-3">
+                            <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed mb-3">
                               {meta.clinicalNote}
                             </p>
 
                             <div className="flex items-center justify-between pt-2 border-t border-white/15">
-                              <div className="text-[10px] text-stone-400 font-mono">
+                              <div className="text-[10px] text-slate-400 font-mono">
                                 คัดกรอง {formatNumber(dim.screened)} คน
                               </div>
                               <button
@@ -389,7 +398,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                                   e.stopPropagation();
                                   handleSelectActiveDimension();
                                 }}
-                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-300 hover:text-white transition-colors"
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-300 hover:text-white transition-colors"
                               >
                                 <span>สำรวจมิตินี้ในแดชบอร์ด</span>
                                 <ArrowRight className="w-3.5 h-3.5" />
@@ -398,41 +407,41 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                           </div>
                         </div>
                       ) : (
-                        /* === SIDE CARDS: ELEGANT EDITORIAL PAPER CARDS (Noa Vale Style) === */
-                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#faf8f4] border border-[#dcd6cb] p-6 flex flex-col justify-between text-[#1c1917] select-none hover:bg-white transition-colors">
+                        /* === SIDE CARDS: NAVY MARBLE FROSTED GLASS CARDS === */
+                        <div className="relative w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-[#091d34]/90 backdrop-blur-xl border border-[#16365a] p-6 flex flex-col justify-between text-white select-none hover:bg-[#0c2440] transition-colors shadow-lg shadow-black/50">
                           {/* Card Header */}
                           <div>
-                            <div className="flex items-center justify-between text-[11px] font-mono text-[#78716c] uppercase mb-4 pb-2 border-b border-[#e7e2d8]">
+                            <div className="flex items-center justify-between text-[11px] font-mono text-cyan-400 uppercase mb-4 pb-2 border-b border-[#143254]">
                               <span>RANK 0{dim.rank}</span>
-                              <span className="font-semibold text-[#1c1917]">HDC 2569</span>
+                              <span className="font-semibold text-slate-300">HDC 2569</span>
                             </div>
 
-                            <div className="w-10 h-10 rounded-xl bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-700 mb-4">
+                            <div className="w-10 h-10 rounded-xl bg-[#0f2c4c] border border-[#1d4670] flex items-center justify-center text-cyan-300 mb-4 shadow-inner">
                               <Icon className="w-5 h-5" />
                             </div>
 
-                            <h4 className="text-xl font-bold text-[#1c1917] tracking-tight mb-1">
+                            <h4 className="text-xl font-bold text-white tracking-tight mb-1">
                               {dim.name}
                             </h4>
 
-                            <p className="text-xs font-mono text-[#78716c] mb-3">
+                            <p className="text-xs font-mono text-cyan-300/80 mb-3">
                               {meta.englishTitle}
                             </p>
 
-                            <p className="text-xs text-[#57534e] line-clamp-3 leading-relaxed">
+                            <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
                               {meta.clinicalNote}
                             </p>
                           </div>
 
                           {/* Card Stat Footer */}
-                          <div className="pt-4 border-t border-[#e7e2d8]">
-                            <div className="text-[10px] font-mono uppercase text-[#78716c] mb-0.5">
+                          <div className="pt-4 border-t border-[#143254]">
+                            <div className="text-[10px] font-mono uppercase text-cyan-400 mb-0.5">
                               อัตราความเสี่ยงประเมิน
                             </div>
-                            <div className="text-2xl font-black text-[#1c1917] tracking-tight">
+                            <div className="text-2xl font-black text-white tracking-tight">
                               {formatPercent(dim.riskPct)}
                             </div>
-                            <div className="text-[10px] text-[#78716c] mt-0.5">
+                            <div className="text-[10px] text-slate-400 mt-0.5">
                               ผู้มีความเสี่ยง {formatNumber(dim.risk)} คน
                             </div>
                           </div>
@@ -443,11 +452,16 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 })}
               </div>
 
-              {/* Signature Noa Vale Floor Fracture Graphic underneath active card */}
-              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-48 sm:w-64 h-10 pointer-events-none opacity-40">
+              {/* Signature Noa Vale Floor Fracture Graphic: Glowing Sky Cyan on Navy Floor */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-48 sm:w-64 h-10 pointer-events-none opacity-60">
                 <svg viewBox="0 0 200 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                  <path d="M100 0 L95 12 L82 18 L68 15 L50 25 M100 0 L106 14 L120 18 L138 16 L158 28 M100 0 L99 22 L92 34 M100 0 L103 24 L114 36" 
-                        stroke="#78716c" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+                  <path 
+                    d="M100 0 L95 12 L82 18 L68 15 L50 25 M100 0 L106 14 L120 18 L138 16 L158 28 M100 0 L99 22 L92 34 M100 0 L103 24 L114 36" 
+                    stroke="#0099ff" 
+                    strokeWidth="1.2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                  />
                 </svg>
               </div>
             </div>
@@ -455,12 +469,12 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {/* Stage Controls: Left/Right Navigation and Dimension Pill Selector */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 px-2 sm:px-6">
               
-              {/* Active Dimension Caption: Noa Vale Editorial Style */}
+              {/* Active Dimension Caption: Navy Marble Editorial Style */}
               <div className="text-center sm:text-left">
-                <div className="text-[10px] font-mono tracking-wider text-[#78716c] uppercase">
+                <div className="text-[10px] font-mono tracking-wider text-cyan-400 uppercase">
                   0{currentDim.rank} / 09 • MOVING HEALTH PERSPECTIVE
                 </div>
-                <h3 className="text-lg sm:text-xl font-extrabold text-[#1c1917] tracking-tight">
+                <h3 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
                   {currentDim.name} — {visualMeta.englishTitle}
                 </h3>
               </div>
@@ -469,7 +483,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
               <div className="flex items-center gap-3">
                 <button
                   onClick={handlePrev}
-                  className="w-10 h-10 rounded-full border border-[#d5cec2] bg-white/80 hover:bg-white text-[#44403c] flex items-center justify-center transition-all shadow-sm active:scale-95"
+                  className="w-10 h-10 rounded-full border border-[#1a3d66] bg-[#0c233d] hover:bg-[#006bff] hover:border-[#006bff] text-slate-300 hover:text-white flex items-center justify-center transition-all shadow-md active:scale-95"
                   aria-label="Previous dimension"
                 >
                   <ChevronLeft className="w-5 h-5" />
@@ -477,86 +491,30 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 
                 <button
                   onClick={handleSelectActiveDimension}
-                  className="px-4 py-2 rounded-full border border-[#d5cec2] bg-white/90 hover:bg-stone-900 hover:text-white text-xs font-semibold text-[#44403c] transition-all shadow-sm"
+                  className="px-5 py-2 rounded-full border border-white/20 bg-gradient-to-r from-[#006bff] to-[#0099ff] hover:from-[#005cd6] hover:to-[#0088e6] text-xs font-semibold text-white transition-all shadow-lg shadow-[#006bff]/30 active:scale-95"
                 >
                   สำรวจมิตินี้ในแดชบอร์ด ↗
                 </button>
 
                 <button
                   onClick={handleNext}
-                  className="w-10 h-10 rounded-full border border-[#d5cec2] bg-white/80 hover:bg-white text-[#44403c] flex items-center justify-center transition-all shadow-sm active:scale-95"
+                  className="w-10 h-10 rounded-full border border-[#1a3d66] bg-[#0c233d] hover:bg-[#006bff] hover:border-[#006bff] text-slate-300 hover:text-white flex items-center justify-center transition-all shadow-md active:scale-95"
                   aria-label="Next dimension"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Bottom Right Scroll Indicator: Exactly as in Noa Vale */}
+              {/* Bottom Right Scroll Indicator: Navy Marble Style */}
               <a
                 href="#dashboard"
-                className="hidden lg:flex items-center gap-2 text-[11px] font-mono text-[#78716c] hover:text-[#1c1917] transition-colors"
+                className="hidden lg:flex items-center gap-2 text-[11px] font-mono text-slate-400 hover:text-cyan-300 transition-colors"
               >
-                <span className="w-6 h-6 rounded-full border border-[#d5cec2] flex items-center justify-center animate-bounce">
-                  <ArrowDown className="w-3 h-3 text-[#c07a38]" />
+                <span className="w-6 h-6 rounded-full border border-[#1a3d66] bg-[#0c233d] flex items-center justify-center animate-bounce text-cyan-400">
+                  <ArrowDown className="w-3 h-3" />
                 </span>
                 <span>เลื่อนลงเพื่อดูข้อมูลเชิงลึก 76 จังหวัด</span>
               </a>
-            </div>
-          </div>
-
-          {/* 3. EXECUTIVE KEY STATS BAND (Integrated cleanly below the stage) */}
-          <div className="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-8 pt-8 border-t border-[#dfd9ce]">
-            
-            <div className="bg-white/70 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-[#dfd9ce] shadow-sm">
-              <div className="flex items-center gap-2 text-[#78716c] text-xs font-medium mb-1">
-                <Users className="w-4 h-4 text-[#006bff]" />
-                <span>ผู้สูงอายุคัดกรองสะสม</span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-[#1c1917] tracking-tight">
-                {formatNumber(national.totalScreened)}
-              </div>
-              <div className="text-[11px] text-[#78716c] mt-0.5">
-                คนทั่วประเทศ (12 เขตสุขภาพ)
-              </div>
-            </div>
-
-            <div className="bg-white/70 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-[#dfd9ce] shadow-sm">
-              <div className="flex items-center gap-2 text-[#78716c] text-xs font-medium mb-1">
-                <ShieldCheck className="w-4 h-4 text-[#16a34a]" />
-                <span>คัดกรองครบทั้ง 9 ด้าน</span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-[#1c1917] tracking-tight">
-                {formatPercent(national.pctScreened9d)}
-              </div>
-              <div className="text-[11px] text-[#78716c] mt-0.5">
-                {formatNumber(national.screened9d)} คนที่มีข้อมูลสมบูรณ์
-              </div>
-            </div>
-
-            <div className="bg-white/70 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-[#dfd9ce] shadow-sm">
-              <div className="flex items-center gap-2 text-[#78716c] text-xs font-medium mb-1">
-                <Eye className="w-4 h-4 text-[#c07a38]" />
-                <span>ความเสี่ยงอันดับ 1 ประเทศ</span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-[#1c1917] tracking-tight truncate">
-                {national.rankedDimensions[0]?.name || 'การมองเห็น'}
-              </div>
-              <div className="text-[11px] text-[#c07a38] font-bold mt-0.5">
-                ร้อยละเสี่ยง {formatPercent(national.rankedDimensions[0]?.riskPct)}
-              </div>
-            </div>
-
-            <div className="bg-white/70 backdrop-blur-md rounded-2xl p-4 sm:p-5 border border-[#dfd9ce] shadow-sm">
-              <div className="flex items-center gap-2 text-[#78716c] text-xs font-medium mb-1">
-                <Building2 className="w-4 h-4 text-[#006bff]" />
-                <span>ความครอบคลุมพื้นที่</span>
-              </div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-[#1c1917] tracking-tight">
-                76 จังหวัด
-              </div>
-              <div className="text-[11px] text-[#78716c] mt-0.5">
-                12 เขตบริการสุขภาพทั่วประเทศ
-              </div>
             </div>
           </div>
 
