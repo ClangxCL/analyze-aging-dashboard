@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { NationalData, DimensionKey } from '@/types/health';
 import { formatNumber, formatPercent } from '@/lib/analytics';
+import { DimensionMotionCanvas } from './DimensionMotionCanvas';
 
 interface LandingHeroProps {
   national: NationalData;
@@ -143,9 +144,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const [isAutoRotate, setIsAutoRotate] = useState(true);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Ranked dimensions list
   const dimensions = national.rankedDimensions || [];
@@ -160,24 +159,6 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
     }, 7000);
     return () => clearInterval(timer);
   }, [isAutoRotate, dimensions.length]);
-
-  // Video play/pause effect
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play().catch(() => {});
-      setIsPlaying(true);
-    }
-  };
-
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-  };
 
   const handlePrev = () => {
     setIsAutoRotate(false);
@@ -329,59 +310,56 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                     >
                       {/* CARD CONTENT */}
                       {isActive ? (
-                        /* === ACTIVE CENTER CARD: CINEMATIC MOTION VIDEO === */
+                        /* === ACTIVE CENTER CARD: PROCEDURAL CLINICAL MOTION ANIMATION === */
                         <div className="relative w-full h-full rounded-[24px] sm:rounded-[28px] overflow-hidden bg-stone-950 border border-white/20 flex flex-col justify-between text-white">
                           
-                          {/* Motion Video Loop */}
-                          <video
-                            ref={videoRef}
-                            src="/videos/motion.mp4"
-                            autoPlay
-                            loop
-                            muted={isMuted}
-                            playsInline
-                            className="absolute inset-0 w-full h-full object-cover opacity-80"
+                          {/* Themed Procedural 60fps Animation for this Dimension */}
+                          <DimensionMotionCanvas
+                            dimensionKey={dim.key}
+                            isPlaying={isPlaying}
                           />
 
-                          {/* Gradient Mesh Overlay for Editorial Contrast */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-stone-900/30 pointer-events-none" />
+                          {/* Subtle Vignette Overlay for Crisp Readability */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-stone-900/40 pointer-events-none" />
 
                           {/* Top Card Controls Bar */}
                           <div className="relative z-10 p-4 sm:p-5 flex items-center justify-between">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-widest uppercase">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[10px] font-mono tracking-widest uppercase">
                               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                              <span>LIVE MOTION • มิติที่ 0{dim.rank}</span>
+                              <span>CLINICAL MOTION • 0{dim.rank} {dim.name}</span>
                             </div>
 
-                            {/* Video Playback Controls */}
-                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md rounded-full p-1 border border-white/15">
+                            {/* Animation Playback Controls */}
+                            <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md rounded-full p-1 border border-white/15">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  togglePlay();
+                                  setIsPlaying(prev => !prev);
                                 }}
                                 className="p-1.5 rounded-full hover:bg-white/20 transition-all text-white/90"
-                                title={isPlaying ? 'หยุดวิดีโอชั่วคราว' : 'เล่นวิดีโอ'}
+                                title={isPlaying ? 'หยุดแอนิเมชันชั่วคราว' : 'เล่นแอนิเมชัน'}
                               >
                                 {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
                               </button>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  toggleMute();
+                                  setIsAutoRotate(prev => !prev);
                                 }}
-                                className="p-1.5 rounded-full hover:bg-white/20 transition-all text-white/90"
-                                title={isMuted ? 'เปิดเสียง' : 'ปิดเสียง'}
+                                className={`px-2 py-0.5 rounded-full text-[9px] font-mono font-bold transition-all ${
+                                  isAutoRotate ? 'bg-amber-500/30 text-amber-300' : 'text-stone-400 hover:text-white'
+                                }`}
+                                title="สลับการหมุนมิติอัตโนมัติ"
                               >
-                                {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                                {isAutoRotate ? 'AUTO' : 'MANUAL'}
                               </button>
                             </div>
                           </div>
 
                           {/* Center Graphic Watermark / Subtle Pulse */}
                           <div className="relative z-10 flex-1 flex items-center justify-center pointer-events-none">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm animate-pulse">
-                              <Icon className="w-10 h-10 sm:w-12 sm:h-12 text-white/90 drop-shadow-lg" />
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border border-white/20 flex items-center justify-center bg-white/5 backdrop-blur-sm animate-pulse">
+                              <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-white/90 drop-shadow-lg" />
                             </div>
                           </div>
 
