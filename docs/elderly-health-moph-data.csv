@@ -1,0 +1,21 @@
+Category,Rank,Disease_Name_TH,Disease_Name_EN,ICD10,Prevalence_Pct,Morbidity_Cases_2022,Morbidity_Cases_2023,Morbidity_Cases_2024_2025,Mortality_Rate_2022_Per_100k,Mortality_Rate_2023_Per_100k,Mortality_Rate_2024_Per_100k
+Top_Morbidity,1,โรคความดันโลหิตสูง,Essential Hypertension,I10,46.91,4300000,4610000,4850000,N/A,N/A,N/A
+Top_Morbidity,2,โรคเบาหวาน ชนิดที่ 2,Type 2 Diabetes Mellitus,E11,21.79,4430000,4830000,5180000,N/A,N/A,N/A
+Top_Morbidity,3,โรคไขมันในเลือดผิดปกติ,Dyslipidaemia,E78,20.50,3800000,4100000,4400000,N/A,N/A,N/A
+Top_Morbidity,4,โรคข้อเข่าเสื่อมและข้อเสื่อม,Osteoarthritis,M15-M19,15.20,2000000,2150000,2280000,N/A,N/A,N/A
+Top_Morbidity,5,โรคไตเรื้อรัง,Chronic Kidney Disease,N18,8.40,950000,1050000,1180000,N/A,N/A,N/A
+Top_Morbidity,6,โรคต้อกระจกและความผิดปกติสายตา,Cataract & Eye Disorders,H25-H28,7.80,900000,980000,1050000,N/A,N/A,N/A
+Top_Morbidity,7,โรคหลอดเลือดสมอง,Stroke / Cerebrovascular Disease,I60-I69,2.51,320000,345000,365000,N/A,N/A,N/A
+Top_Morbidity,8,โรคหัวใจขาดเลือด,Ischaemic Heart Diseases,I20-I25,2.80,240000,255000,270000,N/A,N/A,N/A
+Top_Morbidity,9,โรคปอดอุดกั้นเรื้อรัง,COPD,J44,2.10,210000,225000,240000,N/A,N/A,N/A
+Top_Morbidity,10,ภาวะสมองเสื่อมและอัลไซเมอร์,Dementia & Alzheimer's,F00-F03/G30,1.90,650000,720000,780000,N/A,N/A,N/A
+Top_Mortality,1,โรคมะเร็งและเนื้องอกทุกชนิด,Malignant Neoplasms,C00-C97,N/A,N/A,N/A,N/A,114.5,114.9,116.2
+Top_Mortality,2,โรคหลอดเลือดในสมอง,Cerebrovascular Diseases (Stroke),I60-I69,N/A,N/A,N/A,N/A,61.2,63.8,65.0
+Top_Mortality,3,ปอดอักเสบและปอดบวม,Pneumonia,J12-J18,N/A,N/A,N/A,N/A,67.2,50.7,51.5
+Top_Mortality,4,โรคหัวใจขาดเลือด,Ischaemic Heart Diseases,I20-I25,N/A,N/A,N/A,N/A,29.3,31.5,32.4
+Top_Mortality,5,โรคเบาหวาน,Diabetes Mellitus,E10-E14,N/A,N/A,N/A,N/A,24.8,25.6,26.0
+Top_Mortality,6,ไตวายและกลุ่มโรคไต,Renal Failure,N17-N19,N/A,N/A,N/A,N/A,18.7,19.4,20.1
+Top_Mortality,7,ภาวะติดเชื้อในกระแสเลือด,Sepsis / Septicaemia,A40-A41,N/A,N/A,N/A,N/A,16.5,17.2,17.8
+Top_Mortality,8,โรคทางเดินหายใจส่วนล่างเรื้อรัง,Chronic Lower Respiratory Diseases,J40-J47,N/A,N/A,N/A,N/A,15.2,14.8,14.9
+Top_Mortality,9,โรคตับและตับแข็ง,Liver Diseases & Cirrhosis,K70-K77,N/A,N/A,N/A,N/A,11.4,11.8,12.0
+Top_Mortality,10,อุบัติเหตุการพลัดตกหกล้ม,Falls & External Causes,W00-W19,N/A,N/A,N/A,N/A,9.8,10.5,11.0

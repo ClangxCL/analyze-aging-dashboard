@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Next.js & Build outputs
+.next/
+*/.next/
+build/
+dist/
+out/
+.vercel
+
+# Logs & temp
+*.log
+npm-debug.log*
+yarn-debug.log*
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+
+# Env files
+.env*
+!.env.example
+
+# Large scratch files
+dms_2023.html

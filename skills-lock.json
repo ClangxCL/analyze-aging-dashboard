@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "computedHash": "80161e6836b3b40f4e83730a290deb40ac14d877d38c97ad5f6d71be37ce74c3"
+    },
+    "ai-image-generation": {
+      "source": "magentosh/superpowers",
+      "sourceType": "github",
+      "skillPath": "tools/image/ai-image-generation/SKILL.md",
+      "computedHash": "0cb296ffe8d9277dff2e4fbd9888fa943a4f6acee4ad218559e60e45c8a06526"
+    },
+    "ai-video-generation": {
+      "source": "101-skills/superpowers",
+      "sourceType": "github",
+      "skillPath": "tools/video/ai-video-generation/SKILL.md",
+      "computedHash": "a2d7f92bb0fc3670a531576ce6e4ae0b7ed842cdeebec354a5bebe4c97821e39"
+    },
+    "answer-me-with-html": {
+      "source": "QingYunA/answer-me-with-html",
+      "sourceType": "github",
+      "skillPath": "skills/answer-me-with-html/SKILL.md",
+      "computedHash": "85914d041b82128fdef41b9fd20eb904ebbc6e83eda43e70d64c954d120b8f86"
+    },
+    "domain-modeling": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/domain-modeling/SKILL.md",
+      "computedHash": "f377a1341e1b368833cfe5889ace3e61d7df48d7a9e5da9253dba75d062bbfbc"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "computedHash": "b146008599c31057cef1c145774cea5d5afb30e8f43fa802e47a4b461419aaaf"
+    },
+    "hallmark": {
+      "source": "nutlope/hallmark",
+      "sourceType": "github",
+      "skillPath": "skills/hallmark/SKILL.md",
+      "computedHash": "6d53b2b609e05849c1dd0fc53e37daa7515089d5880c15e7e885c86e8b814e9c"
+    },
+    "improve-codebase-architecture": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
+      "computedHash": "f74b0bf1be26220dd615523fc1c0562567f9c463d9e9b255d4031345ffb37cd3"
+    },
+    "ios-design": {
+      "source": "uizze.sh",
+      "sourceUrl": "https://uizze.sh/",
+      "sourceType": "well-known",
+      "computedHash": "6b92ffbe225bdd877e1245e843c5b79f1e37f7ab40d3f802937044f6aee29d20",
+      "wellKnownDigest": "sha256:b117db775a77c436d7e46c2eeb1602de40f5f0256214cf6a9dc2bb056ddffd9d"
+    },
+    "poteto-mode": {
+      "source": "michael-denyer/pstack-claude",
+      "sourceType": "github",
+      "skillPath": "plugins/pstack/skills/poteto-mode/SKILL.md",
+      "computedHash": "141598462c7d6a28b84647366300defb2fa94974369fc7e64c805d513d8c20e5"
+    },
+    "setup-pstack": {
+      "source": "michael-denyer/pstack-claude",
+      "sourceType": "github",
+      "skillPath": "plugins/pstack/skills/setup-pstack/SKILL.md",
+      "computedHash": "8ced375ba752cc8aaf877b37b4a5711de76c242baedba0d4d3c7a3564c1c9d93"
+    },
+    "slideshow": {
+      "source": "heygen-com/hyperframes",
+      "sourceType": "github",
+      "skillPath": "skills/slideshow/SKILL.md",
+      "computedHash": "fa178947b4cfe834d416c4d826d50cdd1f92dfb22395569032a40aa5d26819cc"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "supabase/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
+      "computedHash": "128fac78002d916c8ca908245d398e634f540d8bcf20915b2b2359aeb18eba59"
+    },
+    "ui-taste": {
+      "source": "uizze.sh",
+      "sourceUrl": "https://uizze.sh/",
+      "sourceType": "well-known",
+      "computedHash": "9b73951ae54b7d1eb81e69bb2f47d1622b3813bbefbd6c0aaa36dfcf938f1f27",
+      "wellKnownDigest": "sha256:3b88468608bc7ceec66b8333fab1729590e7af62487fcdbdf79ef60ff626def7"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "6b526d013e28073246a36f99b529bc43745d30832ecfa8217b359c34f260ca6b"
+    },
+    "zframes": {
+      "source": "zentryhq/zframes",
+      "sourceType": "github",
+      "skillPath": "skills/zframes/SKILL.md",
+      "computedHash": "644c4c8301ab331c9f0f116f1cd54c9acc4ec19f1cc37227d857236349976f86"
+    }
+  }
+}

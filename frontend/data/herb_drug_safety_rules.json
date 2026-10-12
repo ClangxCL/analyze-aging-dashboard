@@ -1,0 +1,110 @@
+[
+  {
+    "id": "SAFE-001",
+    "herb_name": "ฟ้าทะลายโจร",
+    "botanical": "Andrographis paniculata",
+    "drug_names": ["Warfarin", "Aspirin", "Clopidogrel", "Dabigatran", "Rivaroxaban"],
+    "risk_level": "RED",
+    "risk_label": "อันตรายสูง (High Risk / Contraindicated)",
+    "mechanism": "Andrographolide มีฤทธิ์ยับยั้งการรวมตัวของเกล็ดเลือด (Platelet aggregation) และยับยั้งเอนไซม์ตับ CYP2C9 อย่างแรง ส่งผลให้ระดับยา Warfarin ในกระแสเลือดเพิ่มขึ้นอย่างมีนัยสำคัญ",
+    "clinical_risk": "เพิ่มความเสี่ยงเกิดเลือดออกผิดปกติรุนแรง (Major Gastrointestinal / Intracranial Bleeding)",
+    "action_for_ttm": "【ห้ามจ่ายฟ้าทะลายโจร】 แนะนำรักษาไข้หวัดด้วยยาพาราเซตามอลแผนปัจจุบัน หรือใช้ยาจันทลีลา / ยาประสะมะแว้ง ที่ไม่มีผลต่อเกล็ดเลือดแทน",
+    "monitoring_plan": "หากผู้ป่วยเผลอรับประทาน ให้สังเกตอาการจ้ำเลือด ปัสสาวะเป็นเลือด หรือถ่ายดำ และส่งตรวจค่า INR ด่วน"
+  },
+  {
+    "id": "SAFE-002",
+    "herb_name": "ฟ้าทะลายโจร",
+    "botanical": "Andrographis paniculata",
+    "drug_names": ["Amlodipine", "Enalapril", "Losartan", "Hydrochlorothiazide"],
+    "risk_level": "YELLOW",
+    "risk_label": "เฝ้าระวัง (Moderate Risk / Caution)",
+    "mechanism": "สารสกัดฟ้าทะลายโจรมีฤทธิ์ขยายหลอดเลือดและลดความดันโลหิต เสริมฤทธิ์กับยาลดความดันแผนปัจจุบัน (Additive Hypotension)",
+    "clinical_risk": "อาจเกิดอาการหน้ามืด วิงเวียนศีรษะ ความดันตกขณะเปลี่ยนท่า (Postural hypotension)",
+    "action_for_ttm": "【จ่ายได้ด้วยความระมัดระวัง】 แนะนำทานระยะสั้นไม่เกิน 3-5 วัน และรับประทานห่างจากยาความดันอย่างน้อย 2 ชั่วโมง",
+    "monitoring_plan": "แนะนำผู้ป่วยวัดความดันโลหิตเช้า-เย็น หากค่า Systolic < 100 mmHg ให้หยุดใช้"
+  },
+  {
+    "id": "SAFE-003",
+    "herb_name": "เถาวัลย์เปรียง",
+    "botanical": "Derris scandens",
+    "drug_names": ["Paracetamol", "Tramadol"],
+    "risk_level": "GREEN",
+    "risk_label": "ปลอดภัยและส่งเสริมการรักษา (Low Risk / Synergistic)",
+    "mechanism": "เถาวัลย์เปรียงยับยั้งเอนไซม์ COX-2 ต้านการอักเสบเทียบเท่ายาเคมีสังเคราะห์ แต่มีความปลอดภัยต่อเยื่อบุกระเพาะอาหารและไตสูงกว่าอย่างชัดเจน",
+    "clinical_risk": "ไม่มีความเสี่ยงที่มีนัยสำคัญทางคลินิก",
+    "action_for_ttm": "【สนับสนุนการใช้เป็น First-Line Drug】 ขนาดยา 400 มก. วันละ 3 ครั้งหลังอาหาร ช่วยลดการพึ่งพายาแก้ปวดเคมีสังเคราะห์ในผู้สูงอายุ",
+    "monitoring_plan": "ประเมิน Pain Score หลังรับประทาน 1-2 สัปดาห์"
+  },
+  {
+    "id": "SAFE-004",
+    "herb_name": "เถาวัลย์เปรียง",
+    "botanical": "Derris scandens",
+    "drug_names": ["Ibuprofen", "Diclofenac", "Naproxen", "Celecoxib"],
+    "risk_level": "YELLOW",
+    "risk_label": "กลไกออกฤทธิ์ซ้ำซ้อน (Duplicate Mechanism)",
+    "mechanism": "ออกฤทธิ์ยับยั้งกระบวนการอักเสบซ้ำซ้อนกัน",
+    "clinical_risk": "ไม่เพิ่มพิษต่อตับไต แต่อาจเกิดความซ้ำซ้อนและสิ้นเปลืองยา",
+    "action_for_ttm": "【แนะนำปรึกษาเพื่อลดยาเคมี】 เสนอให้แพทย์แผนปัจจุบันปรับลดยา NSAIDs ลง แล้วใช้เถาวัลย์เปรียงทดแทนเพื่อถนอมไต",
+    "monitoring_plan": "ติดตามอาการปวดและการทำงานของไต (eGFR)"
+  },
+  {
+    "id": "SAFE-005",
+    "herb_name": "ชะพลู / มะระขี้นก",
+    "botanical": "Piper sarmentosum / Momordica charantia",
+    "drug_names": ["Metformin", "Glipizide", "Glimepiride", "Insulin"],
+    "risk_level": "YELLOW",
+    "risk_label": "เฝ้าระวังน้ำตาลตก (Additive Hypoglycemia)",
+    "mechanism": "มีสารกระตุ้นการหลั่งอินซูลินและเพิ่มการใช้น้ำตาลของเซลล์ เสริมฤทธิ์ยาลดน้ำตาลแผนปัจจุบัน",
+    "clinical_risk": "เสี่ยงต่อภาวะน้ำตาลในเลือดต่ำเฉียบพลัน (เหงื่อแตก มือสั่น ใจสั่น หมดสติ)",
+    "action_for_ttm": "【จ่ายได้แต่ต้องเตือนผู้ป่วย】 กำชับให้ตรวจวัดน้ำตาลปลายนิ้ว (DTX) สม่ำเสมอ ไม่ควรทานตอนท้องว่างหรืออดอาหาร",
+    "monitoring_plan": "หากระดับ FBS < 100 mg/dL บ่อยครั้ง ให้ประสานแพทย์แผนปัจจุบันปรับลดยาเคมีลง"
+  },
+  {
+    "id": "SAFE-006",
+    "herb_name": "ขมิ้นชัน",
+    "botanical": "Curcuma longa",
+    "drug_names": ["Omeprazole", "Esomeprazole", "Antacids", "Simethicone"],
+    "risk_level": "GREEN",
+    "risk_label": "ปลอดภัยและส่งเสริมการรักษา (Low Risk / Synergistic)",
+    "mechanism": "สาร Curcuminoids สมานแผลในกระเพาะและขับลม ส่งเสริมการรักษาโรคแผลในทางเดินอาหารและกรดไหลย้อนร่วมกับยาลดกรด",
+    "clinical_risk": "ไม่มีความเสี่ยง",
+    "action_for_ttm": "【สนับสนุนการใช้ร่วมกัน】 จ่ายขมิ้นชันขนาด 500-1,000 มก. วันละ 4 ครั้งหลังอาหารและก่อนนอน",
+    "monitoring_plan": "ประเมินอาการจุกแน่นท้องและเรอเปรี้ยวหลังใช้ 2 สัปดาห์"
+  },
+  {
+    "id": "SAFE-007",
+    "herb_name": "ขมิ้นชัน",
+    "botanical": "Curcuma longa",
+    "drug_names": ["Warfarin"],
+    "risk_level": "YELLOW",
+    "risk_label": "เฝ้าระวังค่า INR (Moderate Risk)",
+    "mechanism": "Curcumin ขนาดสูงมีฤทธิ์ต้านเกล็ดเลือดเล็กน้อย อาจมีผลต่อค่าการแข็งตัวของเลือด",
+    "clinical_risk": "อาจทำให้ค่า INR ผันผวนได้",
+    "action_for_ttm": "【ใช้ขนาดปกติได้แต่เลี่ยงสารสกัดเข้มข้น】 หากเป็นผงขมิ้นชันทั่วไปใช้ได้ แต่หากเป็นสารสกัดสิทธิบัตรเข้มข้นสูงให้ปรึกษาแพทย์ก่อน",
+    "monitoring_plan": "เจาะตรวจค่า INR ภายใน 2 สัปดาห์หลังเริ่มใช้"
+  },
+  {
+    "id": "SAFE-008",
+    "herb_name": "รางจืด",
+    "botanical": "Thunbergia laurifolia",
+    "drug_names": ["Metformin", "Amlodipine", "Enalapril", "Warfarin", "Atorvastatin"],
+    "risk_level": "RED",
+    "risk_label": "รบกวนการดูดซึมยาอย่างรุนแรง (Drug Clearance Interaction)",
+    "mechanism": "กระตุ้นเอนไซม์ล้างพิษในตับ (CYP450) และจับสารเคมีในทางเดินอาหาร เร่งขับยาแผนปัจจุบันออกจากร่างกายอย่างรวดเร็ว",
+    "clinical_risk": "ระดับยาแผนปัจจุบันในกระแสเลือดลดลงอย่างรวดเร็ว ส่งผลให้คุมความดัน/น้ำตาลไม่ได้",
+    "action_for_ttm": "【ห้ามรับประทานพร้อมยาประจำตัว】 หากจำเป็นต้องใช้ขับพิษ ต้องรับประทานห่างจากยาแผนปัจจุบันอย่างน้อย 2-4 ชั่วโมง",
+    "monitoring_plan": "ติดตามระดับความดันโลหิตและระดับน้ำตาลอย่างใกล้ชิด"
+  },
+  {
+    "id": "SAFE-009",
+    "herb_name": "ยาต้มหม้อ / ยาสมุนไพรไม่ทราบสูตร",
+    "botanical": "Unstandardized Herbal Decoction",
+    "drug_names": ["Enalapril", "Losartan", "Spironolactone", "Metformin"],
+    "risk_level": "RED",
+    "risk_label": "อันตรายขั้นวิกฤตต่อผู้ป่วยโรคไต (Severe Renal Hazard)",
+    "mechanism": "ยาต้มสมุนไพรที่ไม่ผ่านการรับรองมักมี Potassium สูงมาก และเสี่ยงต่อการปนเปื้อนสเตียรอยด์สังเคราะห์หรือสารหนู/ตะกั่ว",
+    "clinical_risk": "ภาวะโพแทสเซียมในเลือดสูงวิกฤต (Hyperkalemia) หัวใจเต้นผิดจังหวะ และภาวะไตวายเฉียบพลัน",
+    "action_for_ttm": "【สั่งหยุดทันที】 หากผู้ป่วยมี eGFR < 60 หรือ Serum Cr > 1.5 ให้ปฏิเสธการใช้ยาต้มที่ไม่ทราบสูตรเด็ดขาด",
+    "monitoring_plan": "ส่งตรวจติดตามการทำงานของไตและเกลือแร่ในเลือดด่วน"
+  }
+]

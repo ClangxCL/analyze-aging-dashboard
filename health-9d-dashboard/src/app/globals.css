@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+:root {
+  /* Colors from DESIGN.md */
+  --color-ink-navy: #0b3558;
+  --color-signal-blue: #006bff;
+  --color-slate-gray: #476788;
+  --color-mist-gray: #a6bbd1;
+  --color-cloud: #f8f9fb;
+  --color-paper: #ffffff;
+  --color-pebble: #f0f3f8;
+  --color-hairline: #d4e0ed;
+  --color-carbon: #0a0a0a;
+  --color-coral-magenta: #e55cff;
+  --color-sky-cyan: #0099ff;
+  --color-deep-cobalt: #004eba;
+
+  /* Surfaces */
+  --surface-canvas: #f8f9fb;
+  --surface-card: #ffffff;
+  --surface-input-fill: #f0f3f8;
+  --surface-dark-surface: #0b3558;
+  --surface-accent-surface: #006bff;
+
+  /* Elevation Shadows (blue-tinted from DESIGN.md) */
+  --shadow-sm: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, rgba(71, 103, 136, 0.03) 0px 4px 10px 0px, rgba(71, 103, 136, 0.05) 0px 10px 20px 0px;
+  --shadow-elevated: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, rgba(71, 103, 136, 0.03) 0px 8px 15px 0px, rgba(71, 103, 136, 0.08) 0px 30px 50px 0px;
+  --shadow-button: rgba(71, 103, 136, 0.04) 0px 4px 5px 0px, rgba(71, 103, 136, 0.03) 0px 8px 15px 0px, rgba(71, 103, 136, 0.06) 0px 15px 30px 0px;
+}
+
+@theme {
+  --color-ink-navy: #0b3558;
+  --color-signal-blue: #006bff;
+  --color-slate-gray: #476788;
+  --color-mist-gray: #a6bbd1;
+  --color-cloud: #f8f9fb;
+  --color-paper: #ffffff;
+  --color-pebble: #f0f3f8;
+  --color-hairline: #d4e0ed;
+  --color-carbon: #0a0a0a;
+  --color-coral-magenta: #e55cff;
+  --color-sky-cyan: #0099ff;
+  --color-deep-cobalt: #004eba;
+}
+
+body {
+  background-color: var(--color-cloud);
+  color: var(--color-ink-navy);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Sarabun", "Noto Sans Thai", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Custom Card elevation utility */
+.card-elevation {
+  box-shadow: var(--shadow-elevated);
+}
+
+.card-elevation-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.button-elevation {
+  box-shadow: var(--shadow-button);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f0f3f8;
+}
+::-webkit-scrollbar-thumb {
+  background: #a6bbd1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #476788;
+}

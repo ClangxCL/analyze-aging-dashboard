@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TTM Smart Clinical Co-pilot - ระบบปลั๊กอินสนับสนุนการตัดสินใจเวชกรรมไทย</title>
+  <!-- Google Fonts: Prompt & Sarabun -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'Sarabun', 'sans-serif'],
+            mono: ['Courier New', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Prompt', 'Sarabun', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- Top Navbar -->
+  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center font-bold text-xl text-white shadow-md">
+          🌿
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-base text-white tracking-tight">TTM Smart Clinical Co-pilot</h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">HIS Co-Pilot Plugin</span>
+          </div>
+          <p class="text-xs text-slate-400">ระบบปลั๊กอินสนับสนุนการตัดสินใจทางคลินิก ผสานรอยต่อเวชกรรมไทยในระบบ HIS (HOSxP / EHP)</p>
+        </div>
+      </div>
+
+      <div class="hidden md:flex items-center gap-3 text-xs">
+        <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-800 rounded-full border border-slate-700 text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Knowledge Base: Online (42 Elements & ICD-10-TM)</span>
+        </div>
+        <div class="flex items-center gap-1.5 px-3 py-1 bg-slate-800 rounded-full border border-slate-700 text-slate-300 font-mono">
+          <span>Active Patient: HN-694201</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Split Screen Layout: HIS Screen (Left) vs TTM Co-pilot Plugin (Right) -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: HOSPITAL INFORMATION SYSTEM (HIS / HOSxP Screen, 5 cols) -->
+    <div class="lg:col-span-5 space-y-4">
+      <div class="bg-white rounded-xl shadow-xs border border-slate-300 p-4 space-y-4">
+        
+        <!-- HIS Header Banner -->
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🏥</span>
+            <div>
+              <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wide">Hospital Information System (HIS / EMR)</h2>
+              <p class="text-[11px] text-slate-500">ระบบเวชระเบียนผู้ป่วยนอก • แผนกตรวจรักษาเวชกรรมไทย</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-mono bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded border border-blue-200">HIS Connected</span>
+        </div>
+
+        <!-- Patient Demographics & Vitals -->
+        <div class="p-3 bg-slate-50 rounded-lg border border-slate-200 text-xs space-y-1.5">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-sm text-slate-900">นายสมบัติ วัฒนากุล (อายุ 64 ปี / ชาย)</span>
+            <span class="font-mono font-bold text-slate-700">HN: 694201</span>
+          </div>
+          <div class="text-[11px] text-slate-600">
+            <strong>สัญญาณชีพ:</strong> BP 135/84 mmHg | Pulse 78 | Temp 36.6 °C | SpO2 98%
+          </div>
+          <div class="text-[11px] text-slate-600">
+            <strong>ผลแล็บสำคัญ (Recent Labs):</strong> FBS 138 mg/dL | eGFR 74 mL/min | Serum Cr 1.1 mg/dL
+          </div>
+        </div>
+
+        <!-- Synced Modern Drug Profile from HIS -->
+        <div class="p-3 bg-indigo-50/60 rounded-lg border border-indigo-200 space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+              <span>💊</span> ประวัติยาแผนปัจจุบัน (Active Synced Meds จาก HIS):
+            </span>
+            <span class="text-[10px] text-indigo-700 font-medium">4 รายการ</span>
+          </div>
+          <div id="container-his-meds" class="space-y-1.5">
+            <!-- Rendered by JS from state.hisPatient.hisActiveMeds -->
+          </div>
+          <p class="text-[10px] text-indigo-800 leading-tight">
+            * ระบบ Co-pilot จะดึงรายการยาเหล่านี้ไปตรวจอันตรกิริยา (Herb-Drug Interaction) อัตโนมัติเมื่อเลือกสมุนไพร
+          </p>
+        </div>
+
+        <!-- Doctor's Clinical Note Typing Area (The Core Test Bed!) -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <label class="block text-xs font-bold text-slate-900 flex items-center gap-1">
+              <span>📝</span> บันทึกอาการและผลการตรวจ (พิมพ์ทดสอบได้อิสระ):
+            </label>
+            <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+              ⚡ Real-time KB Engine
+            </span>
+          </div>
+
+          <textarea id="txt-clinical-note" rows="4" 
+            class="w-full text-xs p-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:bg-white leading-relaxed text-slate-900 font-medium shadow-inner"
+            placeholder="ลองพิมพ์อาการของผู้ป่วยที่นี่ เช่น 'ปวดข้อเข่าขัด มีเสียงกรอบแกรบ เดินแล้วเจ็บ ข้อฝืดตอนเช้า...'"></textarea>
+
+          <!-- Quick Test Sample Prompt Buttons -->
+          <div>
+            <span class="text-[11px] font-semibold text-slate-500 block mb-1">⚡ คลิกเพื่อลองพิมพ์สถานการณ์จำลอง (Quick Test):</span>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="insertSamplePrompt('ปวดข้อเข่าขัด เดินแล้วมีเสียงกรอบแกรบ งอเหยียดยาก ข้อฝืดตอนเช้ามา 2 เดือน')" 
+                class="px-2 py-1 text-[11px] rounded bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-900 font-medium transition">
+                เข่าเสื่อม (กรอบแกรบ)
+              </button>
+              <button type="button" onclick="insertSamplePrompt('มีไข้ต่ำ ตัวร้อน เจ็บคอ ครั่นเนื้อครั่นตัว น้ำมูกใสไหลมา 2 วัน')" 
+                class="px-2 py-1 text-[11px] rounded bg-rose-50 hover:bg-rose-100 border border-rose-300 text-rose-900 font-medium transition">
+                ไข้หวัด (ตัวร้อน เจ็บคอ)
+              </button>
+              <button type="button" onclick="insertSamplePrompt('ปวดตึงคอบ่าไหล่ ยกแขนแล้วตึงสะบัก ปวดร้าวขึ้นศีรษะ นั่งคอมพิวเตอร์นาน')" 
+                class="px-2 py-1 text-[11px] rounded bg-blue-50 hover:bg-blue-100 border border-blue-300 text-blue-900 font-medium transition">
+                ออฟฟิศซินโดรม (ปวดสะบัก)
+              </button>
+              <button type="button" onclick="insertSamplePrompt('ปัสสาวะบ่อยตอนกลางคืน หิวน้ำ อ่อนเพลีย ระดับน้ำตาลในเลือดขึ้นสูง')" 
+                class="px-2 py-1 text-[11px] rounded bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-medium transition">
+                เบาหวาน (มธุรเมหะ)
+              </button>
+              <button type="button" onclick="insertSamplePrompt('แขนขาข้างขวาอ่อนแรง เดินเซ มีอาการอัมพฤกษ์เดิม ข้อยึดติด')" 
+                class="px-2 py-1 text-[11px] rounded bg-purple-50 hover:bg-purple-100 border border-purple-300 text-purple-900 font-medium transition">
+                อัมพฤกษ์ (แขนขาอ่อนแรง)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Insert into HIS Record Button -->
+        <div class="pt-2">
+          <button type="button" onclick="syncBackToHis()" 
+            class="w-full py-2.5 px-4 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold text-xs rounded-lg shadow-sm transition flex items-center justify-center gap-2">
+            <span>💾</span> ซิงค์และส่งข้อมูลผลการตรวจกลับเข้าสู่ระบบ HIS (Insert to EMR)
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: TTM SMART CO-PILOT PLUGIN PANE (7 cols) -->
+    <div class="lg:col-span-7 space-y-4">
+      <div class="bg-white rounded-xl shadow-xs border border-emerald-300/80 p-5 space-y-4">
+        
+        <!-- Co-pilot Header & Live Token Match -->
+        <div class="flex justify-between items-center border-b border-emerald-100 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🧠</span>
+            <div>
+              <h2 class="text-sm font-bold text-emerald-950 flex items-center gap-1.5">
+                <span>TTM Co-pilot Extension: Rule-Based & Knowledge Retrieval Engine</span>
+              </h2>
+              <p class="text-[11px] text-slate-500">วิเคราะห์สมุฏฐาน 4 • ธาตุ 42 • พยากรณ์โรคเวชกรรมไทย • ตรวจความปลอดภัยยาใน HIS</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold bg-emerald-600 text-white px-2 py-0.5 rounded shadow-2xs">Active Co-pilot</span>
+        </div>
+
+        <!-- Live Detected Keywords Badge -->
+        <div class="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-xs flex items-center justify-between">
+          <span class="font-bold text-slate-700">คำสำคัญที่ตรวจพบจากข้อความ (Entities):</span>
+          <div id="badge-detected-keywords" class="flex flex-wrap gap-1">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- SECTION 1: ETIOLOGY & 42 ELEMENTS (สมุฏฐานการเกิดโรค & ความผิดปกติของธาตุ) -->
+        <div class="border border-slate-200 rounded-lg p-3.5 space-y-2">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <span>☯️</span> 1. การวิเคราะห์สมุฏฐานและความผิดปกติของธาตุ (Etiology & Elements)
+            </h3>
+            <span class="text-[10px] text-slate-400">คัมภีร์เวชศึกษา</span>
+          </div>
+          
+          <div id="div-elements-grid">
+            <!-- Rendered by JS (4 Elements status & 42 elements list) -->
+          </div>
+        </div>
+
+        <!-- SECTION 2: TTM CLINICAL PREDICTION (ระบบพยากรณ์โรคเวชกรรมไทย - The Winning Hackathon Feature!) -->
+        <div id="div-prognosis-box">
+          <!-- Rendered by JS (Prognosis, Progression Risk, Seasonal Flare) -->
+        </div>
+
+        <!-- SECTION 3: AUTOMATED ICD CROSS-MAPPING -->
+        <div class="border border-slate-200 rounded-lg p-3.5 space-y-2">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+              <span>🔄</span> 2. การเทียบเคียงรหัสโรคมาตรฐาน (ICD-10-TM ⟷ ICD-10)
+            </h3>
+            <span class="text-[10px] text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+              มาตรฐานกรมฯ 2568
+            </span>
+          </div>
+
+          <div id="div-icd-mapping">
+            <!-- Rendered by JS (Side-by-side ICD-10-TM & ICD-10) -->
+          </div>
+        </div>
+
+        <!-- SECTION 4: TREATMENT PLAN & HERB-DRUG SAFETY CHECK (Cross-checked against HIS Meds!) -->
+        <div class="border border-emerald-200 rounded-lg p-3.5 space-y-3 bg-emerald-50/30">
+          <div class="flex justify-between items-center">
+            <h3 class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+              <span>🩺</span> 3. แผนการรักษา & ตรวจความปลอดภัยกับประวัติยาใน HIS (Safety Gate)
+            </h3>
+            <span class="text-[10px] text-emerald-700 font-bold">Auto Cross-Checking</span>
+          </div>
+
+          <div id="div-treatment-plan">
+            <!-- Rendered by JS (Procedures & Herb Selection) -->
+          </div>
+
+          <!-- Active Safety Gate Results -->
+          <div class="pt-2 border-t border-emerald-200">
+            <span class="text-xs font-bold text-slate-900 block mb-2">
+              🛡️ ผลการตรวจสอบอันตรกิริยา (Herb-Drug Interaction กับยาแผนปัจจุบันของผู้ป่วย):
+            </span>
+            <div id="div-safety-gate">
+              <!-- Rendered by JS: Green/Yellow/Red alerts against HIS active meds -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Script -->
+  <script src="app.js"></script>
+</body>
+</html>
