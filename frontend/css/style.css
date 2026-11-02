@@ -1,0 +1,365 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* ======================================================== */
+  /* Atelier AI Authentic Warm Paper / Editorial Palette      */
+  /* ======================================================== */
+  --bg-page: #f5f0e9;             /* Atelier warm paper background */
+  --bg-surface: #eee5da;          /* Atelier warm oatmeal panel */
+  --bg-card: #eee5da;             /* Card surface */
+  --bg-card-hover: #f1ebe1;
+  --border-subtle: #d6c5b2;       /* Warm border */
+  --border-hover: #a67b4f;        /* Taupe accent border */
+  --border-highlight: #9a744d;
+
+  --accent-taupe: #a67b4f;
+  --accent-ochre: #9d7650;
+  --accent-sand: #caa57c;
+  --accent-amber: #b38a5f;
+
+  /* Backward compat variables */
+  --accent-sky: #a67b4f;
+  --accent-blue: #9d7650;
+  --accent-indigo: #825f3c;
+  --accent-teal: #a67b4f;
+
+  --text-main: #171411;           /* Atelier ink black */
+  --text-muted: #6e6459;          /* Atelier muted text */
+  --text-dim: #94887b;            /* Sub-caption */
+
+  --base-font-size: 16px;
+  --font-family-body: 'Plus Jakarta Sans', 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-heading: 'Prompt', 'Plus Jakarta Sans', sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-pill: 9999px;
+
+  /* Touch target standard for accessibility (min 48px) */
+  --min-touch-target: 48px;
+  --focus-ring: #a67b4f;
+}
+
+/* Accessibility: Font Size Scales */
+html.font-normal {
+  --base-font-size: 16px;
+}
+html.font-large {
+  --base-font-size: 19px;
+}
+html.font-xlarge {
+  --base-font-size: 22px;
+}
+
+/* Accessibility: High Contrast Mode */
+html.high-contrast {
+  --bg-page: #000000;
+  --bg-surface: #000000;
+  --bg-card: #000000;
+  --bg-card-hover: #111111;
+  --border-subtle: #facc15;
+  --border-hover: #ffffff;
+  --border-highlight: #facc15;
+  --text-main: #ffffff;
+  --text-muted: #fef08a;
+  --text-dim: #fef9c3;
+  --accent-sky: #facc15;
+  --focus-ring: #facc15;
+}
+
+html.high-contrast body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast .aura-card,
+html.high-contrast .canon-card,
+html.high-contrast .a11y-toolbar,
+html.high-contrast section,
+html.high-contrast header,
+html.high-contrast footer {
+  background: #000000 !important;
+  border-color: #facc15 !important;
+  color: #ffffff !important;
+}
+
+html.high-contrast input,
+html.high-contrast select,
+html.high-contrast textarea {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #facc15 !important;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family-body);
+  font-size: var(--base-font-size);
+  color: var(--text-main);
+  background-color: var(--bg-page);
+  background: radial-gradient(circle at 12% 16%, rgba(255, 255, 255, 0.85), transparent 32%),
+              radial-gradient(circle at 82% 10%, rgba(221, 211, 198, 0.4), transparent 36%),
+              var(--bg-page);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom, 24px);
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  display: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  color: var(--text-main);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+/* Safe Area Insets for Mobile/iPad */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+/* Touch Targets: minimum 48px */
+button, 
+.btn, 
+input[type="text"], 
+input[type="number"], 
+input[type="tel"], 
+input[type="email"], 
+select, 
+textarea {
+  min-height: var(--min-touch-target);
+  font-size: 1rem;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f0e9;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6c5b2;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a67b4f;
+}
+
+/* Text Selection */
+::selection {
+  background-color: rgba(166, 123, 79, 0.25);
+  color: #171411;
+}
+
+/* Accessibility Toolbar */
+.a11y-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(245, 240, 233, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 8px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Speech-to-Text active pulse animation */
+@keyframes mic-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.mic-active {
+  animation: mic-pulse 1.4s infinite;
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border-color: #dc2626 !important;
+}
+
+/* A4 Vertical Schedule Slider Container */
+.schedule-a4-viewport {
+  max-width: 650px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1.414; /* Standard A4 aspect ratio */
+  background: #f7efe6;
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 45px -10px rgba(71, 56, 42, 0.12);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Focus styles for keyboard accessibility */
+button:focus-visible, 
+input:focus-visible, 
+select:focus-visible, 
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Atelier AI Aura Card & Elevated Components */
+.aura-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 40px -10px rgba(71, 56, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+}
+
+.aura-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: 0 24px 50px -10px rgba(71, 56, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.aura-card-featured {
+  background: #fdfaf6;
+  border: 1.5px solid #a67b4f;
+  box-shadow: 0 20px 45px -10px rgba(166, 123, 79, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.aura-card-featured:hover {
+  border-color: #8c633a;
+  box-shadow: 0 26px 55px -10px rgba(166, 123, 79, 0.25);
+}
+
+/* Backward compatibility for canon-card */
+.canon-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 16px 40px -10px rgba(71, 56, 42, 0.08);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+.canon-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+}
+
+/* Atelier AI Pill Badge */
+.aura-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: #f7efe6;
+  border: 1px solid var(--border-subtle);
+  color: #9a744d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+/* Atelier AI Primary Action Button: Obsidian Black with White Text */
+.aura-btn-primary {
+  background: #171614;
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  padding: 14px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 12px 28px rgba(23, 20, 17, 0.16);
+  cursor: pointer;
+  border: none;
+}
+.aura-btn-primary:hover {
+  background: #2b2520;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(23, 20, 17, 0.22);
+}
+.aura-btn-primary:active {
+  transform: scale(0.98);
+}
+
+/* Atelier AI Outline Button: Warm Paper Border with Ink Text */
+.aura-btn-outline {
+  background: #f1ebe3;
+  color: #171411;
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+  padding: 14px 28px;
+  border: 1px solid #d1c4b7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 20px rgba(88, 72, 58, 0.05);
+  cursor: pointer;
+}
+.aura-btn-outline:hover {
+  background: #fcf8f3;
+  border-color: #a67b4f;
+  transform: translateY(-2px);
+}
+
+/* Modals */
+.modal-backdrop {
+  background-color: rgba(23, 20, 17, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.2s ease;
+}
+
+/* Metric / Stat Box */
+.aura-metric-box {
+  background: #eee5da;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: 0 10px 25px rgba(71, 56, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.aura-metric-box:hover {
+  border-color: var(--border-hover);
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .a11y-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  .hide-on-mobile {
+    display: none !important;
+  }
+}

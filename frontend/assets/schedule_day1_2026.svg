@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1131" width="800" height="1131">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .header-bg { fill: #0f294a; }
+      .header-title { font-family: 'Prompt', 'Sarabun', sans-serif; font-size: 24px; font-weight: bold; fill: #ffffff; }
+      .header-sub { font-family: 'Sarabun', sans-serif; font-size: 14px; fill: #93c5fd; }
+      .day-badge { fill: #059669; }
+      .day-text { font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: bold; fill: #ffffff; }
+      .time-box { fill: #ecfdf5; stroke: #a7f3d0; stroke-width: 1; }
+      .time-text { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: bold; fill: #059669; }
+      .event-title { font-family: 'Prompt', 'Sarabun', sans-serif; font-size: 16px; font-weight: bold; fill: #0f172a; }
+      .event-desc { font-family: 'Sarabun', sans-serif; font-size: 13px; fill: #475569; }
+      .room-pill { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
+      .room-text { font-family: 'Sarabun', sans-serif; font-size: 11px; font-weight: 600; fill: #334155; }
+      .footer-text { font-family: 'Sarabun', sans-serif; font-size: 12px; fill: #64748b; }
+    </style>
+  </defs>
+
+  <!-- A4 Page Background -->
+  <rect width="800" height="1131" class="bg" />
+  <rect width="800" height="1131" fill="none" stroke="#e2e8f0" stroke-width="2" />
+
+  <!-- Header Section -->
+  <rect x="0" y="0" width="800" height="150" class="header-bg" />
+  <circle cx="60" cy="75" r="30" fill="#059669" />
+  <text x="60" y="82" font-family="'Prompt', sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">สศ.</text>
+  <text x="110" y="60" class="header-title">มหกรรมสุขภาพผู้สูงอายุแห่งชาติ ครั้งที่ 6 (Forum 2026)</text>
+  <text x="110" y="85" class="header-sub">“การประชุมวิชาการ เวชศาสตร์และวิทยาการด้านผู้สูงอายุ”</text>
+  <text x="110" y="108" font-family="'Sarabun', sans-serif" font-size="12" fill="#cbd5e1">สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข</text>
+
+  <!-- Day Header -->
+  <rect x="40" y="170" width="140" height="34" rx="6" class="day-badge" />
+  <text x="110" y="193" class="day-text" text-anchor="middle">กำหนดการ วันที่ 2</text>
+  <text x="195" y="193" font-family="'Prompt', sans-serif" font-size="16" font-weight="bold" fill="#0f294a">นวัตกรรมเวชศาสตร์ &amp; เวิร์กช็อปสุขภาพดี</text>
+
+  <!-- Timeline Item 1 -->
+  <g transform="translate(40, 225)">
+    <rect width="110" height="40" rx="6" class="time-box" />
+    <text x="55" y="25" class="time-text" text-anchor="middle">09:00 - 10:30</text>
+    <text x="130" y="22" class="event-title">นวัตกรรมคลินิกชะลอวัยและวิทยาการด้านอายุวัฒนะ (Longevity Medicine)</text>
+    <text x="130" y="42" class="event-desc">การประยุกต์ใช้เทคโนโลยีปัญญาประดิษฐ์และเซ็นเซอร์ดูแลสุขภาพผู้สูงวัยที่บ้าน</text>
+    <rect x="620" y="12" width="100" height="24" rx="4" class="room-pill" />
+    <text x="670" y="28" class="room-text" text-anchor="middle">Room Sapphire 1</text>
+  </g>
+  <line x1="40" y1="285" x2="760" y2="285" stroke="#f1f5f9" stroke-width="1.5" />
+
+  <!-- Timeline Item 2 -->
+  <g transform="translate(40, 305)">
+    <rect width="110" height="40" rx="6" class="time-box" />
+    <text x="55" y="25" class="time-text" text-anchor="middle">10:45 - 12:00</text>
+    <text x="130" y="22" class="event-title">เวิร์กช็อปกายภาพบำบัดและโภชนาการฟื้นฟูกล้ามเนื้อผู้สูงอายุ</text>
+    <text x="130" y="42" class="event-desc">โดยทีมแพทย์เวชศาสตร์ฟื้นฟู นักกายภาพบำบัด และนักกำหนดอาหารวิชาชีพ</text>
+    <rect x="620" y="12" width="100" height="24" rx="4" class="room-pill" />
+    <text x="670" y="28" class="room-text" text-anchor="middle">Workshop Hall A</text>
+  </g>
+  <line x1="40" y1="365" x2="760" y2="365" stroke="#f1f5f9" stroke-width="1.5" />
+
+  <!-- Timeline Item 3 -->
+  <g transform="translate(40, 385)">
+    <rect width="110" height="40" rx="6" class="time-box" />
+    <text x="55" y="25" class="time-text" text-anchor="middle">13:00 - 14:30</text>
+    <text x="130" y="22" class="event-title">การนำเสนอผลงานวิจัยยอดเยี่ยมด้านเวชศาสตร์ผู้สูงอายุ</text>
+    <text x="130" y="42" class="event-desc">Oral Presentation จากบุคลากรการแพทย์ทั้ง 12 เขตสุขภาพทั่วประเทศ</text>
+    <rect x="620" y="12" width="100" height="24" rx="4" class="room-pill" />
+    <text x="670" y="28" class="room-text" text-anchor="middle">Room Sapphire 2</text>
+  </g>
+  <line x1="40" y1="445" x2="760" y2="445" stroke="#f1f5f9" stroke-width="1.5" />
+
+  <!-- Timeline Item 4 -->
+  <g transform="translate(40, 465)">
+    <rect width="110" height="40" rx="6" class="time-box" />
+    <text x="55" y="25" class="time-text" text-anchor="middle">14:45 - 16:00</text>
+    <text x="130" y="22" class="event-title">พิธีมอบรางวัลนวัตกรรมดีเด่น และพิธีปิดการประชุมวิชาการ</text>
+    <text x="130" y="42" class="event-desc">มอบโล่เกียรติคุณแก่หน่วยงานสุขภาพดีเด่น และสรุปปฏิญญาเพื่อผู้สูงอายุไทย</text>
+    <rect x="620" y="12" width="100" height="24" rx="4" class="room-pill" />
+    <text x="670" y="28" class="room-text" text-anchor="middle">Grand Ballroom</text>
+  </g>
+  <line x1="40" y1="525" x2="760" y2="525" stroke="#f1f5f9" stroke-width="1.5" />
+
+  <!-- Bottom Details Box -->
+  <g transform="translate(40, 560)">
+    <rect width="720" height="150" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+    <text x="30" y="35" font-family="'Prompt', sans-serif" font-size="16" font-weight="bold" fill="#0f294a">การรับมอบวุฒิบัตรและเกียรติบัตร</text>
+    <text x="30" y="65" font-family="'Sarabun', sans-serif" font-size="13" fill="#475569">• ผู้เข้าร่วมประชุมที่ลงทะเบียนครบตามเกณฑ์สามารถดาวน์โหลด E-Certificate ได้ผ่านระบบ</text>
+    <text x="30" y="90" font-family="'Sarabun', sans-serif" font-size="13" fill="#475569">• ข้อมูลหน่วยกิตการศึกษาต่อเนื่องของพยาบาล (CNEU) จะส่งเข้าระบบสภาการพยาบาลอัตโนมัติ</text>
+    <text x="30" y="115" font-family="'Sarabun', sans-serif" font-size="13" fill="#475569">• ติดต่อสอบถามเพิ่มเติมได้ที่ โต๊ะประชาสัมพันธ์กลาง สถาบันเวชศาสตร์ฯ กรมการแพทย์</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="1060" x2="760" y2="1060" stroke="#e2e8f0" stroke-width="1" />
+  <text x="40" y="1085" class="footer-text">สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ &bull; กรมการแพทย์ กระทรวงสาธารณสุข</text>
+  <text x="760" y="1085" class="footer-text" text-anchor="end">หน้า 2 จาก 2 &bull; เอกสารทางการ A4</text>
+</svg>
