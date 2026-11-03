@@ -2,6 +2,13 @@
 > ระบบสารสนเทศและแดชบอร์ดสุขภาพผู้สูงอายุไทย 9 ด้าน (MOPH HDC Data Surveillance & Clinical Insights)  
 > ออกแบบภายใต้แนวคิด **Sunlit Editing Desk** ตามมาตรฐาน [DESIGN.md](DESIGN.md)
 
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?style=flat&logo=vercel)](https://analyze-aging-dashboard.vercel.app)
+[![Live Demo](https://img.shields.io/badge/Live_Dashboard-analyze--aging--dashboard.vercel.app-00d0ff?style=flat)](https://analyze-aging-dashboard.vercel.app)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-ClangxCL%2Fanalyze--aging--dashboard-181717?style=flat&logo=github)](https://github.com/ClangxCL/analyze-aging-dashboard)
+
+🌐 **Live Production URL:** [https://analyze-aging-dashboard.vercel.app](https://analyze-aging-dashboard.vercel.app)  
+📦 **GitHub Repository:** [https://github.com/ClangxCL/analyze-aging-dashboard](https://github.com/ClangxCL/analyze-aging-dashboard)
+
 ---
 
 ## 🌟 จุดเด่นของระบบ (Key Features)
