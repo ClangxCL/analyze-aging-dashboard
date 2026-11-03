@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบสารสนเทศและแดชบอร์ดข้อมูลสุขภาพผู้สูงอายุไทย 5 ปี (พ.ศ. 2565 – 2569)</title>
+  
+  <!-- Google Fonts: Prompt (Headings), Sarabun (Body), Plus Jakarta Sans (Data/Nums) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#0f294a',     // Deep Medical Navy
+              'primary-hover': '#0a1c33',
+              'primary-light': '#eff6ff',
+              secondary: '#1d4ed8',   // Clinical Cobalt
+              'secondary-hover': '#1e40af',
+              accent: '#059669',      // Vitality Emerald
+              'accent-light': '#ecfdf5',
+              amber: '#d97706',       // Warm Amber
+              'amber-light': '#fffbeb',
+              surface: '#ffffff',
+              bg: '#f8fafc',
+              text: '#0f172a',
+              muted: '#475569',
+              border: '#e2e8f0',
+            }
+          },
+          fontFamily: {
+            heading: ['Prompt', 'sans-serif'],
+            body: ['Sarabun', 'sans-serif'],
+            data: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Prompt', sans-serif;
+    }
+    .font-data {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .nav-tab.active {
+      background-color: #0f294a;
+      color: #ffffff;
+      border-color: #0f294a;
+    }
+    .nav-tab:not(.active) {
+      background-color: #ffffff;
+      color: #475569;
+      border-color: #e2e8f0;
+    }
+    .nav-tab:not(.active):hover {
+      background-color: #eff6ff;
+      color: #1d4ed8;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+
+  <!-- TOP ACCESSIBILITY & INSTITUTIONAL HEADER -->
+  <header class="bg-[#0f294a] text-white border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand & Crest -->
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 p-2 shadow-inner">
+            <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs font-data uppercase tracking-wider text-slate-300">National Geriatric Health Analytics & Surveillance</div>
+            <h1 class="text-lg sm:text-xl font-bold font-heading text-white tracking-tight">ระบบสารสนเทศสุขภาพผู้สูงอายุไทย (พ.ศ. 2565 – 2569)</h1>
+          </div>
+        </div>
+
+        <!-- Controls: Font Scaler & Tools -->
+        <div class="flex items-center space-x-3">
+          <div class="bg-white/10 rounded-lg p-1 border border-white/15 flex items-center space-x-1">
+            <span class="text-xs text-slate-300 px-2 font-heading hidden sm:inline">ขนาดอักษร:</span>
+            <button onclick="setFontScale('small')" class="px-2 py-1 text-xs rounded hover:bg-white/20 font-bold transition">A-</button>
+            <button onclick="setFontScale('normal')" class="px-2 py-1 text-xs rounded bg-white/20 hover:bg-white/30 font-bold transition">A</button>
+            <button onclick="setFontScale('large')" class="px-2 py-1 text-xs rounded hover:bg-white/20 font-bold transition">A+</button>
+          </div>
+          <button onclick="window.print()" class="hidden md:flex items-center space-x-1 px-3 py-1.5 text-xs font-heading font-medium bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition border border-blue-500 shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            <span>พิมพ์รายงาน</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <div class="bg-slate-900/60 border-t border-white/10 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex space-x-2 overflow-x-auto py-2.5 custom-scrollbar" id="tabNav">
+        <button onclick="switchTab('tab-demographics')" id="btn-tab-demographics" class="nav-tab active px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <span>1. ข้อมูลประชากร 5 ปี</span>
+        </button>
+        <button onclick="switchTab('tab-9domains')" id="btn-tab-9domains" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <span>2. คัดกรองสุขภาพ 9 ด้าน</span>
+        </button>
+        <button onclick="switchTab('tab-ncd')" id="btn-tab-ncd" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+          <span>3. ความชุกโรคเรื้อรัง</span>
+        </button>
+        <button onclick="switchTab('tab-morbidity')" id="btn-tab-morbidity" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+          <span>4. อัตราป่วย Top 10 (OPD/IPD)</span>
+        </button>
+        <button onclick="switchTab('tab-mortality')" id="btn-tab-mortality" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <span>5. อัตราตาย Top 10</span>
+        </button>
+        <button onclick="switchTab('tab-bod')" id="btn-tab-bod" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+          <span>6. ภาระโรค (DALYs)</span>
+        </button>
+        <button onclick="switchTab('tab-calculator')" id="btn-tab-calculator" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+          <span>7. เครื่องคิดเลขและสูตรคำนวณ</span>
+        </button>
+        <button onclick="switchTab('tab-references')" id="btn-tab-references" class="nav-tab px-4 py-2 rounded-lg text-xs sm:text-sm font-heading font-medium border flex items-center space-x-2 whitespace-nowrap transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          <span>8. แหล่งอ้างอิงวิชาการ</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8" id="contentArea">
+
+    <!-- 8 MODULAR CSV DATASETS DOWNLOAD SHELF -->
+    <div class="bg-gradient-to-r from-blue-900 via-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-lg border border-slate-700">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
+        <div>
+          <div class="flex items-center space-x-2 text-xs font-bold text-sky-400 uppercase tracking-wider mb-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span>Raw Data Export • ข้อมูลดิบพร้อมใช้ (.csv เข้ารหัส UTF-8 BOM สำหรับ Excel ภาษาไทย)</span>
+          </div>
+          <h2 class="text-lg font-bold font-heading text-white">ดาวน์โหลดไฟล์ชุดข้อมูลดิบ 8 ชุด (ระยะ 5 ปี พ.ศ. 2565 – 2569)</h2>
+          <p class="text-xs text-slate-300">คลิกที่แต่ละปุ่มเพื่อดาวน์โหลดไฟล์ .csv ไปเปิดในโปรแกรม Microsoft Excel หรือเครื่องมือวิเคราะห์ได้ทันที</p>
+        </div>
+        <a href="elderly_health_5year_comprehensive_dataset_2565_2569.csv" download class="inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold font-heading shadow-md transition shrink-0 border border-blue-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>ดาวน์โหลดชุดรวม Master (209 รายการ)</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <a href="1_demographics_population_meter_2565_2569.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">1. ประชากร (มิเตอร์ประเทศไทย)</div>
+            <div class="text-[10px] text-slate-400">5 แถว • ม.มหิดล IPSR</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="2_health_screening_9domains_hdc_dms_2565_2569.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">2. คัดกรอง 9 ด้าน (HDC vs DMS)</div>
+            <div class="text-[10px] text-slate-400">12 แถว • สธ. & กรมการแพทย์</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="2_1_functional_ability_adl_and_screening.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">3. กิจวัตร ADL & Syndromes</div>
+            <div class="text-[10px] text-slate-400">8 แถว • Barthel ADL</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="3_chronic_diseases_ncd_prevalence.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">4. โรคเรื้อรัง NCDs 10 อันดับ</div>
+            <div class="text-[10px] text-slate-400">11 แถว • NHES & HDC</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="4_top10_morbidity_opd_ipd_2565_2569.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">5. อัตราป่วย OPD & IPD Top 10</div>
+            <div class="text-[10px] text-slate-400">20 แถว • 68-69 เว้นว่าง</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="5_top10_mortality_causes_2565_2569.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">6. อัตราตาย Top 10 สาเหตุ</div>
+            <div class="text-[10px] text-slate-400">12 แถว • 68-69 เว้นว่าง</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="6_burden_of_disease_dalys_bod.csv" download class="flex items-center justify-between p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-white group-hover:text-sky-300 truncate">7. ภาระโรค DALYs (YLL/YLD)</div>
+            <div class="text-[10px] text-slate-400">10 แถว • BOD Thailand</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-sky-500/20 text-sky-300">↓</span>
+        </a>
+        <a href="Elderly_Thailand_Health_Report_2565_2569.docx" download class="flex items-center justify-between p-3 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/30 transition group">
+          <div class="min-w-0 pr-2">
+            <div class="text-xs font-bold text-emerald-300 truncate">8. รายงานฉบับสมบูรณ์ .docx</div>
+            <div class="text-[10px] text-emerald-400/80">61.8 KB • พร้อมพิมพ์</div>
+          </div>
+          <span class="p-1.5 rounded-lg bg-emerald-500/30 text-emerald-300">↓</span>
+        </a>
+      </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- TAB 1: DEMOGRAPHICS 5 YEARS               -->
+    <!-- ========================================== -->
+    <div id="tab-demographics" class="tab-content active space-y-8">
+      
+      <!-- KPI CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-heading font-medium text-slate-500 uppercase">ประชากรสูงอายุปี 2569</span>
+            <span class="p-2 bg-blue-50 text-blue-700 rounded-xl">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            </span>
+          </div>
+          <div class="mt-4">
+            <div class="text-3xl font-extrabold font-data text-[#0f294a]">14,964,000</div>
+            <div class="text-xs text-emerald-600 font-medium mt-1">คิดเป็น 22.87% ของประชากรรวม</div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-3 border-t border-slate-100">แหล่งข้อมูล: มิเตอร์ประเทศไทย (IPSR ม.มหิดล)</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-heading font-medium text-slate-500 uppercase">ดัชนีการสูงวัย (Aging Index)</span>
+            <span class="p-2 bg-emerald-50 text-emerald-700 rounded-xl">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            </span>
+          </div>
+          <div class="mt-4">
+            <div class="text-3xl font-extrabold font-data text-[#0f294a]">162.48</div>
+            <div class="text-xs text-amber-600 font-medium mt-1">ผู้สูงอายุ 162 คน ต่อเด็ก 100 คน</div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-3 border-t border-slate-100">เพิ่มขึ้นจาก 118.58 ในปี 2565</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-heading font-medium text-slate-500 uppercase">อัตราส่วนพึ่งพิงสูงอายุ (OADR)</span>
+            <span class="p-2 bg-amber-50 text-amber-700 rounded-xl">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </span>
+          </div>
+          <div class="mt-4">
+            <div class="text-3xl font-extrabold font-data text-[#0f294a]">36.28</div>
+            <div class="text-xs text-slate-600 font-medium mt-1">แรงงาน 100 คน ดูแลผู้สูงอายุ 36 คน</div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-3 border-t border-slate-100">แรงงานไม่ถึง 3 คนต่อผู้สูงอายุ 1 คน</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-heading font-medium text-slate-500 uppercase">สัดส่วนเพศ (หญิง : ชาย)</span>
+            <span class="p-2 bg-rose-50 text-rose-700 rounded-xl">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            </span>
+          </div>
+          <div class="mt-4">
+            <div class="text-3xl font-extrabold font-data text-[#0f294a]">1.39 : 1</div>
+            <div class="text-xs text-rose-600 font-medium mt-1">หญิง 8.70M (58.2%) : ชาย 6.26M (41.8%)</div>
+          </div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-3 border-t border-slate-100">หญิงไทยอายุขัยเฉลี่ย 80.4 ปี (ชาย 73.5 ปี)</div>
+        </div>
+      </div>
+
+      <!-- CHARTS SECTION -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Trend Chart -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h2 class="text-base font-bold font-heading text-slate-800 mb-1">แนวโน้มประชากรสูงอายุ 5 ปี (พ.ศ. 2565 – 2569)</h2>
+          <p class="text-xs text-slate-500 mb-4">แสดงจำนวนประชากร 60 ปีขึ้นไป และสัดส่วนต่อประชากรทั้งประเทศ</p>
+          <div class="h-72">
+            <canvas id="chartPopulationTrend"></canvas>
+          </div>
+        </div>
+
+        <!-- Age Tiers Chart -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h2 class="text-base font-bold font-heading text-slate-800 mb-1">โครงสร้างประชากรสูงอายุตามช่วงวัย 3 กลุ่ม</h2>
+          <p class="text-xs text-slate-500 mb-4">วัยต้น (60–69 ปี), วัยกลาง (70–79 ปี), และวัยปลาย (80 ปีขึ้นไป)</p>
+          <div class="h-72">
+            <canvas id="chartAgeTiers"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA TABLE: POPULATION MATRIX -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+          <div>
+            <h2 class="text-base font-bold font-heading text-slate-800">ตารางสถิติประชากรและดัชนีภาระพึ่งพิง 5 ปี (พ.ศ. 2565 – 2569)</h2>
+            <p class="text-xs text-slate-500">ข้อมูลจากฐานข้อมูลมิเตอร์ประเทศไทยและสารประชากรมหิดล (IPSR)</p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[#0f294a] text-white font-heading text-xs uppercase">
+              <tr>
+                <th class="py-3 px-4">ปี พ.ศ.</th>
+                <th class="py-3 px-4 text-right">ประชากรรวม (คน)</th>
+                <th class="py-3 px-4 text-right">ผู้สูงอายุ 60+ (คน)</th>
+                <th class="py-3 px-4 text-right">สัดส่วน 60+ (%)</th>
+                <th class="py-3 px-4 text-right">ผู้สูงอายุ 65+ (คน)</th>
+                <th class="py-3 px-4 text-right">วัยเด็ก 0–14 (คน)</th>
+                <th class="py-3 px-4 text-right">วัยแรงงาน 15–59 (คน)</th>
+                <th class="py-3 px-4 text-right">Aging Index</th>
+                <th class="py-3 px-4 text-right">OADR</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 font-data text-xs sm:text-sm">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-bold font-heading text-slate-800">2565</td>
+                <td class="py-3 px-4 text-right">66,090,000</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">12,700,000</td>
+                <td class="py-3 px-4 text-right">19.22%</td>
+                <td class="py-3 px-4 text-right">8,420,000</td>
+                <td class="py-3 px-4 text-right">10,710,000</td>
+                <td class="py-3 px-4 text-right">42,680,000</td>
+                <td class="py-3 px-4 text-right font-bold">118.58</td>
+                <td class="py-3 px-4 text-right">29.76</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-bold font-heading text-slate-800">2566</td>
+                <td class="py-3 px-4 text-right">66,050,000</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">13,210,000</td>
+                <td class="py-3 px-4 text-right">20.00%</td>
+                <td class="py-3 px-4 text-right">8,810,000</td>
+                <td class="py-3 px-4 text-right">10,380,000</td>
+                <td class="py-3 px-4 text-right">42,460,000</td>
+                <td class="py-3 px-4 text-right font-bold">127.26</td>
+                <td class="py-3 px-4 text-right">31.11</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-bold font-heading text-slate-800">2567</td>
+                <td class="py-3 px-4 text-right">65,920,000</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">13,720,000</td>
+                <td class="py-3 px-4 text-right">20.81%</td>
+                <td class="py-3 px-4 text-right">9,250,000</td>
+                <td class="py-3 px-4 text-right">9,990,000</td>
+                <td class="py-3 px-4 text-right">42,210,000</td>
+                <td class="py-3 px-4 text-right font-bold">137.34</td>
+                <td class="py-3 px-4 text-right">32.50</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-bold font-heading text-slate-800">2568</td>
+                <td class="py-3 px-4 text-right">65,690,000</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">14,400,000</td>
+                <td class="py-3 px-4 text-right">21.92%</td>
+                <td class="py-3 px-4 text-right">9,720,000</td>
+                <td class="py-3 px-4 text-right">9,580,000</td>
+                <td class="py-3 px-4 text-right">41,710,000</td>
+                <td class="py-3 px-4 text-right font-bold">150.31</td>
+                <td class="py-3 px-4 text-right">34.52</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-blue-50/30">
+                <td class="py-3 px-4 font-bold font-heading text-blue-900">2569</td>
+                <td class="py-3 px-4 text-right font-bold">65,420,000</td>
+                <td class="py-3 px-4 text-right font-extrabold text-blue-800">14,964,000</td>
+                <td class="py-3 px-4 text-right font-bold text-emerald-700">22.87%</td>
+                <td class="py-3 px-4 text-right">10,168,000</td>
+                <td class="py-3 px-4 text-right">9,210,000</td>
+                <td class="py-3 px-4 text-right">41,246,000</td>
+                <td class="py-3 px-4 text-right font-extrabold text-amber-700">162.48</td>
+                <td class="py-3 px-4 text-right font-bold">36.28</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
+          <span>แหล่งอ้างอิง: สถาบันวิจัยประชากรและสังคม มหาวิทยาลัยมหิดล (IPSR). มิเตอร์ประเทศไทย พ.ศ. 2565–2569.</span>
+          <a href="https://www.thailandometers.mahidol.ac.th" target="_blank" class="text-blue-600 hover:underline font-medium">www.thailandometers.mahidol.ac.th &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: BLUE BOOK 9 HEALTH DOMAINS         -->
+    <!-- ========================================== -->
+    <div id="tab-9domains" class="tab-content space-y-8">
+      
+      <!-- Summary Bar -->
+      <div class="bg-gradient-to-r from-[#0f294a] to-blue-900 text-white rounded-2xl p-6 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <div class="text-xs uppercase tracking-wider text-blue-200 font-data">Community-Based Geriatric Screening</div>
+          <h2 class="text-xl font-bold font-heading">ผลการคัดกรองสุขภาพผู้สูงอายุ 9 ด้าน (Blue Book Application)</h2>
+          <p class="text-xs text-slate-300 mt-1">ประเมินโดยอาสาสมัครสาธารณสุขประจำหมู่บ้าน (อสม.) และเจ้าหน้าที่สาธารณสุข ภายใต้นโยบาย 3 หมอ</p>
+        </div>
+        <div class="flex space-x-6 text-center">
+          <div class="bg-white/10 rounded-xl px-4 py-2 border border-white/20">
+            <div class="text-2xl font-bold font-data">10,245,618</div>
+            <div class="text-[11px] text-slate-300">กลุ่มเป้าหมาย (คน)</div>
+          </div>
+          <div class="bg-white/10 rounded-xl px-4 py-2 border border-white/20">
+            <div class="text-2xl font-bold font-data text-emerald-400">9,418,250</div>
+            <div class="text-[11px] text-slate-300">คัดกรองแล้ว (91.92%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts & Visuals -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 9 Domains Bar Chart -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h3 class="text-base font-bold font-heading text-slate-800 mb-1">ร้อยละความผิดปกติ/ความเสี่ยงจำแนกรายด้าน (9 ด้าน)</h3>
+          <p class="text-xs text-slate-500 mb-4">ตรวจพบปัญหาช่องปากสูงที่สุด (51.20%) รองลงมาคือการมองเห็น (23.20%) และการทรงตัว/หกล้ม (17.90%)</p>
+          <div class="h-80">
+            <canvas id="chart9Domains"></canvas>
+          </div>
+        </div>
+
+        <!-- ADL Donut Chart -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold font-heading text-slate-800 mb-1">การประเมินกิจวัตรประจำวัน (ADL)</h3>
+            <p class="text-xs text-slate-500 mb-3">จำแนกผู้สูงอายุตาม Barthel ADL Index (20 คะแนน)</p>
+            <div class="h-52 relative flex items-center justify-center">
+              <canvas id="chartADL"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 space-y-2 text-xs font-heading">
+            <div class="flex justify-between items-center p-2 rounded-lg bg-emerald-50 text-emerald-900">
+              <span class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full bg-emerald-500"></span><span>ติดสังคม (12–20 คะแนน)</span></span>
+              <span class="font-bold font-data">95.80% (9.02M)</span>
+            </div>
+            <div class="flex justify-between items-center p-2 rounded-lg bg-amber-50 text-amber-900">
+              <span class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span>ติดบ้าน (5–11 คะแนน)</span></span>
+              <span class="font-bold font-data">3.30% (310K)</span>
+            </div>
+            <div class="flex justify-between items-center p-2 rounded-lg bg-rose-50 text-rose-900">
+              <span class="flex items-center space-x-2"><span class="w-3 h-3 rounded-full bg-rose-500"></span><span>ติดเตียง (0–4 คะแนน)</span></span>
+              <span class="font-bold font-data">0.90% (84.7K)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- 1 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">1. ด้านสุขภาพช่องปาก</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-rose-100 text-rose-800">51.20%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">4,787,258 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: ฟันแท้ใช้งาน &lt; 20 ซี่ หรือไม่มีคู่สบฟัน 4 คู่</div>
+        </div>
+        <!-- 2 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">2. ด้านการมองเห็น</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-amber-100 text-amber-800">23.20%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">2,184,974 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: Snellen chart ผิดปกติ / สงสัยต้อกระจกตา</div>
+        </div>
+        <!-- 3 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">3. ด้านการเคลื่อนไหว/การทรงตัว</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-amber-100 text-amber-800">17.90%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">1,679,990 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: Timed Up & Go (TUG) &ge; 12 วิ / ประวัติล้ม</div>
+        </div>
+        <!-- 4 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">4. ด้านการกลั้นปัสสาวะ</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-blue-100 text-blue-800">16.50%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">1,551,203 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: ปัสสาวะเล็ด ราด หรือกลั้นไม่อยู่</div>
+        </div>
+        <!-- 5 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">5. ด้านภาวะโภชนาการ</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-blue-100 text-blue-800">14.20%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">เสี่ยงขาดอาหาร: <strong class="font-data text-slate-800">1,333,680 คน</strong> (อ้วน 43.8%)</div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: MNA-SF &le; 11 คะแนน / BMI &ge; 25</div>
+        </div>
+        <!-- 6 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">6. ด้านการได้ยิน</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-blue-100 text-blue-800">14.80%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">1,388,024 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: Whisper Test หรือ Finger Rub Test ผิดปกติ</div>
+        </div>
+        <!-- 7 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">7. สุขภาพจิตและภาวะซึมเศร้า</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-emerald-100 text-emerald-800">9.50%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">893,980 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: คัดกรอง 2Q มีความเสี่ยง และ 9Q &ge; 7 คะแนน</div>
+        </div>
+        <!-- 8 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">8. ความคิดความจำ (สมองเสื่อม)</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-emerald-100 text-emerald-800">7.70%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้พบความเสี่ยง: <strong class="font-data text-slate-800">720,755 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">เกณฑ์: Mini-Cog หรือ AMT ต่ำกว่าเกณฑ์มาตรฐาน</div>
+        </div>
+        <!-- 9 -->
+        <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-start">
+            <h4 class="font-bold font-heading text-sm text-[#0f294a]">9. กิจวัตรประจำวัน (พึ่งพิง)</h4>
+            <span class="px-2 py-0.5 rounded text-xs font-bold font-data bg-purple-100 text-purple-800">4.20%</span>
+          </div>
+          <div class="text-xs text-slate-500 mt-2">ผู้มีภาวะพึ่งพิง: <strong class="font-data text-slate-800">395,566 คน</strong></div>
+          <div class="text-[11px] text-slate-400 mt-1">กลุ่มติดบ้าน 310,802 คน และติดเตียง 84,764 คน</div>
+        </div>
+      </div>
+
+      <!-- Citation -->
+      <div class="p-4 bg-slate-100 rounded-xl border border-slate-200 text-xs text-slate-600 flex justify-between items-center">
+        <span>แหล่งอ้างอิง: กรมอนามัย กระทรวงสาธารณสุข. รายงานสรุปผลการคัดกรองสุขภาพผู้สูงอายุ 9 ด้าน ผ่านระบบ Blue Book Application ประจำปีงบประมาณ 2566–2567.</span>
+        <a href="https://bluebook.anamai.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-medium">bluebook.anamai.moph.go.th &rarr;</a>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: CHRONIC DISEASES PREVALENCE        -->
+    <!-- ========================================== -->
+    <div id="tab-ncd" class="tab-content space-y-8">
+      
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold font-heading text-slate-800">อัตราความชุกของโรคเรื้อรัง (NCDs) จำแนกตามเพศ</h2>
+            <p class="text-xs text-slate-500">ข้อมูลการสำรวจสุขภาพประชาชนไทยโดยการตรวจร่างกาย ครั้งที่ 6 (NHES VI) และคลังข้อมูล HDC</p>
+          </div>
+          <div class="flex items-center space-x-2 text-xs font-heading">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 font-medium">เพศชาย</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-medium">เพศหญิง</span>
+          </div>
+        </div>
+        <div class="h-96">
+          <canvas id="chartNCDPrevalence"></canvas>
+        </div>
+      </div>
+
+      <!-- Detail Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200">
+          <h3 class="text-base font-bold font-heading text-slate-800">ตารางความชุกและประมาณการจำนวนผู้สูงอายุที่ป่วยจริง (ฐานประชากร 13.67 ล้านคน)</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[#0f294a] text-white font-heading text-xs uppercase">
+              <tr>
+                <th class="py-3 px-4">กลุ่มโรคเรื้อรังและปัจจัยเสี่ยง</th>
+                <th class="py-3 px-4 text-center">รหัส ICD-10</th>
+                <th class="py-3 px-4 text-right">ความชุกรวม (%)</th>
+                <th class="py-3 px-4 text-right">ชาย (%)</th>
+                <th class="py-3 px-4 text-right">หญิง (%)</th>
+                <th class="py-3 px-4 text-right">จำนวนผู้ป่วยโดยประมาณ (คน)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 font-data text-xs sm:text-sm">
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">1. ความดันโลหิตสูง (Hypertension)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">I10</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">60.70%</td>
+                <td class="py-3 px-4 text-right">56.40%</td>
+                <td class="py-3 px-4 text-right">64.20%</td>
+                <td class="py-3 px-4 text-right font-bold">8,300,605</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading text-slate-800">2. ภาวะอ้วนลงพุง (Abdominal Obesity)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">E66</td>
+                <td class="py-3 px-4 text-right font-bold text-amber-700">46.50%</td>
+                <td class="py-3 px-4 text-right">29.80%</td>
+                <td class="py-3 px-4 text-right text-rose-700 font-bold">60.10%</td>
+                <td class="py-3 px-4 text-right">6,358,783</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">3. กลุ่มอาการเมตาบอลิก (Metabolic Syndrome)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">E88.8</td>
+                <td class="py-3 px-4 text-right font-bold">39.80%</td>
+                <td class="py-3 px-4 text-right">28.50%</td>
+                <td class="py-3 px-4 text-right">49.10%</td>
+                <td class="py-3 px-4 text-right">5,442,571</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading text-slate-800">4. ไขมันในเลือดสูง (Dyslipidemia)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">E78</td>
+                <td class="py-3 px-4 text-right font-bold">38.40%</td>
+                <td class="py-3 px-4 text-right">33.10%</td>
+                <td class="py-3 px-4 text-right">42.70%</td>
+                <td class="py-3 px-4 text-right">5,251,124</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">5. ข้อเสื่อม / ข้อเข่าเสื่อม (Osteoarthritis)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">M15–M19</td>
+                <td class="py-3 px-4 text-right font-bold text-emerald-700">24.50%</td>
+                <td class="py-3 px-4 text-right">17.20%</td>
+                <td class="py-3 px-4 text-right text-rose-700 font-bold">30.60%</td>
+                <td class="py-3 px-4 text-right">3,350,326</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">6. โรคเบาหวาน (Diabetes Mellitus)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">E10–E14</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">20.40%</td>
+                <td class="py-3 px-4 text-right">18.20%</td>
+                <td class="py-3 px-4 text-right">22.30%</td>
+                <td class="py-3 px-4 text-right font-bold">2,789,660</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">7. โรคไตเรื้อรังระยะ 1–5 (CKD)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">N18</td>
+                <td class="py-3 px-4 text-right font-bold">18.60%</td>
+                <td class="py-3 px-4 text-right">19.10%</td>
+                <td class="py-3 px-4 text-right">18.20%</td>
+                <td class="py-3 px-4 text-right">2,543,513</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading text-slate-800">8. ต้อกระจกตามวัย (Senile Cataract)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">H25–H26</td>
+                <td class="py-3 px-4 text-right font-bold">15.80%</td>
+                <td class="py-3 px-4 text-right">14.20%</td>
+                <td class="py-3 px-4 text-right">17.10%</td>
+                <td class="py-3 px-4 text-right">2,160,619</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">9. โรคหัวใจขาดเลือด (Ischemic Heart Disease)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">I20–I25</td>
+                <td class="py-3 px-4 text-right font-bold">8.20%</td>
+                <td class="py-3 px-4 text-right">8.90%</td>
+                <td class="py-3 px-4 text-right">7.60%</td>
+                <td class="py-3 px-4 text-right">1,121,334</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading text-slate-800">10. โรคหลอดเลือดสมอง (Stroke)</td>
+                <td class="py-3 px-4 text-center text-slate-500 font-mono">I60–I69</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">4.10%</td>
+                <td class="py-3 px-4 text-right">4.80%</td>
+                <td class="py-3 px-4 text-right">3.50%</td>
+                <td class="py-3 px-4 text-right">560,667</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
+          <span>แหล่งอ้างอิง: วิชัย เอกพลากร และคณะ. (2564). NHES VI สถาบันวิจัยระบบสาธารณสุข (สวรส.) และ HDC กระทรวงสาธารณสุข.</span>
+          <a href="https://www.hiso.or.th" target="_blank" class="text-blue-600 hover:underline font-medium">www.hiso.or.th &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: MORBIDITY TOP 10 (OPD / IPD)       -->
+    <!-- ========================================== -->
+    <div id="tab-morbidity" class="tab-content space-y-8">
+      
+      <!-- Sub-Toggle for OPD vs IPD -->
+      <div class="flex items-center justify-between bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+        <div>
+          <h2 class="text-base font-bold font-heading text-slate-800">สถิติอัตราป่วยผู้สูงอายุไทย (Morbidity Top 10)</h2>
+          <p class="text-xs text-slate-500">เปรียบเทียบสถิติผู้ป่วยนอก (OPD) และผู้ป่วยใน (IPD) ในสถานพยาบาลสังกัดกระทรวงสาธารณสุข</p>
+        </div>
+        <div class="bg-slate-100 p-1 rounded-xl flex space-x-1 border border-slate-200 text-xs font-heading font-medium">
+          <button onclick="toggleMorbidityView('opd')" id="btn-morb-opd" class="px-4 py-2 rounded-lg bg-[#0f294a] text-white shadow-sm transition">ผู้ป่วยนอก (OPD)</button>
+          <button onclick="toggleMorbidityView('ipd')" id="btn-morb-ipd" class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200 transition">ผู้ป่วยใน (IPD)</button>
+        </div>
+      </div>
+
+      <!-- OPD VIEW -->
+      <div id="view-opd" class="space-y-6">
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h3 class="text-base font-bold font-heading text-slate-800 mb-1">10 อันดับโรคที่มารับบริการแผนกผู้ป่วยนอกสูงสุด (OPD Rate per 100k)</h3>
+          <p class="text-xs text-slate-500 mb-4">อัตราต่อแสนประชากรสูงอายุและจำนวนครั้งที่รับบริการในรอบปี</p>
+          <div class="h-80">
+            <canvas id="chartMorbidityOPD"></canvas>
+          </div>
+        </div>
+
+        <!-- OPD 5-Year Trend Table -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200">
+            <h3 class="text-base font-bold font-heading text-slate-800">แนวโน้มจำนวนผู้ป่วยนอกจริง (OPD Unique Patients) พ.ศ. 2565 – 2569</h3>
+            <p class="text-xs text-slate-500">*แสดงตัวเลขจริงตามรายงานสถิติสาธารณสุข (ปี 2568 และ 2569 ที่ยังไม่มีรายงานสรุป ให้เว้นว่างตามเกณฑ์ข้อมูลจริง)</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#0f294a] text-white font-heading text-xs uppercase">
+                <tr>
+                  <th class="py-3 px-4">กลุ่มโรคเรื้อรังหลัก (ICD-10)</th>
+                  <th class="py-3 px-4 text-right">2565 (คน)</th>
+                  <th class="py-3 px-4 text-right">2566 (คน)</th>
+                  <th class="py-3 px-4 text-right">2567 (คน)</th>
+                  <th class="py-3 px-4 text-center">2568</th>
+                  <th class="py-3 px-4 text-center">2569</th>
+                  <th class="py-3 px-4 text-right">การเปลี่ยนแปลง (2565–2567)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 font-data text-xs sm:text-sm">
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4 font-heading font-bold text-slate-800">1. ความดันโลหิตสูง (I10)</td>
+                  <td class="py-3 px-4 text-right">4,280,100</td>
+                  <td class="py-3 px-4 text-right">4,520,300</td>
+                  <td class="py-3 px-4 text-right font-bold text-blue-700">4,821,504</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-emerald-600">+12.65%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                  <td class="py-3 px-4 font-heading font-bold text-slate-800">2. โรคเบาหวาน (E11)</td>
+                  <td class="py-3 px-4 text-right">2,150,200</td>
+                  <td class="py-3 px-4 text-right">2,270,150</td>
+                  <td class="py-3 px-4 text-right font-bold text-blue-700">2,410,812</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-emerald-600">+12.12%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4 font-heading text-slate-800">3. ไขมันในเลือดสูง (E78)</td>
+                  <td class="py-3 px-4 text-right">1,980,400</td>
+                  <td class="py-3 px-4 text-right">2,110,500</td>
+                  <td class="py-3 px-4 text-right font-bold">2,245,618</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-emerald-600">+13.39%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                  <td class="py-3 px-4 font-heading text-slate-800">4. ข้อเข่าเสื่อม (M17)</td>
+                  <td class="py-3 px-4 text-right">1,050,300</td>
+                  <td class="py-3 px-4 text-right">1,125,400</td>
+                  <td class="py-3 px-4 text-right font-bold">1,210,450</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-amber-600">+15.25%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4 font-heading text-slate-800">5. โรคไตเรื้อรัง (N18)</td>
+                  <td class="py-3 px-4 text-right">710,500</td>
+                  <td class="py-3 px-4 text-right">758,200</td>
+                  <td class="py-3 px-4 text-right font-bold">815,402</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-amber-600">+14.76%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- IPD VIEW (Hidden by default) -->
+      <div id="view-ipd" class="space-y-6 hidden">
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h3 class="text-base font-bold font-heading text-slate-800 mb-1">10 อันดับสาเหตุการนอนรักษาในโรงพยาบาล (IPD Admission Rate per 100k)</h3>
+          <p class="text-xs text-slate-500 mb-4">โรคหลอดเลือดสมองและปอดอักเสบครองอันดับ 1 และ 2 ของการครองเตียงผู้สูงอายุ</p>
+          <div class="h-80">
+            <canvas id="chartMorbidityIPD"></canvas>
+          </div>
+        </div>
+
+        <!-- IPD 5-Year Trend Table -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-slate-200">
+            <h3 class="text-base font-bold font-heading text-slate-800">แนวโน้มผู้ป่วยใน (IPD Inpatients) พ.ศ. 2565 – 2569</h3>
+            <p class="text-xs text-slate-500">*แสดงเฉพาะตัวเลขจริงที่มีการบันทึกรายงาน ปี 2568 และ 2569 เว้นว่างตามเกณฑ์ข้อมูลจริง</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#0f294a] text-white font-heading text-xs uppercase">
+                <tr>
+                  <th class="py-3 px-4">กลุ่มโรคผู้ป่วยใน (ICD-10)</th>
+                  <th class="py-3 px-4 text-right">2565 (คน)</th>
+                  <th class="py-3 px-4 text-right">2566 (คน)</th>
+                  <th class="py-3 px-4 text-right">2567 (คน)</th>
+                  <th class="py-3 px-4 text-center">2568</th>
+                  <th class="py-3 px-4 text-center">2569</th>
+                  <th class="py-3 px-4 text-right">การเปลี่ยนแปลง (2565–2567)</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 font-data text-xs sm:text-sm">
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4 font-heading font-bold text-slate-800">1. โรคหลอดเลือดสมอง (Stroke)</td>
+                  <td class="py-3 px-4 text-right">215,400</td>
+                  <td class="py-3 px-4 text-right">226,110</td>
+                  <td class="py-3 px-4 text-right font-bold text-rose-700">238,510</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-rose-600">+10.73%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                  <td class="py-3 px-4 font-heading font-bold text-slate-800">2. โรคปอดอักเสบ (Pneumonia)</td>
+                  <td class="py-3 px-4 text-right">198,200</td>
+                  <td class="py-3 px-4 text-right">195,450</td>
+                  <td class="py-3 px-4 text-right font-bold text-blue-700">204,115</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-emerald-600">+2.98%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4 font-heading text-slate-800">3. ติดเชื้อในกระแสเลือด (Sepsis)</td>
+                  <td class="py-3 px-4 text-right">131,400</td>
+                  <td class="py-3 px-4 text-right">139,800</td>
+                  <td class="py-3 px-4 text-right font-bold">148,920</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-amber-600">+13.33%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                  <td class="py-3 px-4 font-heading text-slate-800">4. ภาวะหัวใจล้มเหลว (Heart Failure)</td>
+                  <td class="py-3 px-4 text-right">126,800</td>
+                  <td class="py-3 px-4 text-right">134,250</td>
+                  <td class="py-3 px-4 text-right font-bold">142,308</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-amber-600">+12.23%</td>
+                </tr>
+                <tr class="hover:bg-slate-50 transition">
+                  <td class="py-3 px-4 font-heading text-slate-800">5. กระดูกสะโพกหักจากหกล้ม (Hip Fracture)</td>
+                  <td class="py-3 px-4 text-right">111,200</td>
+                  <td class="py-3 px-4 text-right">118,500</td>
+                  <td class="py-3 px-4 text-right font-bold text-rose-700">126,840</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                  <td class="py-3 px-4 text-right font-bold text-rose-600">+14.06%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citation -->
+      <div class="p-4 bg-slate-100 rounded-xl border border-slate-200 text-xs text-slate-600 flex justify-between items-center">
+        <span>แหล่งอ้างอิง: กองยุทธศาสตร์และแผนงาน สถิติสาธารณสุข และ HDC กระทรวงสาธารณสุข.</span>
+        <a href="https://bps.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-medium">bps.moph.go.th &rarr;</a>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: MORTALITY TOP 10                    -->
+    <!-- ========================================== -->
+    <div id="tab-mortality" class="tab-content space-y-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Mortality Rates Bar Chart -->
+        <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+          <h2 class="text-base font-bold font-heading text-slate-800 mb-1">10 อันดับสาเหตุการเสียชีวิตของผู้สูงอายุไทย (ต่อแสนประชากรสูงอายุ)</h2>
+          <p class="text-xs text-slate-500 mb-4">โรคมะเร็งทุกชนิดครองอันดับ 1 ตามด้วยโรคหลอดเลือดสมอง และโรคปอดอักเสบ</p>
+          <div class="h-80">
+            <canvas id="chartMortalityRate"></canvas>
+          </div>
+        </div>
+
+        <!-- Mortality Share Donut -->
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="text-base font-bold font-heading text-slate-800 mb-1">สัดส่วนสาเหตุการเสียชีวิต</h3>
+            <p class="text-xs text-slate-500 mb-3">ร้อยละของผู้เสียชีวิตจำแนกตามกลุ่มโรคหลัก</p>
+            <div class="h-56 relative flex items-center justify-center">
+              <canvas id="chartMortalityShare"></canvas>
+            </div>
+          </div>
+          <div class="text-xs text-center text-slate-500 mt-2">
+            จำนวนผู้สูงอายุเสียชีวิตรวมปี 2567: <strong class="font-data text-slate-800">405,124 คน</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5-Year Mortality Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200">
+          <h3 class="text-base font-bold font-heading text-slate-800">แนวโน้มจำนวนผู้เสียชีวิตจริงรายสาเหตุ 5 ปี (พ.ศ. 2565 – 2569)</h3>
+          <p class="text-xs text-slate-500">*แสดงเฉพาะตัวเลขจริงตามสถิติมรณกรรมทางการ (ปี 2568 และ 2569 เว้นว่างตามเกณฑ์ข้อมูลจริง)</p>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[#0f294a] text-white font-heading text-xs uppercase">
+              <tr>
+                <th class="py-3 px-4">สาเหตุการเสียชีวิต (ICD-10)</th>
+                <th class="py-3 px-4 text-right">2565 (คน)</th>
+                <th class="py-3 px-4 text-right">2566 (คน)</th>
+                <th class="py-3 px-4 text-right">2567 (คน)</th>
+                <th class="py-3 px-4 text-center">2568</th>
+                <th class="py-3 px-4 text-center">2569</th>
+                <th class="py-3 px-4 text-right">อัตราตายปี 67 (ต่อแสน)</th>
+                <th class="py-3 px-4 text-right">การเปลี่ยนแปลง (2565–2567)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 font-data text-xs sm:text-sm">
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50 font-bold">
+                <td class="py-3 px-4 font-heading text-slate-900">รวมผู้สูงอายุเสียชีวิตทุกสาเหตุ</td>
+                <td class="py-3 px-4 text-right">395,410</td>
+                <td class="py-3 px-4 text-right">388,520</td>
+                <td class="py-3 px-4 text-right text-blue-900">405,124</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right">2,962.56</td>
+                <td class="py-3 px-4 text-right text-slate-700">+2.46%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">1. โรคมะเร็งทุกชนิด (C00–C97)</td>
+                <td class="py-3 px-4 text-right">75,820</td>
+                <td class="py-3 px-4 text-right">77,415</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">80,418</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right font-bold">588.07</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-600">+6.06%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">2. โรคหลอดเลือดสมอง (I60–I69)</td>
+                <td class="py-3 px-4 text-right">49,120</td>
+                <td class="py-3 px-4 text-right">50,210</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">51,855</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right font-bold">379.20</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-600">+5.57%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">3. โรคปอดอักเสบ (J12–J18)</td>
+                <td class="py-3 px-4 text-right">45,210</td>
+                <td class="py-3 px-4 text-right">41,890</td>
+                <td class="py-3 px-4 text-right font-bold">44,158</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right">322.92</td>
+                <td class="py-3 px-4 text-right text-emerald-600">-2.33%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading text-slate-800">4. โรคหัวใจขาดเลือด (I20–I25)</td>
+                <td class="py-3 px-4 text-right">34,510</td>
+                <td class="py-3 px-4 text-right">35,680</td>
+                <td class="py-3 px-4 text-right font-bold">36,866</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right">269.59</td>
+                <td class="py-3 px-4 text-right text-amber-600">+6.83%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">5. ติดเชื้อในกระแสเลือด (A40–A41)</td>
+                <td class="py-3 px-4 text-right">27,150</td>
+                <td class="py-3 px-4 text-right">28,340</td>
+                <td class="py-3 px-4 text-right font-bold">29,574</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right">216.27</td>
+                <td class="py-3 px-4 text-right text-amber-600">+8.93%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-heading text-slate-800">6. โรคไตวาย/ไตเรื้อรัง (N17–N19)</td>
+                <td class="py-3 px-4 text-right">23,890</td>
+                <td class="py-3 px-4 text-right">24,450</td>
+                <td class="py-3 px-4 text-right font-bold">25,118</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right">183.68</td>
+                <td class="py-3 px-4 text-right text-slate-600">+5.14%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-heading text-slate-800">7. โรคเบาหวาน (E10–E14)</td>
+                <td class="py-3 px-4 text-right">18,650</td>
+                <td class="py-3 px-4 text-right">18,990</td>
+                <td class="py-3 px-4 text-right font-bold">19,446</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right">142.20</td>
+                <td class="py-3 px-4 text-right text-slate-600">+4.27%</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-rose-50/30">
+                <td class="py-3 px-4 font-heading font-bold text-rose-900">8. พลัดตกหกล้มรุนแรง (W00–W19)</td>
+                <td class="py-3 px-4 text-right">9,420</td>
+                <td class="py-3 px-4 text-right">9,980</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">10,533</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">77.02</td>
+                <td class="py-3 px-4 text-right font-extrabold text-rose-600">+11.82%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
+          <span>แหล่งอ้างอิง: กองยุทธศาสตร์และแผนงาน สำนักงานปลัดกระทรวงสาธารณสุข. สถิติมรณกรรม 2565–2567.</span>
+          <a href="https://bps.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-medium">bps.moph.go.th &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 6: BURDEN OF DISEASE (DALYs)           -->
+    <!-- ========================================== -->
+    <div id="tab-bod" class="tab-content space-y-8">
+      
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+          <div>
+            <h2 class="text-base font-bold font-heading text-slate-800">ภาระโรคผู้สูงอายุไทย (DALYs): ปีที่สูญเสียจากการตายก่อนวัย (YLL) vs ความพิการ (YLD)</h2>
+            <p class="text-xs text-slate-500">ผลการศึกษาโดยสำนักงานพัฒนานโยบายสุขภาพระหว่างประเทศ (IHPP) ภาระโรครวมสะสม 4,892,110 DALYs</p>
+          </div>
+          <div class="flex items-center space-x-2 text-xs font-heading">
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-medium">YLL (ตายก่อนวัย)</span>
+            <span class="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 font-medium">YLD (อยู่กับความพิการ)</span>
+          </div>
+        </div>
+        <div class="h-96">
+          <canvas id="chartBOD"></canvas>
+        </div>
+      </div>
+
+      <!-- Detail Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200">
+          <h3 class="text-base font-bold font-heading text-slate-800">ตาราง 10 อันดับโรคที่สูญเสียปีสุขภาวะสูงสุด (DALYs Top 10)</h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-[#0f294a] text-white font-heading text-xs uppercase">
+              <tr>
+                <th class="py-3 px-4">อันดับ</th>
+                <th class="py-3 px-4">สาเหตุโรค / ภาวะสุขภาพ</th>
+                <th class="py-3 px-4 text-right">YLL (ปี)</th>
+                <th class="py-3 px-4 text-right">YLD (ปี)</th>
+                <th class="py-3 px-4 text-right">ภาระโรครวม (DALYs)</th>
+                <th class="py-3 px-4 text-right">สัดส่วนต่อ DALY รวม (%)</th>
+                <th class="py-3 px-4">ลักษณะภาระโรคหลัก</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 font-data text-xs sm:text-sm">
+              <tr class="hover:bg-slate-50 transition bg-blue-50/30">
+                <td class="py-3 px-4 font-bold text-center">1</td>
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">โรคหลอดเลือดสมอง (Stroke)</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">412,500</td>
+                <td class="py-3 px-4 text-right font-bold text-amber-700">185,400</td>
+                <td class="py-3 px-4 text-right font-extrabold text-[#0f294a]">597,900</td>
+                <td class="py-3 px-4 text-right font-bold text-blue-700">12.22%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">เสียชีวิตเฉียบพลันร่วมกับอัมพฤกษ์</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-bold text-center">2</td>
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">โรคหัวใจขาดเลือด (IHD)</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">310,200</td>
+                <td class="py-3 px-4 text-right">48,100</td>
+                <td class="py-3 px-4 text-right font-bold">358,300</td>
+                <td class="py-3 px-4 text-right">7.32%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">ภาระหลักมาจากการตายก่อนวัย (86.6%)</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-bold text-center">3</td>
+                <td class="py-3 px-4 font-heading font-bold text-slate-800">โรคเบาหวาน (Diabetes Mellitus)</td>
+                <td class="py-3 px-4 text-right">145,800</td>
+                <td class="py-3 px-4 text-right font-bold text-amber-700">182,500</td>
+                <td class="py-3 px-4 text-right font-bold">328,300</td>
+                <td class="py-3 px-4 text-right">6.71%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">ภาระความพิการสูงจากไตวาย/ตัดขา (55.6%)</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-bold text-center">4</td>
+                <td class="py-3 px-4 font-heading text-slate-800">โรคปอดอักเสบ (Pneumonia)</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">275,400</td>
+                <td class="py-3 px-4 text-right">18,200</td>
+                <td class="py-3 px-4 text-right font-bold">293,600</td>
+                <td class="py-3 px-4 text-right">6.00%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">การตายเฉียบพลันจากหายใจล้มเหลว</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-bold text-center">5</td>
+                <td class="py-3 px-4 font-heading text-slate-800">โรคมะเร็งตับและท่อน้ำดี (Liver Cancer)</td>
+                <td class="py-3 px-4 text-right font-bold text-rose-700">258,100</td>
+                <td class="py-3 px-4 text-right">12,400</td>
+                <td class="py-3 px-4 text-right font-bold">270,500</td>
+                <td class="py-3 px-4 text-right">5.53%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">อัตราตายสูงมาก (YLL 95.4%)</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-amber-50/30">
+                <td class="py-3 px-4 font-bold text-center">6</td>
+                <td class="py-3 px-4 font-heading font-bold text-amber-900">ข้อเข่าเสื่อม/ความผิดปกติกล้ามเนื้อ</td>
+                <td class="py-3 px-4 text-right text-slate-400">0</td>
+                <td class="py-3 px-4 text-right font-extrabold text-amber-700">235,600</td>
+                <td class="py-3 px-4 text-right font-bold text-amber-900">235,600</td>
+                <td class="py-3 px-4 text-right font-bold text-amber-700">4.82%</td>
+                <td class="py-3 px-4 font-heading text-xs font-bold text-amber-800">ภาระความพิการล้วน 100% (YLD)</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-bold text-center">7</td>
+                <td class="py-3 px-4 font-heading text-slate-800">โรคปอดอุดกั้นเรื้อรัง (COPD)</td>
+                <td class="py-3 px-4 text-right">134,200</td>
+                <td class="py-3 px-4 text-right">82,100</td>
+                <td class="py-3 px-4 text-right font-bold">216,300</td>
+                <td class="py-3 px-4 text-right">4.42%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">คุณภาพชีวิตลดลงจากหายใจลำบาก</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-slate-50/50">
+                <td class="py-3 px-4 font-bold text-center">8</td>
+                <td class="py-3 px-4 font-heading text-slate-800">โรคไตเรื้อรัง (CKD)</td>
+                <td class="py-3 px-4 text-right">162,100</td>
+                <td class="py-3 px-4 text-right">45,200</td>
+                <td class="py-3 px-4 text-right font-bold">207,300</td>
+                <td class="py-3 px-4 text-right">4.24%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">เสียชีวิตจากไตวายและการฟอกเลือด</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition bg-purple-50/30">
+                <td class="py-3 px-4 font-bold text-center">9</td>
+                <td class="py-3 px-4 font-heading font-bold text-purple-900">ภาวะสมองเสื่อมและอัลไซเมอร์</td>
+                <td class="py-3 px-4 text-right">38,500</td>
+                <td class="py-3 px-4 text-right font-extrabold text-purple-700">154,200</td>
+                <td class="py-3 px-4 text-right font-bold text-purple-900">192,700</td>
+                <td class="py-3 px-4 text-right font-bold text-purple-700">3.94%</td>
+                <td class="py-3 px-4 font-heading text-xs font-bold text-purple-800">ภาระพึ่งพิงระยะยาวสูงมาก (80.0%)</td>
+              </tr>
+              <tr class="hover:bg-slate-50 transition">
+                <td class="py-3 px-4 font-bold text-center">10</td>
+                <td class="py-3 px-4 font-heading text-slate-800">การพลัดตกหกล้ม (Falls & Fractures)</td>
+                <td class="py-3 px-4 text-right">72,400</td>
+                <td class="py-3 px-4 text-right font-bold text-amber-700">95,800</td>
+                <td class="py-3 px-4 text-right font-bold">168,200</td>
+                <td class="py-3 px-4 text-right">3.44%</td>
+                <td class="py-3 px-4 font-heading text-xs text-slate-600">ติดเตียงจากสะโพกหักร่วมกับเสียชีวิต</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-6 py-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 flex items-center justify-between">
+          <span>แหล่งอ้างอิง: สำนักงานพัฒนานโยบายสุขภาพระหว่างประเทศ (IHPP). รายงานภาระโรคและการบาดเจ็บของประชากรไทย พ.ศ. 2562.</span>
+          <a href="http://www.bodthai.net" target="_blank" class="text-blue-600 hover:underline font-medium">www.bodthai.net &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 7: INTERACTIVE CALCULATOR & FORMULAS   -->
+    <!-- ========================================== -->
+    <div id="tab-calculator" class="tab-content space-y-8">
+      
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <h2 class="text-lg font-bold font-heading text-slate-800 mb-1">เครื่องคำนวณสถิติและดัชนีทางประชากรศาสตร์ (Interactive Calculator)</h2>
+        <p class="text-xs text-slate-500 mb-6">ทดลองป้อนตัวเลขเพื่อคำนวณดัชนีทางประชากรศาสตร์และระบาดวิทยาตามสูตรมาตรฐาน</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Calc 1: Aging Index -->
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold font-heading text-sm text-[#0f294a] mb-3">1. คำนวณดัชนีการสูงวัย (Aging Index)</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-[11px] text-slate-500 font-heading">จำนวนผู้สูงอายุ 60+ (P_60+):</label>
+                  <input type="number" id="calc-ai-elder" value="13720000" class="w-full mt-1 p-2 bg-white rounded border border-slate-300 font-data text-xs" oninput="runCalculations()">
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-500 font-heading">จำนวนเด็ก 0–14 ปี (P_0-14):</label>
+                  <input type="number" id="calc-ai-child" value="9990000" class="w-full mt-1 p-2 bg-white rounded border border-slate-300 font-data text-xs" oninput="runCalculations()">
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-200">
+              <div class="text-xs text-slate-500">ผลลัพธ์ Aging Index:</div>
+              <div class="text-2xl font-extrabold font-data text-blue-700" id="res-ai">137.34</div>
+              <div class="text-[10px] text-slate-400 mt-1">สูตร: (P_60+ / P_0-14) &times; 100</div>
+            </div>
+          </div>
+
+          <!-- Calc 2: OADR -->
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold font-heading text-sm text-[#0f294a] mb-3">2. อัตราส่วนพึ่งพิงสูงอายุ (OADR)</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-[11px] text-slate-500 font-heading">จำนวนผู้สูงอายุ 60+ (P_60+):</label>
+                  <input type="number" id="calc-oadr-elder" value="13720000" class="w-full mt-1 p-2 bg-white rounded border border-slate-300 font-data text-xs" oninput="runCalculations()">
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-500 font-heading">จำนวนวัยแรงงาน 15–59 (P_15-59):</label>
+                  <input type="number" id="calc-oadr-work" value="42210000" class="w-full mt-1 p-2 bg-white rounded border border-slate-300 font-data text-xs" oninput="runCalculations()">
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-200">
+              <div class="text-xs text-slate-500">ผลลัพธ์ OADR (ต่อแรงงาน 100 คน):</div>
+              <div class="text-2xl font-extrabold font-data text-emerald-700" id="res-oadr">32.50</div>
+              <div class="text-[10px] text-slate-400 mt-1">สูตร: (P_60+ / P_15-59) &times; 100</div>
+            </div>
+          </div>
+
+          <!-- Calc 3: Rate per 100k -->
+          <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold font-heading text-sm text-[#0f294a] mb-3">3. อัตราป่วย/อัตราตายต่อแสน</h3>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-[11px] text-slate-500 font-heading">จำนวนเคส (ป่วย หรือ เสียชีวิต):</label>
+                  <input type="number" id="calc-rate-cases" value="80418" class="w-full mt-1 p-2 bg-white rounded border border-slate-300 font-data text-xs" oninput="runCalculations()">
+                </div>
+                <div>
+                  <label class="text-[11px] text-slate-500 font-heading">ประชากรกลางปีกลุ่มเป้าหมาย:</label>
+                  <input type="number" id="calc-rate-pop" value="13674802" class="w-full mt-1 p-2 bg-white rounded border border-slate-300 font-data text-xs" oninput="runCalculations()">
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-slate-200">
+              <div class="text-xs text-slate-500">อัตราต่อแสนประชากร:</div>
+              <div class="text-2xl font-extrabold font-data text-rose-700" id="res-rate">588.07</div>
+              <div class="text-[10px] text-slate-400 mt-1">สูตร: (เคส / ประชากร) &times; 100,000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULAS CARD -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold font-heading text-base text-[#0f294a]">สูตรและนิยามทางประชากรศาสตร์</h3>
+          
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold font-heading text-slate-800">1. สัดส่วนประชากรสูงอายุ (Elderly Proportion)</div>
+            <div class="text-xs font-mono text-blue-700 mt-1 font-bold">Proportion (%) = (P_60+ / P_total) &times; 100</div>
+            <div class="text-[11px] text-slate-500 mt-1">แทนค่าจริงปี 67: (13,720,000 / 65,920,000) &times; 100 = 20.81%</div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold font-heading text-slate-800">2. ดัชนีการสูงวัย (Aging Index)</div>
+            <div class="text-xs font-mono text-blue-700 mt-1 font-bold">AI = (P_60+ / P_0-14) &times; 100</div>
+            <div class="text-[11px] text-slate-500 mt-1">แทนค่าจริงปี 67: (13,720,000 / 9,990,000) &times; 100 = 137.34</div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold font-heading text-slate-800">3. อัตราส่วนพึ่งพิงสูงอายุ (Old-Age Dependency Ratio)</div>
+            <div class="text-xs font-mono text-blue-700 mt-1 font-bold">OADR = (P_60+ / P_15-59) &times; 100</div>
+            <div class="text-[11px] text-slate-500 mt-1">แทนค่าจริงปี 67: (13,720,000 / 42,210,000) &times; 100 = 32.50</div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold font-heading text-base text-[#0f294a]">สูตรและนิยามทางระบาดวิทยาและภาระโรค</h3>
+          
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold font-heading text-slate-800">1. อัตราความชุก (Prevalence Rate)</div>
+            <div class="text-xs font-mono text-blue-700 mt-1 font-bold">Prevalence (%) = (ผู้ป่วยทั้งหมด C / ประชากรเสี่ยง N) &times; 100</div>
+            <div class="text-[11px] text-slate-500 mt-1">แทนค่าความดันโลหิตสูง: (8,300,605 / 13,674,802) &times; 100 = 60.70%</div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold font-heading text-slate-800">2. อัตราป่วย / อัตราตายจำเพาะกลุ่มอายุ</div>
+            <div class="text-xs font-mono text-blue-700 mt-1 font-bold">Rate = (จำนวนเหตุการณ์ / ประชากรผู้สูงอายุกลางปี) &times; 100,000</div>
+            <div class="text-[11px] text-slate-500 mt-1">แทนค่ามะเร็งปี 67: (80,418 / 13,674,802) &times; 100,000 = 588.07 ต่อแสน</div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+            <div class="text-xs font-bold font-heading text-slate-800">3. ภาระโรค (Disability-Adjusted Life Years)</div>
+            <div class="text-xs font-mono text-blue-700 mt-1 font-bold">DALY = YLL (ปีตายก่อนวัย) + YLD (ปีอยู่กับความพิการ)</div>
+            <div class="text-[11px] text-slate-500 mt-1">แทนค่า Stroke: 412,500 + 185,400 = 597,900 DALYs</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 8: ACADEMIC REFERENCES (APA)           -->
+    <!-- ========================================== -->
+    <div id="tab-references" class="tab-content space-y-6">
+      
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <h2 class="text-lg font-bold font-heading text-slate-800 mb-2">รายการเอกสารอ้างอิงทางวิชาการ (APA 7th Edition)</h2>
+        <p class="text-xs text-slate-500 mb-6">ข้อมูลทั้งหมดในระบบนี้รวบรวมจากแหล่งข้อมูลทางวิชาการและฐานข้อมูลทางการของภาครัฐ สามารถคลิกลิงก์เพื่อเข้าสู่เว็บไซต์ต้นทางได้โดยตรง</p>
+
+        <div class="space-y-4 text-xs sm:text-sm font-body divide-y divide-slate-100">
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">1</span>
+            <div>
+              <p class="text-slate-700">กรมกิจการผู้สูงอายุ กระทรวงการพัฒนาสังคมและความมั่นคงของมนุษย์. (2567). <em>สถิติผู้สูงอายุของประเทศไทย 76 จังหวัด ประจำปี 2565–2567</em>. กรมกิจการผู้สูงอายุ.</p>
+              <a href="https://www.dop.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://www.dop.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">2</span>
+            <div>
+              <p class="text-slate-700">กรมควบคุมโรค กระทรวงสาธารณสุข. (2567). <em>รายงานสถานการณ์โรค NCDs เบาหวาน ความดันโลหิตสูง และปัจจัยเสี่ยงที่เกี่ยวข้อง พ.ศ. 2566–2567</em>. กองโรคไม่ติดต่อ.</p>
+              <a href="https://ddc.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://ddc.moph.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">3</span>
+            <div>
+              <p class="text-slate-700">กรมอนามัย กระทรวงสาธารณสุข. (2567). <em>รายงานสรุปผลการคัดกรองสุขภาพผู้สูงอายุ 9 ด้าน ผ่านระบบ Blue Book Application ประจำปีงบประมาณ 2566–2567</em>. กรมอนามัย.</p>
+              <a href="https://bluebook.anamai.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://bluebook.anamai.moph.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">4</span>
+            <div>
+              <p class="text-slate-700">กองยุทธศาสตร์และแผนงาน สำนักงานปลัดกระทรวงสาธารณสุข. (2566). <em>สถิติสาธารณสุข พ.ศ. 2565 (Public Health Statistics A.D. 2022)</em>. กระทรวงสาธารณสุข.</p>
+              <a href="https://bps.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://bps.moph.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">5</span>
+            <div>
+              <p class="text-slate-700">มูลนิธิสถาบันวิจัยและพัฒนาผู้สูงอายุไทย (มส.ผส.). (2566). <em>รายงานสถานการณ์ผู้สูงอายุไทย พ.ศ. 2565–2566</em>. สถาบันวิจัยประชากรและสังคม มหาวิทยาลัยมหิดล.</p>
+              <a href="https://thaitgri.org" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://thaitgri.org</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">6</span>
+            <div>
+              <p class="text-slate-700">ระบบคลังข้อมูลด้านการแพทย์และสุขภาพ (Health Data Center: HDC). (2567). <em>ระบบสารสนเทศเพื่อการจัดการข้อมูลสุขภาพ กระทรวงสาธารณสุข</em>.</p>
+              <a href="https://hdcservice.moph.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://hdcservice.moph.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">7</span>
+            <div>
+              <p class="text-slate-700">วิชัย เอกพลากร, หทัยชนก พรรคเจริญ, กนิษฐา ไทยกล้า, และ วราภรณ์ เสถียรนพเก้า. (2564). <em>รายงานการสำรวจสุขภาพประชาชนไทยโดยการตรวจร่างกาย ครั้งที่ 6 พ.ศ. 2562–2563 (NHES VI)</em>. สถาบันวิจัยระบบสาธารณสุข (สวรส.) และ คณะแพทยศาสตร์โรงพยาบาลรามาธิบดี มหาวิทยาลัยมหิดล.</p>
+              <a href="https://www.hiso.or.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://www.hiso.or.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">8</span>
+            <div>
+              <p class="text-slate-700">สถาบันวิจัยประชากรและสังคม มหาวิทยาลัยมหิดล. (2565–2569). <em>มิเตอร์ประเทศไทยและสารประชากร มหาวิทยาลัยมหิดล</em>. มหาวิทยาลัยมหิดล.</p>
+              <a href="https://www.thailandometers.mahidol.ac.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://www.thailandometers.mahidol.ac.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">9</span>
+            <div>
+              <p class="text-slate-700">สำนักบริหารการทะเบียน กรมการปกครอง กระทรวงมหาดไทย. (2567). <em>สถิติจำนวนประชากรทางการทะเบียนราษฎร</em>. กรมการปกครอง.</p>
+              <a href="https://stat.bora.dopa.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://stat.bora.dopa.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">10</span>
+            <div>
+              <p class="text-slate-700">สำนักงานพัฒนานโยบายสุขภาพระหว่างประเทศ (IHPP). (2565). <em>รายงานภาระโรคและการบาดเจ็บของประชากรไทย พ.ศ. 2562 (Burden of Diseases and Injuries in Thailand 2019)</em>. กระทรวงสาธารณสุข.</p>
+              <a href="http://www.bodthai.net" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">http://www.bodthai.net</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">11</span>
+            <div>
+              <p class="text-slate-700">สำนักงานสภาพัฒนาการเศรษฐกิจและสังคมแห่งชาติ. (2562). <em>การคาดประมาณประชากรของประเทศไทย พ.ศ. 2553–2583 (ฉบับปรับปรุง)</em>. สำนักนายกรัฐมนตรี.</p>
+              <a href="https://www.nesdc.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://www.nesdc.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">12</span>
+            <div>
+              <p class="text-slate-700">สำนักงานสถิติแห่งชาติ. (2567). <em>สรุปผลที่สำคัญ: การสำรวจประชากรสูงอายุในประเทศไทย พ.ศ. 2567</em>. กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม.</p>
+              <a href="https://www.nso.go.th" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://www.nso.go.th</a>
+            </div>
+          </div>
+
+          <div class="pt-3 flex items-start space-x-3">
+            <span class="w-6 h-6 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-bold font-data text-xs shrink-0 mt-0.5">13</span>
+            <div>
+              <p class="text-slate-700">World Health Organization. (2020). <em>Integrated care for older people (ICOPE): Guidance for person-centred assessment and pathways in primary care</em>. World Health Organization.</p>
+              <a href="https://www.who.int/publications/i/item/9789241550109" target="_blank" class="text-blue-600 hover:underline font-mono text-xs">https://www.who.int/publications/i/item/9789241550109</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 font-heading">
+    <div class="max-w-7xl mx-auto px-4">
+      <p>ระบบแดชบอร์ดสารสนเทศสุขภาพผู้สูงอายุไทย (National Elderly Health Analytics Dashboard 2022–2026)</p>
+      <p class="mt-1 text-slate-400">พัฒนาขึ้นเพื่อรองรับการวิจัยเชิงระบาดวิทยาและการวางแผนพัฒนาระบบสุขภาพตามหลักวิชาการสากล</p>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT: LOGIC & CHARTS -->
+  <script>
+    // Tab switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      
+      const btn = document.getElementById('btn-' + tabId);
+      if (btn) btn.classList.add('active');
+
+      // Trigger resize for charts
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    // Toggle Morbidity OPD/IPD
+    function toggleMorbidityView(type) {
+      const opdView = document.getElementById('view-opd');
+      const ipdView = document.getElementById('view-ipd');
+      const btnOpd = document.getElementById('btn-morb-opd');
+      const btnIpd = document.getElementById('btn-morb-ipd');
+
+      if (type === 'opd') {
+        opdView.classList.remove('hidden');
+        ipdView.classList.add('hidden');
+        btnOpd.className = "px-4 py-2 rounded-lg bg-[#0f294a] text-white shadow-sm transition";
+        btnIpd.className = "px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200 transition";
+      } else {
+        opdView.classList.add('hidden');
+        ipdView.classList.remove('hidden');
+        btnIpd.className = "px-4 py-2 rounded-lg bg-[#0f294a] text-white shadow-sm transition";
+        btnOpd.className = "px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-200 transition";
+      }
+    }
+
+    // Font Scaling
+    function setFontScale(size) {
+      const html = document.documentElement;
+      if (size === 'small') html.style.fontSize = '14px';
+      else if (size === 'normal') html.style.fontSize = '16px';
+      else if (size === 'large') html.style.fontSize = '18px';
+    }
+
+    // Interactive Calculator
+    function runCalculations() {
+      // 1. Aging Index
+      const aiElder = parseFloat(document.getElementById('calc-ai-elder').value) || 0;
+      const aiChild = parseFloat(document.getElementById('calc-ai-child').value) || 1;
+      const resAi = (aiElder / aiChild) * 100;
+      document.getElementById('res-ai').innerText = resAi.toFixed(2);
+
+      // 2. OADR
+      const oadrElder = parseFloat(document.getElementById('calc-oadr-elder').value) || 0;
+      const oadrWork = parseFloat(document.getElementById('calc-oadr-work').value) || 1;
+      const resOadr = (oadrElder / oadrWork) * 100;
+      document.getElementById('res-oadr').innerText = resOadr.toFixed(2);
+
+      // 3. Rate per 100k
+      const rateCases = parseFloat(document.getElementById('calc-rate-cases').value) || 0;
+      const ratePop = parseFloat(document.getElementById('calc-rate-pop').value) || 1;
+      const resRate = (rateCases / ratePop) * 100000;
+      document.getElementById('res-rate').innerText = resRate.toFixed(2);
+    }
+
+    // INIT CHARTS
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Population Trend Chart
+      new Chart(document.getElementById('chartPopulationTrend'), {
+        type: 'bar',
+        data: {
+          labels: ['2565', '2566', '2567', '2568', '2569'],
+          datasets: [
+            {
+              type: 'line',
+              label: 'สัดส่วนผู้สูงอายุ (%)',
+              data: [19.22, 20.00, 20.81, 21.92, 22.87],
+              borderColor: '#059669',
+              backgroundColor: '#059669',
+              borderWidth: 3,
+              tension: 0.2,
+              yAxisID: 'y1'
+            },
+            {
+              type: 'bar',
+              label: 'จำนวนผู้สูงอายุ 60+ (ล้านคน)',
+              data: [12.70, 13.21, 13.72, 14.40, 14.96],
+              backgroundColor: '#1d4ed8',
+              borderRadius: 6,
+              yAxisID: 'y'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 10,
+              max: 16,
+              title: { display: true, text: 'ล้านคน' }
+            },
+            y1: {
+              position: 'right',
+              min: 15,
+              max: 25,
+              title: { display: true, text: 'ร้อยละ (%)' },
+              grid: { drawOnChartArea: false }
+            }
+          }
+        }
+      });
+
+      // 2. Age Tiers Stacked Bar Chart
+      new Chart(document.getElementById('chartAgeTiers'), {
+        type: 'bar',
+        data: {
+          labels: ['2565', '2566', '2567', '2568', '2569'],
+          datasets: [
+            {
+              label: 'วัยต้น (60–69 ปี)',
+              data: [7.34, 7.54, 7.72, 8.02, 8.26],
+              backgroundColor: '#3b82f6'
+            },
+            {
+              label: 'วัยกลาง (70–79 ปี)',
+              data: [3.58, 3.74, 3.92, 4.15, 4.34],
+              backgroundColor: '#f59e0b'
+            },
+            {
+              label: 'วัยปลาย (80 ปี+)',
+              data: [1.78, 1.93, 2.07, 2.23, 2.36],
+              backgroundColor: '#ef4444'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, title: { display: true, text: 'ล้านคน' } }
+          }
+        }
+      });
+
+      // 3. 9 Domains Bar Chart
+      new Chart(document.getElementById('chart9Domains'), {
+        type: 'bar',
+        data: {
+          labels: ['ช่องปาก', 'การมองเห็น', 'เคลื่อนไหว/ล้ม', 'กลั้นปัสสาวะ', 'การได้ยิน', 'ขาดสารอาหาร', 'สุขภาพจิต/ซึมเศร้า', 'ความคิดความจำ', 'พึ่งพิง (ติดบ้าน/เตียง)'],
+          datasets: [{
+            label: 'ร้อยละที่พบความผิดปกติ/เสี่ยง (%)',
+            data: [51.20, 23.20, 17.90, 16.50, 14.80, 14.20, 9.50, 7.70, 4.20],
+            backgroundColor: [
+              '#e11d48', '#f97316', '#f59e0b', '#3b82f6', '#0ea5e9', '#6366f1', '#8b5cf6', '#a855f7', '#ec4899'
+            ],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { max: 60, title: { display: true, text: 'ร้อยละ (%)' } } }
+        }
+      });
+
+      // 4. ADL Donut Chart
+      new Chart(document.getElementById('chartADL'), {
+        type: 'doughnut',
+        data: {
+          labels: ['ติดสังคม (12-20)', 'ติดบ้าน (5-11)', 'ติดเตียง (0-4)'],
+          datasets: [{
+            data: [95.80, 3.30, 0.90],
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          cutout: '65%'
+        }
+      });
+
+      // 5. NCD Prevalence Bar Chart (Male vs Female)
+      new Chart(document.getElementById('chartNCDPrevalence'), {
+        type: 'bar',
+        data: {
+          labels: ['ความดันโลหิตสูง', 'อ้วนลงพุง', 'เมตาบอลิก', 'ไขมันสูง', 'ข้อเข่าเสื่อม', 'เบาหวาน', 'ไตเรื้อรัง', 'ต้อกระจก', 'หัวใจขาดเลือด', 'หลอดเลือดสมอง', 'COPD'],
+          datasets: [
+            {
+              label: 'เพศชาย (%)',
+              data: [56.40, 29.80, 28.50, 33.10, 17.20, 18.20, 19.10, 14.20, 8.90, 4.80, 6.20],
+              backgroundColor: '#2563eb'
+            },
+            {
+              label: 'เพศหญิง (%)',
+              data: [64.20, 60.10, 49.10, 42.70, 30.60, 22.30, 18.20, 17.10, 7.60, 3.50, 1.80],
+              backgroundColor: '#ec4899'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: { y: { max: 70, title: { display: true, text: 'ความชุกร้อยละ (%)' } } }
+        }
+      });
+
+      // 6. Morbidity OPD Chart
+      new Chart(document.getElementById('chartMorbidityOPD'), {
+        type: 'bar',
+        data: {
+          labels: ['ความดันโลหิต', 'เบาหวาน', 'ไขมันผิดปกติ', 'ข้อเข่าเสื่อม', 'กระเพาะอาหาร', 'ต้อกระจก', 'ไตเรื้อรัง', 'ติดเชื้อ URI', 'ปวดหลัง', 'หัวใจขาดเลือด'],
+          datasets: [{
+            label: 'อัตราป่วยต่อแสนประชากรสูงอายุ',
+            data: [35258.31, 17629.59, 16421.58, 8851.68, 7647.79, 6889.39, 5962.80, 5837.31, 5209.22, 4271.51],
+            backgroundColor: '#1d4ed8',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { title: { display: true, text: 'อัตราต่อแสน' } } }
+        }
+      });
+
+      // 7. Morbidity IPD Chart
+      new Chart(document.getElementById('chartMorbidityIPD'), {
+        type: 'bar',
+        data: {
+          labels: ['หลอดเลือดสมอง', 'ปอดอักเสบ', 'ติดเชื้อในกระแสเลือด', 'หัวใจล้มเหลว', 'สะโพกหักจากล้ม', 'ต้อกระจกผ่าตัด', 'COPD กำเริบ', 'ไตวาย', 'เบาหวานแทรกซ้อน', 'มะเร็งรับเคมี'],
+          datasets: [{
+            label: 'อัตราการนอน รพ. ต่อแสนประชากรสูงอายุ',
+            data: [1744.16, 1492.64, 1088.99, 1040.66, 927.55, 667.21, 654.12, 615.15, 574.85, 500.28],
+            backgroundColor: '#dc2626',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { title: { display: true, text: 'อัตราต่อแสน' } } }
+        }
+      });
+
+      // 8. Mortality Rate Chart
+      new Chart(document.getElementById('chartMortalityRate'), {
+        type: 'bar',
+        data: {
+          labels: ['มะเร็งทุกชนิด', 'หลอดเลือดสมอง', 'ปอดอักเสบ', 'หัวใจขาดเลือด', 'ติดเชื้อในกระแสเลือด', 'ไตวาย/ไตเรื้อรัง', 'เบาหวาน', 'COPD', 'พลัดตกหกล้ม', 'โรคตับ/ตับแข็ง'],
+          datasets: [{
+            label: 'อัตราตายต่อแสนประชากรสูงอายุ (พ.ศ. 2567)',
+            data: [588.07, 379.20, 322.92, 269.59, 216.27, 183.68, 142.20, 124.43, 77.02, 59.25],
+            backgroundColor: '#475569',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { title: { display: true, text: 'อัตราตายต่อแสน' } } }
+        }
+      });
+
+      // 9. Mortality Share Donut
+      new Chart(document.getElementById('chartMortalityShare'), {
+        type: 'doughnut',
+        data: {
+          labels: ['มะเร็ง', 'หลอดเลือดสมอง', 'ปอดอักเสบ', 'หัวใจขาดเลือด', 'ติดเชื้อกระแสเลือด', 'ไตวาย', 'เบาหวาน', 'COPD', 'พลัดตกหกล้ม', 'อื่นๆ'],
+          datasets: [{
+            data: [19.85, 12.80, 10.90, 9.10, 7.30, 6.20, 4.80, 4.20, 2.60, 22.25],
+            backgroundColor: [
+              '#e11d48', '#2563eb', '#0284c7', '#d97706', '#dc2626', '#7c3aed', '#059669', '#4b5563', '#ea580c', '#cbd5e1'
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          cutout: '60%'
+        }
+      });
+
+      // 10. Burden of Disease (BOD DALYs) Stacked Bar Chart
+      new Chart(document.getElementById('chartBOD'), {
+        type: 'bar',
+        data: {
+          labels: ['หลอดเลือดสมอง', 'หัวใจขาดเลือด', 'เบาหวาน', 'ปอดอักเสบ', 'มะเร็งตับ', 'ข้อเข่าเสื่อม', 'COPD', 'ไตเรื้อรัง', 'สมองเสื่อม', 'พลัดตกหกล้ม'],
+          datasets: [
+            {
+              label: 'ปีที่สูญเสียจากการตายก่อนวัย (YLL)',
+              data: [412500, 310200, 145800, 275400, 258100, 0, 134200, 162100, 38500, 72400],
+              backgroundColor: '#e11d48'
+            },
+            {
+              label: 'ปีที่อยู่กับความพิการ (YLD)',
+              data: [185400, 48100, 182500, 18200, 12400, 235600, 82100, 45200, 154200, 95800],
+              backgroundColor: '#f59e0b'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: { stacked: true },
+            y: { stacked: true, title: { display: true, text: 'ปีสุขภาวะที่สูญเสีย (ปี)' } }
+          }
+        }
+      });
+
+    });
+  </script>
+</body>
+</html>

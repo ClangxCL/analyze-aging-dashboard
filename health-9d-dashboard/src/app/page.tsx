@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState, useMemo, useRef } from 'react';
-import { Navbar } from '@/components/ui/Navbar';
+import { useRouter } from 'next/navigation';
+import { Navbar, WindowMode } from '@/components/ui/Navbar';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { FilterToolbar } from '@/components/ui/FilterToolbar';
 import { TopRankingCards } from '@/components/dashboard/TopRankingCards';
@@ -10,14 +11,18 @@ import { RegionalHeatMap } from '@/components/dashboard/RegionalHeatMap';
 import { DataTable } from '@/components/dashboard/DataTable';
 import { StatCard } from '@/components/ui/StatCard';
 import { PillBadge } from '@/components/ui/PillBadge';
+import { ElderlySituationView } from '@/components/situation/ElderlySituationView';
+import { AnalyzeAgingDashboard } from '@/components/analytics/AnalyzeAgingDashboard';
 import { FilterState, HealthDataset } from '@/types/health';
 import { computeAggregatedRankings, filterProvinces, formatNumber, formatPercent } from '@/lib/analytics';
 import healthDataJson from '@/data/elderly_health_2026.json';
-import { Activity, ShieldCheck, MapPin, Building2, ExternalLink } from 'lucide-react';
+import { Activity, ShieldCheck, MapPin, Building2, ExternalLink, BarChart3, ArrowRight } from 'lucide-react';
 
 const dataset: HealthDataset = healthDataJson as unknown as HealthDataset;
 
 export default function Home() {
+  const router = useRouter();
+  const [currentWindow, setCurrentWindow] = useState<WindowMode>('screening-9d');
   const [activeTab, setActiveTab] = useState<'overview' | 'map' | 'heatmap' | 'table'>('overview');
   const [filter, setFilter] = useState<FilterState>({
     zone: 'all',
@@ -81,8 +86,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f8f9fb]">
-      {/* 1. Navbar */}
+      {/* 1. Universal Dual-Window Navbar */}
       <Navbar
+        currentWindow={currentWindow}
+        onWindowChange={target => {
+          setCurrentWindow(target);
+        }}
         activeTab={activeTab}
         setActiveTab={tab => {
           setActiveTab(tab);
@@ -100,123 +109,167 @@ export default function Home() {
         onExploreClick={handleScrollToDashboard}
       />
 
-      {/* 2. Hero Section (Noa Vale Motion Experience) */}
-      <LandingHero
-        national={dataset.national}
-        onExploreDashboard={handleScrollToDashboard}
-        onSelectDimension={dimKey => {
-          setFilter(prev => ({ ...prev, dimension: dimKey }));
-          handleScrollToDashboard();
-        }}
-      />
-
-      {/* 3. Main Dashboard Workspace */}
-      <main ref={dashboardRef} id="dashboard" className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 py-8">
-        {/* Section Header */}
-        <div className="mb-6">
-          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0b3558] tracking-tight">
-                ศูนย์ข้อมูลวิเคราะห์สุขภาพผู้สูงอายุ 9 มิติ
-              </h2>
-              <p className="text-sm text-[#476788] mt-1">
-                พื้นที่ประเมิน: <span className="font-semibold text-[#006bff]">{scopeTitle}</span>
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <PillBadge variant="signal">ปีงบประมาณ 2569</PillBadge>
-              <PillBadge variant="pebble">กระทรวงสาธารณสุข</PillBadge>
+      {/* WINDOW 3 VIEW: INTERACTIVE VISUALIZATIONS (ANALYZE AGING) */}
+      {currentWindow === 'analyze-aging' ? (
+        <main className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 py-8">
+          <AnalyzeAgingDashboard />
+        </main>
+      ) : currentWindow === 'situation-5y' ? (
+        /* WINDOW 2 VIEW: SITUATION 5-YEAR & DEMOGRAPHICS */
+        <main className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 py-8">
+          <ElderlySituationView />
+        </main>
+      ) : (
+        /* WINDOW 1 VIEW: 9-DIMENSION SCREENING (76 PROVINCES) */
+        <>
+          {/* Quick Notice Banner for Window 2 & 3 Discovery */}
+          <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-emerald-50 border-b border-[#d4e0ed] py-2.5 px-4 sm:px-6">
+            <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded font-bold bg-[#006bff] text-white">ใหม่</span>
+                <span className="text-[#0b3558] font-semibold">
+                  หน้าต่างที่ 3: ระบบแสดงภาพข้อมูลเชิงวิเคราะห์ (Analyze Aging Visualizer) พร้อมกราฟสรุป 8 มิติแล้ว
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => router.push('/analyze-aging')}
+                  className="font-bold text-[#006bff] hover:text-[#0b3558] flex items-center gap-1 transition-colors"
+                >
+                  <span>เปิดหน้าระบบแสดงภาพข้อมูล</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentWindow('situation-5y')}
+                  className="font-semibold text-[#476788] hover:text-[#0b3558] flex items-center gap-1 transition-colors"
+                >
+                  <span>หน้าต่างที่ 2 (รายงาน)</span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Filter Toolbar */}
-        <FilterToolbar
-          filter={filter}
-          setFilter={setFilter}
-          regions={dataset.regions}
-          provinces={dataset.provinces}
-        />
+          {/* Hero Section (Noa Vale Motion Experience) */}
+          <LandingHero
+            national={dataset.national}
+            onExploreDashboard={handleScrollToDashboard}
+            onSelectDimension={dimKey => {
+              setFilter(prev => ({ ...prev, dimension: dimKey }));
+              handleScrollToDashboard();
+            }}
+          />
 
-        {/* Dynamic Context Stat Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <StatCard
-            title="จำนวนคัดกรองในพื้นที่"
-            value={formatNumber(scopeMetrics.screened)}
-            subtitle="ผู้สูงอายุที่เข้ารับการตรวจ"
-            icon={<Activity className="w-5 h-5 text-[#006bff]" />}
-          />
-          <StatCard
-            title="คัดกรองครบทั้ง 9 ด้าน"
-            value={formatPercent(scopeMetrics.pct9d)}
-            subtitle={`${formatNumber(scopeMetrics.screened9d)} คนที่มีผลครบ`}
-            icon={<ShieldCheck className="w-5 h-5 text-[#1b7a42]" />}
-            badge={<PillBadge variant="pebble">เกณฑ์มาตรฐาน</PillBadge>}
-          />
-          <StatCard
-            title="ปัญหาเสี่ยงสูงสุดอันดับ 1"
-            value={scopeMetrics.top1Issue}
-            subtitle={`ร้อยละเสี่ยง ${formatPercent(scopeMetrics.top1RiskPct)}`}
-            icon={<MapPin className="w-5 h-5 text-[#b86200]" />}
-            badge={<PillBadge variant="warning">Top 1 Risk</PillBadge>}
-          />
-          <StatCard
-            title="จำนวนจังหวัดในพื้นที่คัดกรอง"
-            value={`${filteredProvinces.length} จังหวัด`}
-            subtitle={filter.zone !== 'all' ? filter.zone : 'ครบทั้ง 12 เขตสุขภาพ'}
-            icon={<Building2 className="w-5 h-5 text-[#006bff]" />}
-          />
-        </div>
+          {/* Main Dashboard Workspace */}
+          <main ref={dashboardRef} id="dashboard" className="flex-1 max-w-[1280px] w-full mx-auto px-4 sm:px-6 py-8">
+            {/* Section Header */}
+            <div className="mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+                <div>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0b3558] tracking-tight">
+                    ศูนย์ข้อมูลวิเคราะห์สุขภาพผู้สูงอายุ 9 มิติ
+                  </h2>
+                  <p className="text-sm text-[#476788] mt-1">
+                    พื้นที่ประเมิน: <span className="font-semibold text-[#006bff]">{scopeTitle}</span>
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <PillBadge variant="signal">ปีงบประมาณ 2569</PillBadge>
+                  <PillBadge variant="pebble">กระทรวงสาธารณสุข</PillBadge>
+                </div>
+              </div>
+            </div>
 
-        {/* View Switcher Container */}
-        <div className="space-y-10">
-          {/* Section: Top 1-9 Rankings */}
-          <section id="rankings" className="space-y-4">
-            <TopRankingCards
-              rankings={activeRankings}
-              scopeTitle={scopeTitle}
+            {/* Filter Toolbar */}
+            <FilterToolbar
+              filter={filter}
+              setFilter={setFilter}
+              regions={dataset.regions}
+              provinces={dataset.provinces}
             />
-          </section>
 
-          {/* Section: Geographic Map and Heat Map (2-Column on large screens) */}
-          <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Geographic Map (7 cols) */}
-            <div id="geo-map" className="lg:col-span-6 xl:col-span-5">
-              <ThailandGeoMap
-                provinces={filteredProvinces}
-                filter={filter}
-                onSelectProvince={provName => {
-                  setFilter(prev => ({ ...prev, province: provName }));
-                }}
-                onSelectZone={zoneName => {
-                  setFilter(prev => ({ ...prev, zone: zoneName, province: 'all' }));
-                }}
+            {/* Dynamic Context Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <StatCard
+                title="จำนวนคัดกรองในพื้นที่"
+                value={formatNumber(scopeMetrics.screened)}
+                subtitle="ผู้สูงอายุที่เข้ารับการตรวจ"
+                icon={<Activity className="w-5 h-5 text-[#006bff]" />}
+              />
+              <StatCard
+                title="คัดกรองครบทั้ง 9 ด้าน"
+                value={formatPercent(scopeMetrics.pct9d)}
+                subtitle={`${formatNumber(scopeMetrics.screened9d)} คนที่มีผลครบ`}
+                icon={<ShieldCheck className="w-5 h-5 text-[#1b7a42]" />}
+                badge={<PillBadge variant="pebble">เกณฑ์มาตรฐาน</PillBadge>}
+              />
+              <StatCard
+                title="ปัญหาเสี่ยงสูงสุดอันดับ 1"
+                value={scopeMetrics.top1Issue}
+                subtitle={`ร้อยละเสี่ยง ${formatPercent(scopeMetrics.top1RiskPct)}`}
+                icon={<MapPin className="w-5 h-5 text-[#b86200]" />}
+                badge={<PillBadge variant="warning">Top 1 Risk</PillBadge>}
+              />
+              <StatCard
+                title="จำนวนจังหวัดในพื้นที่คัดกรอง"
+                value={`${filteredProvinces.length} จังหวัด`}
+                subtitle={filter.zone !== 'all' ? filter.zone : 'ครบทั้ง 12 เขตสุขภาพ'}
+                icon={<Building2 className="w-5 h-5 text-[#006bff]" />}
               />
             </div>
 
-            {/* Regional Heatmap (7 cols) */}
-            <div id="heat-map" className="lg:col-span-6 xl:col-span-7">
-              <RegionalHeatMap
-                regions={dataset.regions}
-                filter={filter}
-                onSelectZone={zoneName => {
-                  setFilter(prev => ({ ...prev, zone: zoneName, province: 'all' }));
-                }}
-                onSelectDimension={dimKey => {
-                  setFilter(prev => ({ ...prev, dimension: dimKey }));
-                }}
-              />
+            {/* View Switcher Container */}
+            <div className="space-y-10">
+              {/* Section: Top 1-9 Rankings */}
+              <section id="rankings" className="space-y-4">
+                <TopRankingCards
+                  rankings={activeRankings}
+                  scopeTitle={scopeTitle}
+                />
+              </section>
+
+              {/* Section: Geographic Map and Heat Map (2-Column on large screens) */}
+              <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* Geographic Map (7 cols) */}
+                <div id="geo-map" className="lg:col-span-6 xl:col-span-5">
+                  <ThailandGeoMap
+                    provinces={filteredProvinces}
+                    filter={filter}
+                    onSelectProvince={provName => {
+                      setFilter(prev => ({ ...prev, province: provName }));
+                    }}
+                    onSelectZone={zoneName => {
+                      setFilter(prev => ({ ...prev, zone: zoneName, province: 'all' }));
+                    }}
+                  />
+                </div>
+
+                {/* Regional Heatmap (7 cols) */}
+                <div id="heat-map" className="lg:col-span-6 xl:col-span-7">
+                  <RegionalHeatMap
+                    regions={dataset.regions}
+                    filter={filter}
+                    onSelectZone={zoneName => {
+                      setFilter(prev => ({ ...prev, zone: zoneName, province: 'all' }));
+                    }}
+                    onSelectDimension={dimKey => {
+                      setFilter(prev => ({ ...prev, dimension: dimKey }));
+                    }}
+                  />
+                </div>
+              </section>
+
+              {/* Section: Comprehensive Data Table */}
+              <section>
+                <DataTable provinces={filteredProvinces} />
+              </section>
             </div>
-          </section>
+          </main>
+        </>
+      )}
 
-          {/* Section: Comprehensive Data Table */}
-          <section>
-            <DataTable provinces={filteredProvinces} />
-          </section>
-        </div>
-      </main>
-
-      {/* 4. Footer in Calendly Style */}
+      {/* Footer in Calendly Style */}
       <footer className="bg-white border-t border-[#d4e0ed] mt-16 py-12">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-[#f0f3f8]">
