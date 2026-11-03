@@ -11,51 +11,24 @@ def test_index_html_structure():
 
     # 1. Viewport & responsive tags
     assert 'name="viewport"' in content
-    assert 'viewport-fit=cover' in content
-    assert 'safe-top' in content
-    assert 'safe-bottom' in content
 
-    # 2. Universal Design & A11y Toolbar
-    assert 'a11y-toolbar' in content
-    assert 'setFontSize' in content
-    assert 'toggleHighContrast' in content
-    assert 'voiceNoticeBanner' in content
+    # 2. Analyze Aging 6 Navigation Tabs
+    assert 'tab-9domains' in content
+    assert 'tab-demographics' in content
+    assert 'tab-ncd' in content
+    assert 'tab-morbidity' in content
+    assert 'tab-mortality' in content
+    assert 'tab-dalys' in content
+    assert 'tab-loops' not in content
 
-    # 3. Main Headings & Titles per Specification
-    assert "มหกรรมสุขภาพผู้สูงอายุแห่งชาติครั้งที่ 6" in content
-    assert "การประชุมวิชาการ เวชศาสตร์และวิทยาการด้านผู้สูงอายุ" in content
-    assert ("The 6th Thailand National Elderly Health Forum 2026" in content or "The 6th Thailand National Elderly Health Forum 2027" in content)
-    assert "ร่วมเรียนรู้ ร่วมดูแล เพื่อสุขภาพผู้สูงอายุ" in content
-    assert "สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ" in content
-
-    # 4. Official 1920x1080 Banner & A4 Schedule Slider
-    assert "1920x1080" in content
-    assert "schedule-a4-viewport" in content
-    assert "scheduleSlideContainer" in content
-    assert "scheduleLightboxModal" in content
-
-    # 5. Three Registration Modals / Sections
-    assert "publicModal" in content # Form 1.1
-    assert "pub_full_name" in content
-    assert "toggleVoiceInput" in content # Speech-to-text
-    assert "btnReadPublicFormNote" in content # Read Note
-
-    assert "medicalModal" in content # Form 1.2
-    assert "med_health_region" in content
-    assert "nursing_license_no" in content
-
-    assert "aseanModal" in content # Form 1.3
-    assert "Accommodation Booking Notice" in content
-
-    # 6. Status verification search (1.4)
-    assert "searchQueryInput" in content
-    assert "searchResultsContainer" in content
-
-    # 7. Document Downloads (Feature 2)
-    assert "documentsListContainer" in content
-
-    # 8. Success modal
-    assert "registrationSuccessModal" in content
+    # 3. Core Functional & Visual Sections
+    assert 'thailand-map-svg' in content
+    assert 'national-domain-ranking-grid' in content
+    assert 'demographics-chart' in content
+    assert 'ncd-chart' in content
+    assert 'morbidity-chart' in content
+    assert 'mortality-bar-chart' in content
+    assert 'dalys-chart' in content
 
 def test_admin_html_structure():
     admin_file = FRONTEND_DIR / "admin.html"

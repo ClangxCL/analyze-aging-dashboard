@@ -1,14 +1,14 @@
 @echo off
 cd /d "%~dp0"
-echo ========================================================
-echo Starting ElderHealth Forum 2026 Web Application
-echo The 6th Thailand National Elderly Health Forum 2026
-echo ========================================================
+echo ===================================================================
+echo Analyze Aging: ระบบสารสนเทศและแดชบอร์ดสุขภาพผู้สูงอายุไทย (MOPH HDC)
+echo Closed-Loop Data Engineering & 9-Domain Epidemiological Surveillance
+echo ===================================================================
 echo.
-echo Server starting at: http://localhost:8000
-echo Admin Portal at:   http://localhost:8000/admin.html
-echo Admin Login:       admin / forum2026
-echo ========================================================
+echo Interactive Dashboard: http://localhost:8000
+echo Swagger API Docs:      http://localhost:8000/docs
+echo.
+echo ===================================================================
 echo.
 
 if exist ".\.venv\Scripts\python.exe" (

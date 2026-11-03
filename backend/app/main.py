@@ -1,16 +1,17 @@
 import os
 from pathlib import Path
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from .config import settings
-from .routers import registration, content, admin
-from .seed_data import init_and_seed
+from .routers import aging
+from .seed_aging_data import seed_database
 
 app = FastAPI(
-    title="ElderHealth Forum 2026 API",
-    description="Backend API for ElderHealth Forum 2026 - The 6th Thailand National Elderly Health Forum 2026",
+    title=settings.PROJECT_NAME,
+    description="ระบบสารสนเทศและแดชบอร์ดเฝ้าระวังสุขภาพผู้สูงอายุไทย 9 ด้าน (MOPH HDC) พร้อมระบบวิศวกรรมข้อมูลแบบวงปิด (Loop Engineering)",
     version=settings.VERSION
 )
 
@@ -26,20 +27,14 @@ app.add_middleware(
 # Startup hook to initialize & seed database
 @app.on_event("startup")
 def on_startup():
-    init_and_seed()
+    try:
+        seed_database()
+    except Exception as e:
+        print(f"Aging seed notice: {e}")
 
-# Include Routers
-app.include_router(registration.router, prefix=settings.API_PREFIX)
-app.include_router(content.router, prefix=settings.API_PREFIX)
-app.include_router(admin.router, prefix=settings.API_PREFIX)
-
-# Mount Assets Directory from frontend
-frontend_assets_path = Path(__file__).resolve().parent.parent.parent / "frontend" / "assets"
-if frontend_assets_path.exists():
-    app.mount("/assets", StaticFiles(directory=str(frontend_assets_path)), name="assets")
-
-# Mount Uploads Directory
-app.mount("/uploads", StaticFiles(directory=str(settings.UPLOAD_DIR)), name="uploads")
+# Include Routers (both /api/aging and /api for convenience)
+app.include_router(aging.router, prefix=settings.API_PREFIX)
+app.include_router(aging.router, prefix="")
 
 @app.get("/api/health")
 def health_check():
@@ -49,10 +44,22 @@ def health_check():
         "version": settings.VERSION
     }
 
-# Mount Frontend directory for serving HTML, CSS, JS
-frontend_path = Path(__file__).resolve().parent.parent.parent / "frontend"
-if frontend_path.exists():
-    app.mount("/", StaticFiles(directory=str(frontend_path), html=True), name="frontend")
+# Frontend paths
+FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend"
+
+@app.get("/")
+def serve_index():
+    index_file = FRONTEND_DIR / "index.html"
+    return FileResponse(str(index_file))
+
+@app.get("/aging")
+def serve_aging():
+    index_file = FRONTEND_DIR / "index.html"
+    return FileResponse(str(index_file))
+
+# Mount Frontend static files
+if FRONTEND_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,100 +1,129 @@
-# ElderHealth Forum 2026 (มหกรรมสุขภาพผู้สูงอายุแห่งชาติ ครั้งที่ 6)
-
-ระบบเว็บแอปพลิเคชันสำหรับงาน **“การประชุมวิชาการ เวชศาสตร์และวิทยาการด้านผู้สูงอายุ” มหกรรมสุขภาพผู้สูงอายุแห่งชาติ ครั้งที่ 6 (The 6th Thailand National Elderly Health Forum 2026)**
-จัดโดย **สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข**
-
----
-
-## สถาปัตยกรรมและเทคโนโลยีที่ใช้ (Tech Stack)
-
-### Frontend
-- **Design System:** สไตล์ **Atelier AI Warm Linen Paper** โทนกระดาษอบอุ่น (`--paper: #f5f0e9`, `--ink: #171411`, `--panel: #eee5da`, `--taupe: #a67b4f`) คมชัด สบายตา ไม่ฉูดฉาด
-- **Universal Accessibility (WCAG 2.1 AA):** แถบปรับขนาดตัวอักษร 3 ระดับ (A / A+ / A++), ปุ่มโหมดสีคอนทราสต์สูง (High Contrast Mode)
-- **Voice Assistance (Speech-to-Text & Text-to-Speech):** รองรับการพูดด้วยเสียงภาษาไทยแทนการพิมพ์ สำหรับผู้สูงอายุ และปุ่มอ่านสรุปข้อมูลด้วยเสียง
-- **Event Countdown:** ระบบนับถอยหลังสู่วันเปิดงานแบบเรียลไทม์ 4 ช่อง (วัน, ชั่วโมง, นาที, วินาที)
-- **3-Track Registration System:**
-  - **Track 1.1:** ประชาชนทั่วไปและผู้สูงอายุ (Universal Design พร้อมระบบสั่งพิมพ์ด้วยเสียง)
-  - **Track 1.2:** บุคลากรทางการแพทย์และสาธารณสุข (รองรับเขตสุขภาพ 1 - 12 และเลขขอหน่วยกิต CME, CNEU, อื่นๆ)
-  - **Track 1.3:** ASEAN Member States (English registration form & Hotel Accommodation booking notice)
-- **Verification Spotlight:** ด็อกค้นหาและตรวจสอบสถานะการลงทะเบียนทันที
-- **A4 Vertical Schedule Slider:** กำหนดการงานแนวตั้งขนาด A4 รองรับ Touch Swipe บนมือถือ/ไอแพด พร้อมระบบ Lightbox แตะดูภาพขนาดเต็ม
-- **Document Center:** ระบบดาวน์โหลดเอกสารวิชาการและใบจองห้องพักโรงแรม
-
-### Backend
-- **Framework:** Python 3.12 + FastAPI (Asynchronous REST API)
-- **Database ORM:** SQLAlchemy พร้อมระบบจำลองฐานข้อมูล SQLite (`forum2026.db`) รองรับ PostgreSQL ในระดับ Production
-- **Data Deduplication:** ตรวจสอบและป้องกันการลงทะเบียนซ้ำซ้อนระดับชื่อ-นามสกุลแบบ Real-time (Atomic UPSERT)
-- **Admin Management & Excel Export:** แดชบอร์ดสรุปสถิติผู้เข้าร่วมงานแยกตามเขตสุขภาพและจังหวัด พร้อมดาวน์โหลดรายงานเป็นไฟล์ Excel (`.xlsx`)
-- **Audit Logging:** บันทึกประวัติการแก้ไขและส่งออกข้อมูลเพื่อความปลอดภัย
+# Analyze Aging: Thailand Elderly Health Surveillance & Clinical Dashboard
+> ระบบสารสนเทศและแดชบอร์ดสุขภาพผู้สูงอายุไทย 9 ด้าน (MOPH HDC Data Surveillance & Clinical Insights)  
+> ออกแบบภายใต้แนวคิด **Sunlit Editing Desk** ตามมาตรฐาน [DESIGN.md](DESIGN.md)
 
 ---
 
-## โครงสร้างโปรเจกต์ (Project Structure)
+## 🌟 จุดเด่นของระบบ (Key Features)
+
+### 1. Dual-Mode Architecture (สถาปัตยกรรมทำงานได้ 2 รูปแบบ)
+- **Zero-Dependency Direct Offline Mode**: หน้าเว็บ [frontend/index.html](frontend/index.html) ฝังชุดข้อมูลสำรองออฟไลน์ (Embedded Fallback Data Bundle) ขนาด 1.39 MB และแผนที่ประเทศไทย D3.js GeoJSON ครบ 77 จังหวัด **สามารถดับเบิลคลิกเปิดไฟล์ดูและเล่นตัวกรองได้ทันทีในเบราว์เซอร์ โดยไม่ต้องรันเซิร์ฟเวอร์หรือติดตั้งโปรแกรมใดๆ เพิ่มเติม**
+- **Full-Stack Live API Mode**: เชื่อมต่อผ่าน FastAPI + SQLite (`aging_data.db`) พร้อมระบบตรวจสอบความสมบูรณ์ของข้อมูลย้อนหลัง 5 ปี (พ.ศ. 2565–2569) ผ่าน `run.bat`
+
+### 2. โมดูลวิเคราะห์สุขภาพผู้สูงอายุ 6 มิติหลัก (6 Dedicated Health Modules)
+1. **คัดกรอง 9 ด้าน & ศักยภาพ ADL (Barthel Index 3 ติด)**:
+   - แถบวัดสัดส่วนศักยภาพตามเกณฑ์ Barthel Index: **ติดสังคม 95.8% (13.21M คน)**, **ติดบ้าน 3.1% (427k คน)**, **ติดเตียง 1.1% (151k คน)**
+   - การ์ดจัดอันดับ 9 มิติสุขภาพ เรียงลำดับความเสี่ยงสูงสุดในประเทศ พร้อมแถบสีความรุนแรงและปุ่ม Active Focus
+   - แผนที่ระบายสีเชิงพื้นที่ประเทศไทย D3.js Choropleth Map (77 จังหวัด 13 เขตสุขภาพ) พร้อมตารางจัดอันดับ Leaderboard
+2. **โครงสร้างและสถานการณ์ประชากร 5 ปี (2565–2569)**:
+   - กราฟแท่งคู่ผสมผสานจำนวนประชากรสูงวัย (14.96 ล้านคน) และสัดส่วนที่ก้าวสู่ Super-Aged Society (20.67%)
+   - แผนภูมิโดนัทเจาะลึก 3 ช่วงวัย: วัยต้น (60-69 ปี: 54.7%), วัยกลาง (70-79 ปี: 31.4%), วัยปลาย (80+ ปี: 13.9%)
+   - แถบสรุปดัชนีการสูงวัย (Aging Index, OADR, Potential Support Ratio 2.76:1)
+3. **ความชุก 10 โรคเรื้อรังสำคัญ (NCDs) & Multimorbidity**:
+   - ไฮไลต์ประเด็น **68.4% ของผู้สูงอายุมีโรคประจำตัวเรื้อรังตั้งแต่ 2 โรคขึ้นไป**
+   - ปุ่มกรองหมวดหมู่โรค: ทั้งหมด (10 โรค), หัวใจและหลอดเลือด, กระดูกและข้อ, สมองและจิตใจ
+   - ปุ่มสลับการจัดอันดับตามร้อยละความชุก (%) หรือจำนวนผู้ป่วยคาดการณ์จริง
+   - การ์ดจุดเน้นการดูแลทางคลินิก (Clinical Focus) เชิงนโยบาย
+4. **การเจ็บป่วย OPD & IPD ย้อนหลัง 5 ปี (2565–2569)**:
+   - สลับมุมมองระหว่างผู้ป่วยนอก (OPD: 10 อันดับโรคตรวจรักษา) และผู้ป่วยใน (IPD: 10 อันดับการนอนโรงพยาบาล)
+   - สลับการแสดงผลระหว่าง **จำนวนครั้ง/ราย (เปรียบเทียบแนวโน้ม 3 ปี 2565–2567)** และ **อัตราต่อแสนประชากรสูงอายุ**
+   - ป้ายวิเคราะห์ความแตกต่างเชิงระบบ (System Contrast Callout) อธิบายความต่างระหว่างการคุมโรคระดับปฐมภูมิกับการนอน รพ.
+5. **10 อันดับสาเหตุการเสียชีวิต (Mortality Causes)**:
+   - แถบสถิติ Pareto Concentration: Top 4 สาเหตุ (มะเร็ง, หลอดเลือดสมอง, ปอดอักเสบ, หัวใจขาดเลือด) ครองสัดส่วนถึง 68.5% ของการเสียชีวิตทั้งหมด
+   - กราฟแท่งแนวนอนแสดงจำนวนผู้เสียชีวิตจริงปี 2567 เทียบกับแผนภูมิโดนัทสัดส่วนร้อยละ
+6. **ภาระโรคและการสูญเสียปีสุขภาวะ (DALYs & BOD Thailand)**:
+   - ปุ่มสลับมุมมองระหว่าง **จำนวนปีรวม (DALYs)** และ **สัดส่วน 100% Normalized (YLL vs YLD)**
+   - แสดงความแตกต่างระหว่างกลุ่มโรคคร่าชีวิตเฉียบพลัน (เช่น โรคหลอดเลือดสมอง: YLL 89.2%) กับโรคทุพพลภาพเรื้อรังยาวนาน (เช่น ข้อเข่าเสื่อม: YLD 100%, สมองเสื่อม: YLD 80%)
+
+---
+
+## 🎨 ระบบดีไซน์ (Design System)
+ออกแบบตามมาตรฐาน [DESIGN.md](DESIGN.md) (*Captions — Sunlit editing desk*):
+- **Floating Frosted Header**: แถบนำทางโปร่งแสงลอยตัว ขอบมนรัศมี 30px พร้อม Backdrop Blur 24px
+- **Paper White Canvas (`#ffffff`)**: พื้นผิวสีขาวสว่าง พร้อมเส้นกริดไมโครสะอาดตา
+- **Air Wash Surfaces (`#effbff`)**: พื้นผิวสีฟ้าอ่อนโปร่งแสงสำหรับส่วนเน้นและตัวกรอง
+- **Mist Border (`#e8eff2`) & Steel Inset (`#d0d6d7`)**: ขอบมนและเส้นแบ่งความละเอียดสูง 0.5px
+- **Prism Cyan (`#00d0ff`) & Charcoal (`#1d1f20`)**: คู่สีมินิมอลโมเดิร์น
+- **Editorial Typography**: การจับคู่ฟอนต์ `Newsreader` (Display Headline) กับ `Plus Jakarta Sans`, `Prompt`, และ `Sarabun` (Interface & Body)
+
+---
+
+## 🚀 วิธีการติดตั้งและรันระบบ (Quick Start)
+
+### วิธีที่ 1: เปิดใช้งานทันที (Offline / No Server Required)
+เปิดไฟล์ผ่านเบราว์เซอร์ Google Chrome หรือ Microsoft Edge:
+```
+frontend/index.html
+```
+
+### วิธีที่ 2: รันผ่าน Local Server (FastAPI + Uvicorn)
+1. **ติดตั้ง Dependencies** (หากยังไม่ได้ติดตั้ง):
+   ```bash
+   python -m venv .venv
+   .\.venv\Scripts\pip install -r requirements.txt
+   ```
+2. **รันเซิร์ฟเวอร์**:
+   - บน Windows: ดับเบิลคลิกไฟล์ `run.bat`
+   - หรือรันผ่านคำสั่ง:
+     ```bash
+     .\.venv\Scripts\python.exe -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
+     ```
+3. **เข้าใช้งาน**:
+   - แดชบอร์ดหลัก: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+   - เอกสาร Interactive API (Swagger): [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+
+---
+
+## 🧪 การทดสอบระบบ (Test Suite)
+โปรเจกต์ผ่านการทดสอบอัตโนมัติ 100% ครบทั้ง 28 ชุดทดสอบ:
+```bash
+.\.venv\Scripts\pytest.exe -o pythonpath=. tests/ -v
+```
+- `tests/test_html_dom.py`: ตรวจสอบโครงสร้าง DOM, แท็บ, และคอมโพเนนต์
+- `tests/test_aging_api.py`: ตรวจสอบความถูกต้องของ REST API Endpoints 15 จุด
+- `tests/test_aging_db.py`: ตรวจสอบ Schema ฐานข้อมูลและ Audit Logging
+- `tests/test_aging_e2e_playwright.py`: ทดสอบ E2E จำลองการคลิกสลับแท็บ แผนที่ กรองข้อมูล และจัดอันดับบนเบราว์เซอร์เสมือนจริง
+
+---
+
+## 📁 โครงสร้างโปรเจกต์ (Repository Structure)
 
 ```
 .
 ├── backend/
 │   ├── app/
-│   │   ├── main.py              # FastAPI Application Entrypoint & Startup Hook
-│   │   ├── config.py            # การตั้งค่าแอปพลิเคชันและไดเรกทอรี
+│   │   ├── main.py              # FastAPI Application Entrypoint
+│   │   ├── config.py            # การตั้งค่าแอปพลิเคชัน
 │   │   ├── database.py          # SQLAlchemy Session & Engine
-│   │   ├── models.py            # โครงสร้างตารางฐานข้อมูล (Public, Medical, ASEAN, Audit, Documents)
-│   │   ├── schemas.py           # Pydantic Schemas สำหรับ Validation
-│   │   ├── seed_data.py         # ข้อมูลตั้งต้นและเอกสารดาวน์โหลดจำลอง
-│   │   ├── services/
-│   │   │   └── deduplication.py # ตรรกะป้องกันการลงทะเบียนซ้ำ
+│   │   ├── models.py            # โครงสร้างตารางฐานข้อมูลสุขภาพผู้สูงอายุ
+│   │   ├── schemas.py           # Pydantic Validation Schemas
+│   │   ├── seed_aging_data.py   # สคริปต์เพาะข้อมูลสุขภาพ 9 ด้าน 5 ปีย้อนหลัง
 │   │   └── routers/
-│   │       ├── registration.py  # API รับสมัครและค้นหาสถานะ
-│   │       ├── content.py       # API กำหนดการและเอกสารดาวน์โหลด
-│   │       └── admin.py         # API ระบบผู้ดูแลระบบและส่งออก Excel
+│   │       └── aging.py         # REST API Endpoints สำหรับข้อมูลสุขภาพ 6 มิติ
+│   └── aging_data.db            # ฐานข้อมูล SQLite ข้อมูลสุขภาพผู้สูงอายุไทย
 ├── frontend/
-│   ├── index.html               # หน้าหลัก Landing Page สไตล์ Atelier AI
-│   ├── admin.html               # หน้า Backoffice สำหรับผู้ดูแลระบบ
+│   ├── index.html               # หน้าแดชบอร์ดหลัก (Sunlit Editing Desk Design)
+│   ├── aging_dashboard.html     # หน้าแดชบอร์ดสำรอง
 │   ├── css/
-│   │   └── style.css            # สไตล์ชีท Atelier AI Design Tokens & Accessibility
-│   ├── js/
-│   │   ├── app.js               # ตรรกะหน้าเว็บ เสียงพูด การเลื่อนสไลด์ A4 และการส่งฟอร์ม
-│   │   └── thai_address_data.js # ฐานข้อมูลภูมิศาสตร์ไทย (77 จังหวัด, อำเภอ, ตำบล, เขตสุขภาพ 1-12)
-│   └── assets/                  # ภาพแบนเนอร์ทางการ 1920x1080 และภาพกำหนดการ A4
+│   │   └── style.css            # Token สไตล์และคลาสคอมโพเนนต์ตาม DESIGN.md
+│   └── js/
+│       ├── aging_app.js         # ลอจิกแอปพลิเคชันและ Chart.js / D3.js
+│       └── aging_data_embedded.js # ชุดข้อมูลสำรองออฟไลน์ 1.39 MB (Offline Bundle)
 ├── tests/
-│   ├── test_backend_unit.py     # ชุดทดสอบ Backend API, Deduplication และ Excel Export
-│   └── test_html_dom.py         # ชุดทดสอบโครงสร้าง HTML DOM และ A11y Standards
-├── requirements.txt             # รายการแพ็กเกจ Python
-├── run_app.py                   # สคริปต์รันเซิร์ฟเวอร์แบบด่วน
-└── start_server.bat             # ไฟล์ Batch สำหรับรันเซิร์ฟเวอร์บน Windows
+│   ├── test_html_dom.py         # การทดสอบ DOM และ Assets
+│   ├── test_aging_api.py        # การทดสอบ API Endpoints
+│   ├── test_aging_db.py         # การทดสอบ Database Models
+│   └── test_aging_e2e_playwright.py # การทดสอบ End-to-End ผ่าน Playwright
+├── DESIGN.md                    # ข้อกำหนดระบบดีไซน์ต้นแบบ (Design System Specification)
+├── run.bat                      # สคริปต์สำหรับรันเซิร์ฟเวอร์บน Windows
+└── requirements.txt             # รายการ Python Libraries
 ```
 
 ---
 
-## วิธีการติดตั้งและรันระบบ (Quickstart)
-
-### 1. ติดตั้ง Dependencies
-```bash
-python -m venv .venv
-.\.venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 2. เริ่มต้นรันเซิร์ฟเวอร์
-```bash
-python run_app.py
-```
-หรือรันผ่าน Uvicorn โดยตรง:
-```bash
-uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
-```
-
-- เข้าใช้งานหน้าเว็บหลัก: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- เข้าใช้งานระบบผู้ดูแลระบบ (Admin): [http://127.0.0.1:8000/admin.html](http://127.0.0.1:8000/admin.html)
-- ดูคู่มือ Swagger API: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-
-### 3. การรันชุดทดสอบ (Automated Tests)
-```bash
-pytest
-```
-
----
-
-## ผู้พัฒนาและลิขสิทธิ์
-- สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข
-- © 2026 ElderHealth Forum Project. All rights reserved.
+## 📄 แหล่งข้อมูลอ้างอิง (Data Sources & Attribution)
+- กระทรวงสาธารณสุข (MOPH HDC - Health Data Center): ระบบคลังข้อมูลสุขภาพ
+- กรมการแพทย์ (DMS - Department of Medical Services)
+- สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ
+- โครงการประเมินภาระโรคแห่งประเทศไทย (BOD Thailand)
+- สำนักงานสถิติแห่งชาติ และสำนักงานสภาพัฒนาการเศรษฐกิจและสังคมแห่งชาติ (สศช.)

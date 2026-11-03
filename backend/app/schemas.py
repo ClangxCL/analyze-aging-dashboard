@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, Field
 
@@ -88,3 +88,98 @@ class DashboardStatsResponse(BaseModel):
     regional_breakdown: dict
     popular_interests: dict
     recent_registrations: list
+
+
+# ==========================================
+# Analyze Aging: 9-Domain Analytics Schemas
+# ==========================================
+
+class DomainMetric(BaseModel):
+    num: int
+    name_th: str
+    name_en: str
+    screened: int
+    screened_pct: float
+    normal: int
+    risk: int
+    risk_pct: float
+    extra_2q_plus: Optional[int] = None
+
+class NationalDomainRankItem(BaseModel):
+    rank: int
+    domain_id: str
+    num: int
+    name_th: str
+    name_en: str
+    screened: int
+    screened_pct: float
+    risk: int
+    risk_pct: float
+    severity_tier: str
+
+class AgingKPISummary(BaseModel):
+    fiscal_year: str
+    entity_id: Optional[str] = "TH"
+    entity_name: Optional[str] = "ทั้งประเทศ"
+    entity_type: Optional[str] = "national"
+    target_pop: int
+    screened_9d: int
+    screened_9d_pct: float
+    highest_risk_domain: Dict[str, Any]
+    domains: Dict[str, DomainMetric]
+    domain_rankings: Optional[List[NationalDomainRankItem]] = None
+
+class ProvinceItem(BaseModel):
+    province_code: str
+    province_name_th: str
+    province_name_en: Optional[str] = None
+    zone_id: str
+
+class RankingItem(BaseModel):
+    rank: int
+    entity_id: str
+    entity_name: str
+    zone_id: Optional[str] = None
+    target_pop: int
+    screened: int
+    risk: int
+    risk_pct: float
+
+class RankingResponse(BaseModel):
+    fiscal_year: str
+    domain_id: str
+    domain_name: str
+    level: str
+    zone_filter: Optional[str] = None
+    order: Optional[str] = "desc"
+    total_items: int
+    rankings: List[RankingItem]
+
+class HeatmapCell(BaseModel):
+    domain_id: str
+    domain_name: str
+    screened: int
+    risk: int
+    risk_pct: float
+    severity_tier: str  # "low", "moderate", "high", "critical"
+
+class HeatmapRow(BaseModel):
+    entity_id: str
+    entity_name: str
+    zone_id: Optional[str] = None
+    target_pop: int
+    screened_9d: int
+    screened_9d_pct: float
+    domains: Dict[str, HeatmapCell]
+
+class HeatmapResponse(BaseModel):
+    fiscal_year: str
+    level: str
+    rows: List[HeatmapRow]
+
+class ValidationHealthResponse(BaseModel):
+    overall_status: str
+    timestamp: str
+    total_anomalies_recorded: int
+    loops: Dict[str, Any]
+

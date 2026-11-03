@@ -27,6 +27,14 @@
       "dest": "frontend/js/$1"
     },
     {
+      "src": "/aging",
+      "dest": "frontend/aging_dashboard.html"
+    },
+    {
+      "src": "/aging_dashboard.html",
+      "dest": "frontend/aging_dashboard.html"
+    },
+    {
       "src": "/admin.html",
       "dest": "frontend/admin.html"
     },

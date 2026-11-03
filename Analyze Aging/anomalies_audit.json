@@ -1,0 +1,636 @@
+{
+  "total_anomalies": 70,
+  "generated_at": "2026-11-03T08:35:48.624829+00:00",
+  "items": [
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "50",
+      "details": "Domain d1_visual: normal (255852) + risk (47574) != screened (275304)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.405346+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "51",
+      "details": "Domain d1_visual: normal (86945) + risk (19763) != screened (95448)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.410275+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "52",
+      "details": "Domain d1_visual: normal (170746) + risk (21637) != screened (175387)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.412948+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "54",
+      "details": "Domain d1_visual: normal (102989) + risk (19869) != screened (108564)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.418388+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "55",
+      "details": "Domain d1_visual: normal (88916) + risk (18790) != screened (100136)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.422097+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "56",
+      "details": "Domain d1_visual: normal (90938) + risk (20656) != screened (101982)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.425187+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "57",
+      "details": "Domain d1_visual: normal (204933) + risk (34151) != screened (213748)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.429321+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "58",
+      "details": "Domain d1_visual: normal (28302) + risk (3969) != screened (29593)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.432780+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "53",
+      "details": "Domain d1_visual: normal (95741) + risk (17692) != screened (100287)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.432780+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "63",
+      "details": "Domain d1_visual: normal (72564) + risk (12916) != screened (76320)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.432780+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "64",
+      "details": "Domain d1_visual: normal (115937) + risk (15580) != screened (119465)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.441645+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "65",
+      "details": "Domain d1_visual: normal (146370) + risk (20181) != screened (150887)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.441645+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "67",
+      "details": "Domain d1_visual: normal (160487) + risk (23315) != screened (166583)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.445471+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "60",
+      "details": "Domain d1_visual: normal (168567) + risk (21949) != screened (176184)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.451259+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "60",
+      "details": "Domain d2_incontinence: normal (134589) + risk (6548) != screened (173984)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.451781+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "61",
+      "details": "Domain d1_visual: normal (52174) + risk (9377) != screened (57714)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.456022+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "62",
+      "details": "Domain d1_visual: normal (117552) + risk (14605) != screened (120579)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.457531+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "62",
+      "details": "Domain d2_incontinence: normal (108637) + risk (2655) != screened (117267)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.462241+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "66",
+      "details": "Domain d1_visual: normal (93896) + risk (17694) != screened (100803)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.462241+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "66",
+      "details": "Domain d2_incontinence: normal (85717) + risk (4272) != screened (100596)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.462241+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "13",
+      "details": "Domain d1_visual: normal (118879) + risk (11521) != screened (121779)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.468438+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "14",
+      "details": "Domain d1_visual: normal (130063) + risk (23676) != screened (137138)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.472716+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "15",
+      "details": "Domain d1_visual: normal (50839) + risk (8103) != screened (55124)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.474094+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "16",
+      "details": "Domain d1_visual: normal (112949) + risk (17208) != screened (119732)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.477580+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "19",
+      "details": "Domain d1_visual: normal (91123) + risk (16117) != screened (100904)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.482432+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "26",
+      "details": "Domain d1_visual: normal (37304) + risk (6784) != screened (41324)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.483011+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "70",
+      "details": "Domain d1_visual: normal (128847) + risk (16595) != screened (137197)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.487694+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "72",
+      "details": "Domain d1_visual: normal (143862) + risk (30990) != screened (162239)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.490420+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "73",
+      "details": "Domain d1_visual: normal (132004) + risk (13986) != screened (138002)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.492946+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "73",
+      "details": "Domain d2_incontinence: normal (120366) + risk (4162) != screened (133154)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.493506+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "74",
+      "details": "Domain d1_visual: normal (59322) + risk (6129) != screened (61891)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.495862+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "75",
+      "details": "Domain d1_visual: normal (39517) + risk (3724) != screened (40565)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.498756+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "76",
+      "details": "Domain d1_visual: normal (81313) + risk (7340) != screened (84047)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.498756+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "77",
+      "details": "Domain d1_visual: normal (82932) + risk (7401) != screened (85808)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.504529+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "20",
+      "details": "Domain d2_incontinence: normal (89939) + risk (3092) != screened (98121)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.507134+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "25",
+      "details": "Domain d1_visual: normal (69992) + risk (10215) != screened (73732)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.507134+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "27",
+      "details": "Domain d1_visual: normal (82099) + risk (12522) != screened (84543)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.513876+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "40",
+      "details": "Domain d1_visual: normal (259952) + risk (47297) != screened (282409)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.514467+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "44",
+      "details": "Domain d1_visual: normal (144524) + risk (21442) != screened (153264)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.518684+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "38",
+      "details": "Domain d1_visual: normal (50913) + risk (11965) != screened (58453)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.520735+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "39",
+      "details": "Domain d1_visual: normal (70854) + risk (14683) != screened (81029)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.524649+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "41",
+      "details": "Domain d1_visual: normal (256293) + risk (26568) != screened (259492)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.525239+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "42",
+      "details": "Domain d1_visual: normal (110707) + risk (18538) != screened (116192)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.527815+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "43",
+      "details": "Domain d1_visual: normal (78488) + risk (9064) != screened (80555)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.527815+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "47",
+      "details": "Domain d1_visual: normal (123102) + risk (25142) != screened (140897)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.534776+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "48",
+      "details": "Domain d1_visual: normal (98873) + risk (12596) != screened (102960)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.534776+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "30",
+      "details": "Domain d1_visual: normal (420242) + risk (77434) != screened (442210)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.540771+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "31",
+      "details": "Domain d1_visual: normal (237170) + risk (37679) != screened (247052)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.540771+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "31",
+      "details": "Domain d2_incontinence: normal (220701) + risk (13010) != screened (246992)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.545550+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "32",
+      "details": "Domain d1_visual: normal (202289) + risk (49542) != screened (224711)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.545550+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "36",
+      "details": "Domain d1_visual: normal (165072) + risk (29089) != screened (176847)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.550194+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "33",
+      "details": "Domain d1_visual: normal (196814) + risk (46176) != screened (213074)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.550194+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "34",
+      "details": "Domain d1_visual: normal (276524) + risk (49985) != screened (283665)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.557192+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "35",
+      "details": "Domain d1_visual: normal (74842) + risk (13544) != screened (81397)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.558203+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "37",
+      "details": "Domain d1_visual: normal (47388) + risk (9075) != screened (52123)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.558203+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "37",
+      "details": "Domain d2_incontinence: normal (42728) + risk (3901) != screened (49178)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.558203+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "49",
+      "details": "Domain d1_visual: normal (48186) + risk (9857) != screened (52653)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.567072+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "80",
+      "details": "Domain d1_visual: normal (216697) + risk (38340) != screened (233340)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.568080+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "81",
+      "details": "Domain d1_visual: normal (65942) + risk (10077) != screened (66514)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.568080+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "82",
+      "details": "Domain d1_visual: normal (44681) + risk (4872) != screened (45815)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.573978+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "84",
+      "details": "Domain d1_visual: normal (146597) + risk (30151) != screened (155553)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.577110+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "85",
+      "details": "Domain d1_visual: normal (22789) + risk (3371) != screened (23777)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.578116+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "86",
+      "details": "Domain d1_visual: normal (88032) + risk (13712) != screened (89492)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.582646+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "90",
+      "details": "Domain d1_visual: normal (190750) + risk (26660) != screened (196298)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.582646+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "91",
+      "details": "Domain d1_visual: normal (38149) + risk (7004) != screened (40667)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.587536+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "92",
+      "details": "Domain d1_visual: normal (92962) + risk (17414) != screened (101551)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.590735+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "93",
+      "details": "Domain d1_visual: normal (90871) + risk (20394) != screened (97454)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.590735+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "94",
+      "details": "Domain d1_visual: normal (66440) + risk (15578) != screened (75627)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.590735+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "95",
+      "details": "Domain d1_visual: normal (59049) + risk (5698) != screened (60816)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.597807+00:00"
+    },
+    {
+      "rule_name": "ARITHMETIC_INVARIANT",
+      "severity": "INFO",
+      "fiscal_year": "2569",
+      "entity_id": "96",
+      "details": "Domain d1_visual: normal (70550) + risk (11823) != screened (77114)",
+      "resolution_action": "Quarantined in audit log",
+      "timestamp": "2026-11-03T08:35:48.599820+00:00"
+    }
+  ]
+}

@@ -1,882 +1,1211 @@
 <!DOCTYPE html>
-<html lang="th" class="font-normal">
+<html lang="th" class="h-full bg-white">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>ElderHealth Forum 2026 | มหกรรมสุขภาพผู้สูงอายุแห่งชาติครั้งที่ 6</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analyze Aging: ระบบเฝ้าระวังและวิเคราะห์สุขภาพผู้สูงอายุ 9 ด้าน (MOPH HDC)</title>
+  
+  <!-- Google Fonts: Newsreader, Sarabun, Prompt, Plus Jakarta Sans (DESIGN.md) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- D3.js v7 CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sarabun', 'Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            heading: ['Prompt', 'Plus Jakarta Sans', 'sans-serif'],
+            exposure: ['Newsreader', 'Libre Baskerville', 'Prompt', 'Georgia', 'serif'],
+            mono: ['"Plus Jakarta Sans"', 'ui-monospace', 'monospace']
+          },
+          colors: {
+            'paper-white': '#ffffff',
+            'air-wash': '#effbff',
+            'mist-border': '#e8eff2',
+            'steel-inset': '#d0d6d7',
+            'ash-copy': '#7e8486',
+            'graphite-copy': '#434647',
+            'editorial-ink': '#2a2c2d',
+            'charcoal': '#1d1f20',
+            'prism-cyan': '#00d0ff',
+            'sky-fade': '#a6ecff',
+            'cyan-halo': '#ccf6ff',
+            moph: {
+              DEFAULT: '#1d1f20',
+              dark: '#1d1f20',
+              light: '#effbff',
+              hover: '#2a2c2d'
+            },
+            navy: {
+              DEFAULT: '#1d1f20',
+              dark: '#1d1f20',
+              light: '#effbff'
+            }
+          },
+          borderRadius: {
+            'card': '12px',
+            'pill': '9999px',
+            'feature': '40px',
+            'frosted': '30px'
+          },
+          boxShadow: {
+            'subtle': 'rgb(208, 214, 215) 0px 0px 0px 0.5px inset',
+            'halo': 'rgba(190, 210, 235, 0.45) 0px 0px 80px 0px',
+            'cyan-inset': 'color(srgb 0 0.815686 1 / 0.2) 0px 0px 0px 0.5px inset'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-feature-settings: "cv02", "cv03", "cv04", "cv11"; }
+    .map-tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(15, 23, 42, 0.96);
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      transition: opacity 0.15s ease;
+      z-index: 50;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .tab-btn.active {
+      background-color: #007b5e;
+      color: #ffffff;
+      border-color: #007b5e;
+    }
+    .tab-btn:not(.active) {
+      background-color: #ffffff;
+      color: #475569;
+      border-color: #e2e8f0;
+    }
+    .tab-btn:not(.active):hover {
+      background-color: #f8fafc;
+      color: #007b5e;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body class="bg-[#f5f0e9] text-[#171411] min-h-screen flex flex-col antialiased selection:bg-[#a67b4f]/25 selection:text-[#171411]">
+<body class="min-h-full text-[#1d1f20] flex flex-col font-sans bg-white selection:bg-[#ccf6ff] selection:text-[#1d1f20]">
 
-  <!-- ======================================================== -->
-  <!-- 1. Universal Accessibility Toolbar (Sticky Top)          -->
-  <!-- ======================================================== -->
-  <header class="a11y-toolbar safe-top">
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2 px-3 py-1 bg-[#eee5da] text-[#7d7267] rounded-full border border-[#d6c5b2] text-xs font-semibold backdrop-blur-md">
-        <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
-        <span>Universal Accessibility</span>
-      </div>
+  <!-- Floating Frosted Header (DESIGN.md - Sunlit Editing Desk) -->
+  <header class="sticky top-3 z-40 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mb-3">
+    <div class="bg-white/90 backdrop-blur-2xl border border-[#d0d6d7] rounded-[30px] px-5 sm:px-7 py-3 shadow-xs flex flex-wrap items-center justify-between gap-3">
       
-      <!-- Speech to Text Status Indicator -->
-      <div id="voiceNoticeBanner" class="hidden flex items-center gap-2 px-3 py-1 bg-red-500/10 text-red-600 border border-red-500/30 rounded-full text-xs font-semibold animate-pulse">
-        <span class="w-2 h-2 bg-red-600 rounded-full"></span>
-        <span class="voice-text">กำลังรับฟังเสียงพูด...</span>
+      <!-- Brand & Crest -->
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-2xl bg-[#effbff] flex items-center justify-center border border-[#ccf6ff] shadow-subtle text-[#1d1f20]">
+          <i data-lucide="activity" class="w-5 h-5 text-[#00d0ff]"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-[10px] px-2.5 py-0.5 rounded-full bg-[#effbff] text-[#1d1f20] border border-[#ccf6ff] flex items-center space-x-1.5 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#00d0ff] animate-pulse"></span>
+              <span>พร้อมใช้งาน · MOPH HDC Mapped</span>
+            </span>
+          </div>
+          <h1 class="text-base sm:text-lg font-bold font-exposure text-[#2a2c2d] tracking-tight mt-0.5">
+            Analyze Aging: <span class="font-normal text-xs sm:text-sm text-[#434647] font-sans">ระบบสารสนเทศและแดชบอร์ดสุขภาพผู้สูงอายุไทย</span>
+          </h1>
+        </div>
       </div>
-    </div>
 
-    <div class="flex items-center gap-3">
-      <!-- Font Size Controls (WCAG 2.1 AA) -->
-      <div class="flex items-center gap-1 bg-[#eee5da] p-1 rounded-full border border-[#d6c5b2] backdrop-blur-md" role="group" aria-label="ปรับขนาดตัวอักษร">
-        <button type="button" class="btn-font-size px-3 py-1 text-xs font-bold rounded-full transition-colors bg-[#171614] text-white" data-size="normal" onclick="setFontSize('normal')" title="ขนาดตัวอักษรปกติ">ก</button>
-        <button type="button" class="btn-font-size px-3 py-1 text-sm font-bold rounded-full hover:bg-[#e2d5c8] transition-colors text-[#7d7267]" data-size="large" onclick="setFontSize('large')" title="ขนาดตัวอักษรใหญ่">ก+</button>
-        <button type="button" class="btn-font-size px-3 py-1 text-base font-bold rounded-full hover:bg-[#e2d5c8] transition-colors text-[#7d7267]" data-size="xlarge" onclick="setFontSize('xlarge')" title="ขนาดตัวอักษรใหญ่พิเศษ">ก++</button>
+      <!-- Navigation Tabs Bar -->
+      <div class="flex items-center space-x-1 overflow-x-auto py-1 custom-scrollbar max-w-full" id="tabNav">
+        <button onclick="switchTab('tab-9domains')" id="btn-tab-9domains" class="tab-btn active px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition cursor-pointer flex items-center space-x-1.5">
+          <i data-lucide="map" class="w-3.5 h-3.5"></i>
+          <span>1. คัดกรอง 9 ด้าน & ADL</span>
+        </button>
+
+        <button onclick="switchTab('tab-demographics')" id="btn-tab-demographics" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition cursor-pointer flex items-center space-x-1.5">
+          <i data-lucide="users" class="w-3.5 h-3.5"></i>
+          <span>2. สถานการณ์ประชากร 5 ปี</span>
+        </button>
+
+        <button onclick="switchTab('tab-ncd')" id="btn-tab-ncd" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition cursor-pointer flex items-center space-x-1.5">
+          <i data-lucide="heart-pulse" class="w-3.5 h-3.5"></i>
+          <span>3. ความชุกโรคเรื้อรัง (NCDs)</span>
+        </button>
+
+        <button onclick="switchTab('tab-morbidity')" id="btn-tab-morbidity" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition cursor-pointer flex items-center space-x-1.5">
+          <i data-lucide="hospital" class="w-3.5 h-3.5"></i>
+          <span>4. การเจ็บป่วย OPD & IPD</span>
+        </button>
+
+        <button onclick="switchTab('tab-mortality')" id="btn-tab-mortality" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition cursor-pointer flex items-center space-x-1.5">
+          <i data-lucide="alert-octagon" class="w-3.5 h-3.5"></i>
+          <span>5. สาเหตุการเสียชีวิต 10 อันดับ</span>
+        </button>
+
+        <button onclick="switchTab('tab-dalys')" id="btn-tab-dalys" class="tab-btn px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition cursor-pointer flex items-center space-x-1.5">
+          <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
+          <span>6. ภาระโรคและการสูญเสีย (DALYs)</span>
+        </button>
       </div>
 
-      <!-- High Contrast Toggle -->
-      <button type="button" id="btnToggleContrast" class="px-3.5 py-1.5 text-xs font-bold rounded-full border border-[#d6c5b2] bg-[#eee5da] hover:bg-[#e2d5c8] transition-colors flex items-center gap-1.5 text-[#171411] backdrop-blur-md" onclick="toggleHighContrast()" title="สลับโหมดคอนทราสต์สูง">
-        <svg class="w-4 h-4 text-[#a67b4f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-        <span class="hide-on-mobile">สีคอนทราสต์สูง</span>
-      </button>
+      <!-- Quick Actions -->
+      <div class="hidden xl:flex items-center space-x-2 shrink-0">
+        <button onclick="window.print()" class="btn-outlined-pill text-xs px-3.5 py-1.5 flex items-center space-x-1.5 text-[#1d1f20] hover:bg-[#effbff] transition">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+          <span>พิมพ์รายงาน</span>
+        </button>
+        <a href="/docs" target="_blank" class="btn-dark-ink text-xs px-3.5 py-1.5 rounded-full text-white bg-[#1d1f20] hover:bg-[#2a2c2d] transition flex items-center space-x-1.5 shadow-xs">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 text-[#00d0ff]"></i>
+          <span>API Docs</span>
+        </a>
+      </div>
 
-      <!-- Admin Backoffice Link -->
-      <a href="admin.html" class="px-3.5 py-1.5 text-xs font-semibold rounded-full bg-[#171614] hover:bg-[#2b2520] text-white transition-colors flex items-center gap-1.5 shadow-sm" title="เข้าสู่ระบบผู้ดูแลระบบ">
-        <svg class="w-3.5 h-3.5 text-stone-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-        <span>ระบบหลังบ้าน</span>
-      </a>
     </div>
   </header>
 
-  <!-- ======================================================== -->
-  <!-- 2. Main Navigation Bar (Atelier Warm Paper Header)        -->
-  <!-- ======================================================== -->
-  <nav class="sticky top-[52px] z-40 bg-[#f5f0e9]/90 backdrop-blur-xl border-b border-[#dfd4c8]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <div class="w-9 h-9 rounded-xl bg-[#171614] flex items-center justify-center text-white font-black text-lg shadow-md group-hover:scale-105 transition-transform">
-          ✦
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="font-extrabold text-base tracking-tight text-[#171411] font-mono">ElderHealth Forum</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#eee5da] text-[#9a744d] border border-[#d6c5b2]">2026</span>
-          </div>
-          <p class="text-[11px] text-[#7d7267] truncate max-w-[280px] sm:max-w-none">
-            มหกรรมสุขภาพผู้สูงอายุแห่งชาติครั้งที่ 6
-          </p>
-        </div>
-      </a>
-
-      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-[#4a4239]">
-        <a href="#registerSection" class="hover:text-[#171411] transition-colors">ลงทะเบียน 3 กลุ่ม</a>
-        <a href="#scheduleSection" class="hover:text-[#171411] transition-colors">กำหนดการ A4</a>
-        <a href="#statusSearchSection" class="hover:text-[#171411] transition-colors">ตรวจสอบผล</a>
-        <a href="#documentsSection" class="hover:text-[#171411] transition-colors">ดาวน์โหลดเอกสาร</a>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <a href="#registerSection" class="aura-btn-primary text-xs sm:text-sm py-2 px-5">
-          <span>ลงทะเบียนเข้าร่วมงาน</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-        </a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ======================================================== -->
-  <!-- 3. Official Event Hero Stage (Atelier Warm Editorial Look)-->
-  <!-- ======================================================== -->
-  <section class="relative pt-12 pb-16 md:pt-20 md:pb-24 overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center max-w-4xl mx-auto">
-        <!-- Floating Pill Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-[#eee5da] border border-[#d6c5b2] text-[#7d7267] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)] mb-6" data-banner-resolution="1920x1080">
-          <span class="w-2 h-2 rounded-full bg-[#a67b4f]"></span>
-          <span>The 6th Thailand National Elderly Health Forum 2026</span>
-        </div>
-
-        <!-- Huge Display Typography -->
-        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-[#171411] leading-[1.1] mb-6">
-          เวชศาสตร์และวิทยาการ<br>
-          <span class="bg-gradient-to-r from-[#171411] via-[#9d7650] to-[#b38a5f] bg-clip-text text-transparent">
-            เพื่อสุขภาวะผู้สูงวัยไทย
-          </span>
-        </h1>
-
-        <!-- Subheading -->
-        <p class="text-base sm:text-lg md:text-xl text-[#3a332d] leading-relaxed font-normal max-w-3xl mx-auto mb-4">
-          “การประชุมวิชาการ เวชศาสตร์และวิทยาการด้านผู้สูงอายุ” มหกรรมสุขภาพผู้สูงอายุแห่งชาติครั้งที่ 6
-        </p>
-        <p class="text-sm sm:text-base text-[#6e6459] font-medium max-w-2xl mx-auto mb-8">
-          จัดโดย <span class="text-[#171411] font-semibold">สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ</span> กรมการแพทย์ กระทรวงสาธารณสุข &bull; ร่วมเรียนรู้ ร่วมดูแล เพื่อสุขภาพผู้สูงอายุ
-        </p>
-
-        <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-          <a href="#registerSection" class="aura-btn-primary w-full sm:w-auto text-base">
-            <span>เลือกระบบลงทะเบียนเข้าร่วมงาน</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-          </a>
-          <a href="#scheduleSection" class="aura-btn-outline w-full sm:w-auto text-base">
-            <svg class="w-4 h-4 text-[#a67b4f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <span>กำหนดการประชุม A4</span>
-          </a>
-        </div>
-
-        <!-- ======================================================== -->
-        <!-- Event Countdown Section (เคานต์ดาวน์วันจัดงาน)            -->
-        <!-- ======================================================== -->
-        <div class="mt-12 text-center">
-          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-[#eee5da] text-[#9a744d] border border-[#d6c5b2] mb-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-            <span class="w-2 h-2 rounded-full bg-[#a67b4f] animate-ping"></span>
-            <span>นับถอยหลังสู่งานมหกรรมสุขภาพผู้สูงอายุแห่งชาติ ครั้งที่ 6</span>
-          </div>
-
-          <!-- 4-Column Real-time Countdown Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            
-            <!-- Days -->
-            <div class="aura-metric-box text-center p-6 border border-[#d6c5b2] rounded-2xl bg-[#eee5da] relative overflow-hidden group hover:border-[#a67b4f] transition-all">
-              <div id="countdownDays" class="text-4xl sm:text-5xl font-black text-[#171411] font-mono tracking-tight group-hover:scale-105 transition-transform">00</div>
-              <div class="text-xs sm:text-sm text-[#9a744d] font-bold uppercase tracking-wider mt-2">วัน (Days)</div>
-              <p class="text-[11px] text-[#7d7267] mt-1">เวลาที่เหลือสู่วันเปิดงาน</p>
+  <!-- ===================================================================== -->
+  <!-- TAB 1: 9-DOMAIN SCREENING SURVEILLANCE & CHOROPLETH MAP               -->
+  <!-- ===================================================================== -->
+  <div id="tab-9domains" class="tab-panel active flex-1">
+    
+    <!-- Filter Toolbar (DESIGN.md - Mist Border & Steel Inset) -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-1 pb-3">
+      <div class="bg-white border border-[#e8eff2] rounded-2xl p-3 sm:p-4 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between gap-2.5">
+          <!-- Filters Group -->
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Fiscal Year -->
+            <div class="flex items-center space-x-1.5 bg-[#effbff] px-3 py-1.5 rounded-xl border border-[#e8eff2]">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-[#7e8486]"></i>
+              <span class="text-xs text-[#7e8486] font-medium">ปีงบฯ:</span>
+              <select id="filter-year" onchange="onFilterChange()" class="text-xs font-semibold text-[#1d1f20] bg-transparent focus:outline-hidden cursor-pointer font-mono">
+                <option value="2569" selected>2569 (ล่าสุด)</option>
+                <option value="2568">2568</option>
+                <option value="2567">2567</option>
+              </select>
             </div>
 
-            <!-- Hours -->
-            <div class="aura-metric-box text-center p-6 border border-[#d6c5b2] rounded-2xl bg-[#eee5da] relative overflow-hidden group hover:border-[#a67b4f] transition-all">
-              <div id="countdownHours" class="text-4xl sm:text-5xl font-black text-[#171411] font-mono tracking-tight group-hover:scale-105 transition-transform">00</div>
-              <div class="text-xs sm:text-sm text-[#9a744d] font-bold uppercase tracking-wider mt-2">ชั่วโมง (Hours)</div>
-              <p class="text-[11px] text-[#7d7267] mt-1">ชั่วโมงก่อนเริ่มพิธีเปิด</p>
+            <!-- Administrative Level -->
+            <div class="flex items-center space-x-1.5 bg-[#effbff] px-3 py-1.5 rounded-xl border border-[#e8eff2]">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-[#7e8486]"></i>
+              <span class="text-xs text-[#7e8486] font-medium">ระดับ:</span>
+              <select id="filter-level" onchange="onLevelChange()" class="text-xs font-semibold text-[#1d1f20] bg-transparent focus:outline-hidden cursor-pointer">
+                <option value="province" selected>รายจังหวัด (77 จังหวัด)</option>
+                <option value="zone">เขตสุขภาพ (13 เขต)</option>
+              </select>
             </div>
 
-            <!-- Minutes -->
-            <div class="aura-metric-box text-center p-6 border border-[#d6c5b2] rounded-2xl bg-[#eee5da] relative overflow-hidden group hover:border-[#a67b4f] transition-all">
-              <div id="countdownMinutes" class="text-4xl sm:text-5xl font-black text-[#171411] font-mono tracking-tight group-hover:scale-105 transition-transform">00</div>
-              <div class="text-xs sm:text-sm text-[#9a744d] font-bold uppercase tracking-wider mt-2">นาที (Minutes)</div>
-              <p class="text-[11px] text-[#7d7267] mt-1">นาทีสู่การสัมมนาวิชาการ</p>
+            <!-- Health Zone Filter -->
+            <div id="zone-filter-container" class="flex items-center space-x-1.5 bg-[#effbff] px-3 py-1.5 rounded-xl border border-[#e8eff2]">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5 text-[#7e8486]"></i>
+              <span class="text-xs text-[#7e8486] font-medium">เขตสุขภาพ:</span>
+              <select id="filter-zone" onchange="onZoneChange()" class="text-xs font-semibold text-[#1d1f20] bg-transparent focus:outline-hidden cursor-pointer">
+                <option value="all" selected>ทุกเขตสุขภาพ (All Zones)</option>
+                <option value="01">เขตสุขภาพที่ 1</option>
+                <option value="02">เขตสุขภาพที่ 2</option>
+                <option value="03">เขตสุขภาพที่ 3</option>
+                <option value="04">เขตสุขภาพที่ 4</option>
+                <option value="05">เขตสุขภาพที่ 5</option>
+                <option value="06">เขตสุขภาพที่ 6</option>
+                <option value="07">เขตสุขภาพที่ 7</option>
+                <option value="08">เขตสุขภาพที่ 8</option>
+                <option value="09">เขตสุขภาพที่ 9</option>
+                <option value="10">เขตสุขภาพที่ 10</option>
+                <option value="11">เขตสุขภาพที่ 11</option>
+                <option value="12">เขตสุขภาพที่ 12</option>
+                <option value="13">เขตสุขภาพที่ 13 (กทม.)</option>
+              </select>
             </div>
 
-            <!-- Seconds -->
-            <div class="aura-metric-box text-center p-6 border border-[#d6c5b2] rounded-2xl bg-[#eee5da] relative overflow-hidden group hover:border-[#a67b4f] transition-all">
-              <div id="countdownSeconds" class="text-4xl sm:text-5xl font-black text-[#a67b4f] font-mono tracking-tight group-hover:scale-105 transition-transform">00</div>
-              <div class="text-xs sm:text-sm text-[#9a744d] font-bold uppercase tracking-wider mt-2">วินาที (Seconds)</div>
-              <p class="text-[11px] text-[#7d7267] mt-1">อัปเดตแบบเรียลไทม์</p>
+            <!-- Specific Province Filter -->
+            <div id="province-filter-container" class="flex items-center space-x-1.5 bg-[#effbff] px-3 py-1.5 rounded-xl border border-[#e8eff2]">
+              <i data-lucide="building-2" class="w-3.5 h-3.5 text-[#7e8486]"></i>
+              <span class="text-xs text-[#7e8486] font-medium">จังหวัด:</span>
+              <select id="filter-province" onchange="onProvinceChange()" class="text-xs font-semibold text-[#1d1f20] bg-transparent focus:outline-hidden cursor-pointer max-w-[150px]">
+                <option value="all" selected>ทุกจังหวัด</option>
+                <!-- Populated dynamically via JS -->
+              </select>
             </div>
 
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== -->
-  <!-- 4. Registration Selection Track (3 Paths) & Search Dock   -->
-  <!-- Balanced, Unified Atelier AI Grid                        -->
-  <!-- ======================================================== -->
-  <section id="registerSection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 w-full relative z-10">
-    <div class="text-center max-w-3xl mx-auto mb-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#eee5da] border border-[#d6c5b2] text-[#9a744d] mb-2.5">
-        <span>Registration Tracks</span>
-      </div>
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-[#171411] tracking-tight">
-        เลือกระบบลงทะเบียนที่ตรงกับท่าน
-      </h2>
-      <p class="text-[#6e6459] mt-2 text-sm sm:text-base">
-        โปรดเลือกประเภทผู้เข้าร่วมงานที่ตรงกับท่าน เพื่อกรอกข้อมูลตามสิทธิประโยชน์และการรับรองวิชาชีพ
-      </p>
-    </div>
-
-    <!-- Unified Container for Cards + Search (Same max-w for perfect balance) -->
-    <div class="max-w-5xl mx-auto space-y-6">
-      
-      <!-- 3 Registration Cards Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
-        
-        <!-- Card 1: ประชาชนทั่วไปและผู้สูงอายุ -->
-        <div class="aura-card p-6 sm:p-7 flex flex-col justify-between h-full group hover:border-[#a67b4f] transition-all bg-[#eee5da] border-[#d6c5b2]">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3.5">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#f7efe6] text-[#9a744d] border border-[#d6c5b2]">
-                Universal Design
-              </span>
-              <span class="text-xs font-mono text-[#94887b] font-semibold">Track 1.1</span>
+            <!-- Domain Selector -->
+            <div class="flex items-center space-x-1.5 bg-[#effbff] px-3 py-1.5 rounded-xl border border-[#ccf6ff]">
+              <i data-lucide="heart-pulse" class="w-3.5 h-3.5 text-[#00d0ff]"></i>
+              <span class="text-xs text-[#7e8486] font-medium">ด้านคัดกรอง:</span>
+              <select id="filter-domain" onchange="onDomainChange()" class="text-xs font-semibold text-[#1d1f20] bg-transparent focus:outline-hidden cursor-pointer max-w-[210px]">
+                <option value="d1_visual" selected>1. การมองเห็น (Visual)</option>
+                <option value="d2_incontinence">2. การกลั้นปัสสาวะ (Incontinence)</option>
+                <option value="d3_hearing">3. การได้ยิน (Hearing)</option>
+                <option value="d4_adl">4. กิจวัตรประจำวัน (ADL)</option>
+                <option value="d5_cognition">5. ความคิดความจำ (Cognition)</option>
+                <option value="d6_depression">6. ภาวะซึมเศร้า (Depression 2Q)</option>
+                <option value="d7_mobility">7. การเคลื่อนไหว (Mobility & Falls)</option>
+                <option value="d8_oral">8. สุขภาพช่องปาก (Oral Health)</option>
+                <option value="d9_nutrition">9. ภาวะโภชนาการ (Nutrition)</option>
+              </select>
             </div>
 
-            <div class="h-[54px] flex items-center">
-              <h3 class="text-lg sm:text-xl font-bold text-[#171411] tracking-tight leading-snug">
-                ประชาชนทั่วไปและผู้สูงอายุ
-              </h3>
-            </div>
-
-            <div class="h-[44px] flex items-start mt-1">
-              <p class="text-[#6e6459] text-xs sm:text-sm leading-relaxed line-clamp-2">
-                สำหรับผู้สูงวัยและประชาชนทั่วไป พร้อมระบบสั่งพิมพ์ด้วยเสียงพูดภาษาไทย
-              </p>
+            <!-- Sort Order Selector -->
+            <div class="flex items-center space-x-1.5 bg-[#effbff] px-3 py-1.5 rounded-xl border border-[#e8eff2]">
+              <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-[#7e8486]"></i>
+              <span class="text-xs text-[#7e8486] font-medium">เรียงตาม:</span>
+              <select id="filter-order" onchange="onOrderChange()" class="text-xs font-semibold text-[#1d1f20] bg-transparent focus:outline-hidden cursor-pointer">
+                <option value="desc" selected>🔻 เสี่ยงสูงสุด (% เสี่ยง)</option>
+                <option value="asc">🔺 เสี่ยงต่ำสุด (% เสี่ยง)</option>
+                <option value="risk_count_desc">👥 คนเสี่ยงมากสุด (จำนวนคน)</option>
+                <option value="coverage_desc">🎯 ครอบคลุมคัดกรองสูงสุด (%)</option>
+              </select>
             </div>
           </div>
 
-          <div class="mt-6 pt-4 border-t border-[#d6c5b2]">
-            <button type="button" onclick="openRegistrationModal('publicModal')" class="w-full py-3.5 px-4 bg-[#f1ebe3] hover:bg-[#171614] text-[#171411] hover:text-white font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 border border-[#d1c4b7] shadow-sm text-sm group">
-              <span>ลงทะเบียนประชาชน / ผู้สูงอายุ</span>
-              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          <!-- Limit, Reset & Refresh Actions -->
+          <div class="flex items-center space-x-2">
+            <div class="flex items-center bg-[#effbff] rounded-xl p-0.5 text-xs border border-[#e8eff2]">
+              <button onclick="setLimit(5)" id="btn-limit-5" class="px-2.5 py-1 rounded-lg font-medium text-[#434647] hover:text-[#1d1f20] transition">Top 5</button>
+              <button onclick="setLimit(10)" id="btn-limit-10" class="px-2.5 py-1 rounded-lg font-medium bg-[#1d1f20] text-white shadow-xs">Top 10</button>
+              <button onclick="setLimit(25)" id="btn-limit-25" class="px-2.5 py-1 rounded-lg font-medium text-[#434647] hover:text-[#1d1f20] transition">Top 25</button>
+              <button onclick="setLimit(77)" id="btn-limit-all" class="px-2.5 py-1 rounded-lg font-medium text-[#434647] hover:text-[#1d1f20] transition">ทั้งหมด</button>
+            </div>
+            <button onclick="resetAllFilters()" class="btn-outlined-pill px-3 py-1.5 text-xs text-[#1d1f20] flex items-center space-x-1" title="ล้างตัวกรองทั้งหมด">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-rose-500"></i>
+              <span class="hidden sm:inline">รีเซ็ต</span>
+            </button>
+            <button onclick="refreshData()" class="p-2 bg-[#effbff] border border-[#e8eff2] rounded-xl hover:bg-white text-[#1d1f20] transition" title="โหลดข้อมูลใหม่">
+              <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
+      </div>
+    </section>
 
-        <!-- Card 2: บุคลากรทางการแพทย์และสาธารณสุข (Featured Card) -->
-        <div class="aura-card aura-card-featured p-6 sm:p-7 flex flex-col justify-between h-full group transition-all relative">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3.5">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#a67b4f]/15 text-[#825b30] border border-[#a67b4f]/30">
-                หน่วยกิต CNEU พยาบาล
-              </span>
-              <span class="text-xs font-mono text-[#825b30] font-semibold">Track 1.2</span>
-            </div>
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-            <div class="h-[54px] flex items-center">
-              <h3 class="text-lg sm:text-xl font-bold text-[#171411] tracking-tight leading-snug">
-                บุคลากรทางการแพทย์และสาธารณสุข
-              </h3>
-            </div>
-
-            <div class="h-[44px] flex items-start mt-1">
-              <p class="text-[#4a4239] text-xs sm:text-sm leading-relaxed line-clamp-2">
-                สำหรับแพทย์ พยาบาล (CNEU) และบุคลากรสาธารณสุข เขตสุขภาพ 1 - 12
-              </p>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-[#d6c5b2]">
-            <button type="button" onclick="openRegistrationModal('medicalModal')" class="w-full py-3.5 px-4 bg-[#171614] hover:bg-[#2c2621] text-white font-extrabold rounded-full transition-all text-center flex items-center justify-center gap-2 shadow-lg shadow-[#171411]/20 text-sm group">
-              <span>ลงทะเบียนบุคลากรทางการแพทย์</span>
-              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
-          </div>
+      <!-- Active Filter Status Banner (DESIGN.md - Air Wash & Prism Cyan) -->
+      <div id="filter-status-banner" class="bg-[#effbff] border border-[#ccf6ff] rounded-xl px-4 py-2.5 flex flex-wrap items-center justify-between text-xs text-[#1d1f20] shadow-xs">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="info" class="w-4 h-4 text-[#00d0ff]"></i>
+          <span>กำลังแสดงข้อมูล: <strong id="filter-banner-area" class="font-bold text-[#1d1f20]">ทั้งประเทศ</strong> | ปีงบประมาณ <strong id="filter-banner-year" class="font-mono text-[#1d1f20]">2569</strong> | มิติหลัก: <strong id="filter-banner-domain" class="font-bold text-[#1d1f20]">การมองเห็น</strong> | การจัดอันดับ: <strong id="filter-banner-order" class="font-bold text-[#1d1f20]">ร้อยละความเสี่ยงสูงสุด</strong></span>
         </div>
-
-        <!-- Card 3: ASEAN Member States -->
-        <div class="aura-card p-6 sm:p-7 flex flex-col justify-between h-full group hover:border-[#a67b4f] transition-all bg-[#eee5da] border-[#d6c5b2]">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-3.5">
-              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#f7efe6] text-[#9a744d] border border-[#d6c5b2]">
-                International Delegates
-              </span>
-              <span class="text-xs font-mono text-[#94887b] font-semibold">Track 1.3</span>
-            </div>
-
-            <div class="h-[54px] flex items-center">
-              <h3 class="text-lg sm:text-xl font-bold text-[#171411] tracking-tight leading-snug">
-                ASEAN Member States
-              </h3>
-            </div>
-
-            <div class="h-[44px] flex items-start mt-1">
-              <p class="text-[#6e6459] text-xs sm:text-sm leading-relaxed line-clamp-2">
-                English registration for ASEAN delegates & international attendees
-              </p>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-[#d6c5b2]">
-            <button type="button" onclick="openRegistrationModal('aseanModal')" class="w-full py-3.5 px-4 bg-[#f1ebe3] hover:bg-[#171614] text-[#171411] hover:text-white font-bold rounded-full transition-all text-center flex items-center justify-center gap-2 border border-[#d1c4b7] shadow-sm text-sm group">
-              <span>Register for ASEAN Delegates</span>
-              <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </button>
-          </div>
-        </div>
-
+        <button onclick="resetAllFilters()" class="text-xs font-semibold text-[#1d1f20] hover:text-[#00d0ff] underline ml-auto transition">
+          รีเซ็ตกลับเป็นค่าเริ่มต้น
+        </button>
       </div>
 
-      <!-- ======================================================== -->
-      <!-- Status Verification Search (Feature 1.4)                 -->
-      <!-- Positioned directly under registration track              -->
-      <!-- Perfectly balanced with matching container width         -->
-      <!-- ======================================================== -->
-      <div id="statusSearchSection" class="aura-card p-6 sm:p-7 border border-[#d6c5b2] bg-[#eee5da]">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+      <!-- Functional Ability (ADL) Overview Cards -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-2">
           <div>
-            <h3 class="text-lg sm:text-xl font-bold text-[#171411] flex items-center gap-2">
-              <svg class="w-5 h-5 text-[#a67b4f] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              <span>ระบบตรวจสอบผลการลงทะเบียน</span>
-            </h3>
-            <p class="text-xs sm:text-sm text-[#6e6459] mt-0.5">
-              ค้นหาเพื่อตรวจสอบสถานะการลงทะเบียนและรหัสเข้าร่วมงาน โดยกรอกชื่อหรือนามสกุล
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-0.5 rounded-full text-2xs font-bold font-mono uppercase bg-emerald-100 text-emerald-800 border border-emerald-200">
+                Functional Ability
+              </span>
+              <span class="text-xs text-[#7e8486] font-mono">แบบประเมิน Barthel ADL Index</span>
+            </div>
+            <h2 class="text-sm sm:text-base font-bold font-heading text-[#2a2c2d] mt-1 flex items-center space-x-2">
+              <i data-lucide="user-check" class="w-4 h-4 text-moph"></i>
+              <span>ศักยภาพการดำเนินชีวิตประจำวันของผู้สูงอายุไทย (กลุ่ม 3 ติด: สังคม-บ้าน-เตียง)</span>
+            </h2>
+          </div>
+          <div class="text-xs text-[#7e8486] font-mono">
+            ฐานข้อมูล HDC สธ. &amp; สปสช. (13.79M คน)
+          </div>
+        </div>
+
+        <!-- ADL Segmented Breakdown Bar -->
+        <div class="mb-4 bg-[#effbff]/50 rounded-xl p-3.5 border border-[#e8eff2]">
+          <div class="flex items-center justify-between text-xs mb-2 font-medium">
+            <span class="text-[#1d1f20] font-semibold flex items-center space-x-1.5">
+              <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-moph"></i>
+              <span>แถบสัดส่วนโครงสร้างศักยภาพผู้สูงอายุไทย (ประเมินแล้ว 13,790,000 คน)</span>
+            </span>
+            <span class="font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-2xs font-bold border border-emerald-200">ครอบคลุม 100%</span>
+          </div>
+          <div class="w-full h-5 rounded-lg overflow-hidden flex bg-slate-200 shadow-inner">
+            <div style="width: 95.8%;" class="bg-emerald-600 transition-all duration-700 hover:opacity-90 flex items-center justify-center text-[10px] text-white font-mono font-bold" title="ติดสังคม: 95.8% (13.21M คน)">
+              95.8%
+            </div>
+            <div style="width: 3.1%;" class="bg-amber-500 transition-all duration-700 hover:opacity-90" title="ติดบ้าน: 3.1% (427.5k คน)"></div>
+            <div style="width: 1.1%;" class="bg-rose-600 transition-all duration-700 hover:opacity-90" title="ติดเตียง: 1.1% (151.7k คน)"></div>
+          </div>
+          <div class="flex flex-wrap items-center justify-between text-xs font-mono mt-2 pt-2 border-t border-[#e8eff2] gap-2">
+            <span class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+              <span class="text-slate-700">กลุ่มติดสังคม: <strong class="text-emerald-800">95.8%</strong> (13,210,820 คน)</span>
+            </span>
+            <span class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span class="text-slate-700">กลุ่มติดบ้าน: <strong class="text-amber-800">3.1%</strong> (427,490 คน)</span>
+            </span>
+            <span class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+              <span class="text-slate-700">กลุ่มติดเตียง: <strong class="text-rose-800">1.1%</strong> (151,690 คน)</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 1. ติดสังคม -->
+          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold font-mono bg-emerald-200 text-emerald-900 flex items-center space-x-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                  <span>กลุ่มติดสังคม (Independent)</span>
+                </span>
+                <span class="text-xs font-mono font-bold text-emerald-700">ADL 12-20</span>
+              </div>
+              <div class="text-2xl font-bold font-mono text-emerald-900 mt-3">95.8%</div>
+              <div class="text-xs font-mono text-emerald-800 font-semibold mt-0.5">13,210,820 คน</div>
+              <p class="text-xs text-[#434647] mt-2 leading-relaxed">
+                ช่วยเหลือตนเองได้ดี ดำเนินชีวิตอิสระ เน้นการสร้างเสริมสุขภาพ ชะลอความเสื่อม และป้องกันอุบัติเหตุ
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-emerald-200/60 text-2xs font-mono text-emerald-800">
+              ยุทธศาสตร์: ชะลอชรา &amp; Active Aging
+            </div>
+          </div>
+
+          <!-- 2. ติดบ้าน -->
+          <div class="p-4 rounded-xl border border-amber-200 bg-amber-50/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-200 text-amber-900 flex items-center space-x-1">
+                  <span class="w-2 h-2 rounded-full bg-amber-600"></span>
+                  <span>กลุ่มติดบ้าน (Partially Dependent)</span>
+                </span>
+                <span class="text-xs font-mono font-bold text-amber-700">ADL 5-11</span>
+              </div>
+              <div class="text-2xl font-bold font-mono text-amber-900 mt-3">3.1%</div>
+              <div class="text-xs font-mono text-amber-800 font-semibold mt-0.5">427,490 คน</div>
+              <p class="text-xs text-[#434647] mt-2 leading-relaxed">
+                ต้องการผู้ดูแล (Caregiver) ช่วยเหลือกิจวัตรประจำวันบางส่วน เสี่ยงต่อการถดถอยสู่กลุ่มติดเตียง
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-amber-200/60 text-2xs font-mono text-amber-800">
+              ยุทธศาสตร์: ฟื้นฟูกายภาพ &amp; Caregiver Support
+            </div>
+          </div>
+
+          <!-- 3. ติดเตียง -->
+          <div class="p-4 rounded-xl border border-rose-200 bg-rose-50/50 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="px-2 py-0.5 rounded-full text-xs font-bold font-mono bg-rose-200 text-rose-900 flex items-center space-x-1">
+                  <span class="w-2 h-2 rounded-full bg-rose-600"></span>
+                  <span>กลุ่มติดเตียง (Totally Dependent)</span>
+                </span>
+                <span class="text-xs font-mono font-bold text-rose-700">ADL 0-4</span>
+              </div>
+              <div class="text-2xl font-bold font-mono text-rose-900 mt-3">1.1%</div>
+              <div class="text-xs font-mono text-rose-800 font-semibold mt-0.5">151,690 คน</div>
+              <p class="text-xs text-[#434647] mt-2 leading-relaxed">
+                พึ่งพิงผู้อื่นโดยสมบูรณ์ ต้องการระบบการดูแลระยะยาว (Long-Term Care) บริการเยี่ยมบ้าน และการดูแลแบบประคับประคอง
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-rose-200/60 text-2xs font-mono text-rose-800">
+              ยุทธศาสตร์: Long-Term Care (LTC) &amp; Palliative
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KPI Summary Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-2">
+            <span class="text-xs font-heading font-semibold uppercase tracking-wider">ผู้สูงอายุเป้าหมาย</span>
+            <span class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="users" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-2xl font-bold font-mono text-[#2a2c2d] tracking-tight" id="kpi-target-pop">-</div>
+          <div class="text-xs text-[#7e8486] mt-1 flex items-center justify-between">
+            <span class="text-[#434647] font-medium truncate" id="kpi-target-area-label">ประชากรสูงอายุ 60 ปีขึ้นไป</span>
+            <span class="text-emerald-600 font-semibold font-mono">100%</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-2">
+            <span class="text-xs font-heading font-semibold uppercase tracking-wider">คัดกรองครบ 9 ด้าน</span>
+            <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="check-circle" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-2xl font-bold font-mono text-[#2a2c2d] tracking-tight" id="kpi-screened-count">-</div>
+          <div class="text-xs text-[#7e8486] mt-1 flex items-center space-x-1">
+            <span id="kpi-coverage-badge" class="font-bold font-mono text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">-</span>
+            <span>ความครอบคลุมการคัดกรอง</span>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-2">
+            <span class="text-xs font-heading font-semibold uppercase tracking-wider truncate" id="kpi-active-domain-title">ความเสี่ยงด้านที่เลือก</span>
+            <span class="p-2 bg-amber-50 text-amber-600 rounded-lg"><i data-lucide="alert-triangle" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-2xl font-bold font-mono text-[#2a2c2d] tracking-tight flex items-baseline space-x-2">
+            <span id="kpi-active-domain-pct">-</span>
+            <span class="text-xs font-normal font-sans text-[#7e8486]" id="kpi-active-domain-count">(-)</span>
+          </div>
+          <div class="text-xs text-[#7e8486] mt-1" id="kpi-active-domain-subtitle">อัตราความเสี่ยงในพื้นที่ที่เลือก</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-2">
+            <span class="text-xs font-heading font-semibold uppercase tracking-wider">ความเสี่ยงสูงสุดใน 9 ด้าน</span>
+            <span class="p-2 bg-rose-50 text-rose-600 rounded-lg"><i data-lucide="trending-up" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-base font-bold text-[#2a2c2d] truncate" id="kpi-highest-domain-name">-</div>
+          <div class="text-xs text-rose-600 font-semibold mt-1 flex items-center space-x-1">
+            <span id="kpi-highest-domain-pct" class="font-mono">-</span>
+            <span class="text-[#7e8486] font-normal">ความชุกสูงสุดอันดับ 1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SECTION: NATIONAL 9-DOMAIN RISK RANKING (จัด Rank เสี่ยงสูงสุด 9 ด้าน) -->
+      <!-- =================================================================== -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-4 border-b border-slate-100 gap-2">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-0.5 rounded-full text-2xs font-bold font-mono uppercase bg-amber-100 text-amber-800 border border-amber-200 flex items-center space-x-1">
+                <i data-lucide="trophy" class="w-3 h-3 text-amber-600"></i>
+                <span>National Risk Ranking</span>
+              </span>
+              <span class="text-xs text-[#7e8486] font-mono" id="domain-ranking-scope-badge">ขอบเขต: ทั้งประเทศ (77 จังหวัด)</span>
+            </div>
+            <h2 class="text-base font-bold font-heading text-[#2a2c2d] mt-1 flex items-center space-x-2">
+              <i data-lucide="bar-chart-3" class="w-5 h-5 text-moph"></i>
+              <span id="domain-ranking-title">จัด Rank ร้อยละที่มีความเสี่ยงสูงสุดในประเทศ (9 ด้าน)</span>
+            </h2>
+            <p class="text-xs text-[#7e8486] mt-0.5">
+              เรียงลำดับสุขภาพผู้สูงอายุไทย 9 ด้านตามสัดส่วนกลุ่มสงสัยผิดปกติ/เสี่ยงสูงสุด (คลิกการ์ดมิติเพื่อเปลี่ยนมุมมองทั้งแดชบอร์ด)
             </p>
           </div>
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#f7efe6] text-[#9a744d] border border-[#d6c5b2] self-start sm:self-center shrink-0">
-            <span class="w-1.5 h-1.5 rounded-full bg-[#a67b4f]"></span>
-            <span>Verification Spotlight</span>
-          </span>
-        </div>
 
-        <!-- Spotlight Input Bar -->
-        <div class="flex flex-col sm:flex-row gap-3">
-          <div class="relative flex-1">
-            <input type="text" id="searchQueryInput" placeholder="กรอกชื่อ หรือ นามสกุล ที่ลงทะเบียนไว้..." class="w-full pl-11 pr-4 py-3.5 rounded-full bg-white border border-[#d6c5b2] text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none text-sm sm:text-base transition-all shadow-inner">
-            <svg class="w-4 h-4 text-[#7d7267] absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          </div>
-          <button type="button" onclick="performStatusSearch()" class="px-7 py-3.5 bg-[#171614] hover:bg-[#2c2621] text-white rounded-full font-bold transition-all shadow-md shadow-[#171411]/15 flex items-center justify-center gap-2 text-sm sm:text-base shrink-0">
-            <span>ค้นหาสถานะ</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-          </button>
-        </div>
-
-        <!-- Search Results Box -->
-        <div id="searchResultsContainer" class="mt-6 space-y-3">
-          <!-- Rendered dynamically by JS -->
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ======================================================== -->
-  <!-- 5. A4 Vertical Schedule Slider Section                   -->
-  <!-- ======================================================== -->
-  <section id="scheduleSection" class="py-16 border-y border-[#d6c5b2]/70 bg-[#eee5da]/40 relative">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#eee5da] border border-[#d6c5b2] text-[#9a744d] mb-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-          <span>Official Timetable</span>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-[#171411] tracking-tight">
-          กำหนดการงานแบบแนวตั้ง (ขนาด A4)
-        </h2>
-        <p class="text-[#6e6459] text-sm mt-1">
-          รองรับการปัดหน้าจอ (Touch Swipe) บนมือถือและไอแพด หรือแตะที่ภาพเพื่อขยายดูขนาดเต็มจอ
-        </p>
-      </div>
-
-      <div class="schedule-a4-viewport">
-        <div id="scheduleSlideContainer" class="w-full h-full flex items-center justify-center p-2 bg-[#f7efe6]">
-          <p class="text-[#7d7267]">กำลังโหลดกำหนดการ...</p>
-        </div>
-
-        <!-- Slider Navigation Controls -->
-        <button type="button" onclick="prevScheduleSlide()" class="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white text-[#171411] rounded-full shadow-lg flex items-center justify-center transition-all border border-[#d6c5b2] backdrop-blur-md" aria-label="หน้าก่อนหน้า">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-        </button>
-        <button type="button" onclick="nextScheduleSlide()" class="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white text-[#171411] rounded-full shadow-lg flex items-center justify-center transition-all border border-[#d6c5b2] backdrop-blur-md" aria-label="หน้าถัดไป">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-        </button>
-      </div>
-
-      <!-- Schedule Footer Details -->
-      <div class="flex items-center justify-between max-w-[650px] mx-auto mt-4 px-2 text-xs sm:text-sm text-[#6e6459]">
-        <span id="scheduleSlideTitle" class="font-medium truncate max-w-[70%] text-[#171411]">กำหนดการประชุมวิชาการ</span>
-        <span id="scheduleSlideCounter" class="font-mono font-bold bg-[#eee5da] text-[#171411] px-3.5 py-1 rounded-full border border-[#d6c5b2] shadow-sm">หน้า 1 จาก 2</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== -->
-  <!-- 7. Document Downloads Section (Feature 2)                -->
-  <!-- ======================================================== -->
-  <section id="documentsSection" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 gap-4">
-      <div>
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#eee5da] border border-[#d6c5b2] text-[#9a744d] mb-2 shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
-          <span>Document Center</span>
-        </div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-[#171411] tracking-tight">
-          เอกสารสำหรับดาวน์โหลด
-        </h2>
-        <p class="text-[#6e6459] text-sm mt-1">
-          ดาวน์โหลดแบบฟอร์มการจองห้องพัก และเอกสารวิชาการประกอบงาน พร้อมระบุวันที่อัปเดตล่าสุด
-        </p>
-      </div>
-    </div>
-
-    <div id="documentsListContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Rendered dynamically by JS -->
-    </div>
-  </section>
-
-  <!-- ======================================================== -->
-  <!-- 9. Footer (Atelier AI Minimalist Studio Footer)          -->
-  <!-- ======================================================== -->
-  <footer class="mt-auto bg-[#eee5da] text-[#171411] py-12 border-t border-[#d6c5b2] safe-bottom">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
-        <div>
-          <div class="flex items-center justify-center md:justify-start gap-2">
-            <span class="text-[#9a744d] font-extrabold text-lg">✦ ElderHealth Forum 2026</span>
-          </div>
-          <div class="text-sm text-[#6e6459] mt-1">
-            มหกรรมสุขภาพผู้สูงอายุแห่งชาติครั้งที่ 6 &mdash; “การประชุมวิชาการ เวชศาสตร์และวิทยาการด้านผู้สูงอายุ”
-          </div>
-          <div class="text-xs text-[#7d7267] mt-1">
-            สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข
-          </div>
-          <div class="text-xs text-[#94887b] mt-2 font-mono">
-            &copy; 2026 ElderHealth Forum Project. All rights reserved.
+          <!-- Severity Legend -->
+          <div class="flex flex-wrap items-center gap-1.5 text-2xs font-mono">
+            <span class="text-slate-400 font-sans mr-1">เกณฑ์ความเสี่ยง:</span>
+            <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold border border-rose-200">วิกฤต &ge;25%</span>
+            <span class="px-2 py-0.5 rounded bg-orange-100 text-orange-800 font-semibold border border-orange-200">สูง 15-25%</span>
+            <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">ปานกลาง 5-15%</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">ต่ำ &lt;5%</span>
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-[#6e6459] font-medium">
-          <a href="/admin.html" class="hover:text-[#171411] transition-colors">เข้าสู่ระบบ Admin</a>
-          <span>&bull;</span>
-          <a href="#registerSection" class="hover:text-[#171411] transition-colors">ลงทะเบียน</a>
-          <span>&bull;</span>
-          <a href="#scheduleSection" class="hover:text-[#171411] transition-colors">กำหนดการ A4</a>
-          <span>&bull;</span>
-          <a href="#documentsSection" class="hover:text-[#171411] transition-colors">ดาวน์โหลดเอกสาร</a>
+        <!-- 9 Domains Grid (Interactive cards sorted #1 to #9) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3.5" id="national-domain-ranking-grid">
+          <!-- Populated by JS -->
         </div>
-      </div>
-    </div>
-  </footer>
+      </section>
 
-  <!-- ======================================================== -->
-  <!-- MODAL 1: ประชาชนทั่วไปและผู้สูงอายุ (1.1)                   -->
-  <!-- ======================================================== -->
-  <div id="publicModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-[#171411]/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#f5f0e9] text-[#171411] rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative border border-[#d6c5b2] max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-start pb-4 border-b border-[#dfd4c8]">
-        <div>
-          <span class="text-xs font-semibold px-3 py-1 bg-[#eee5da] text-[#9a744d] border border-[#d6c5b2] rounded-full">ฟอร์ม 1.1</span>
-          <h2 class="text-xl sm:text-2xl font-bold text-[#171411] mt-2">ลงทะเบียนประชาชนทั่วไปและผู้สูงอายุ</h2>
-        </div>
-        <button type="button" onclick="closeRegistrationModal('publicModal')" class="text-[#7d7267] hover:text-[#171411] p-2 text-2xl font-bold leading-none">&times;</button>
-      </div>
-
-      <!-- Voice Assistance Prompt Banner -->
-      <div class="my-4 p-4 bg-[#eee5da] border border-[#d6c5b2] rounded-2xl flex items-center justify-between gap-3">
-        <div class="text-xs sm:text-sm text-[#4a4239]">
-          <span class="font-bold text-[#171411]">ตัวช่วยสำหรับผู้สูงอายุ:</span> แตะปุ่มไมโครโฟนเพื่อพูดแทนการพิมพ์ (ไม่บันทึกเสียง) และกดปุ่มอ่านเพื่อฟังเสียงสรุป
-        </div>
-        <button type="button" id="btnReadPublicFormNote" class="px-3.5 py-2 bg-[#171614] text-white rounded-full text-xs font-bold hover:bg-[#2c2621] flex items-center gap-1.5 shrink-0 transition shadow-sm">
-          <svg class="w-4 h-4 text-[#e2c29d]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-          อ่านข้อความ
-        </button>
-      </div>
-
-      <form id="publicRegisterForm" onsubmit="handlePublicSubmit(event)" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">คำนำหน้าชื่อ *</label>
-            <select name="title" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="นาย">นาย</option>
-              <option value="นาง">นาง</option>
-              <option value="นางสาว">นางสาว</option>
-            </select>
+      <!-- Visual Analytics Grid: Leaderboard & Map -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: TOP Rank Leaderboard (5 Cols) -->
+        <div class="lg:col-span-5 bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs flex flex-col">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+            <div>
+              <h2 class="font-bold font-heading text-[#2a2c2d] text-sm flex items-center space-x-1.5">
+                <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
+                <span id="leaderboard-title">อันดับพื้นที่เสี่ยงสูงสุด (TOP Rank)</span>
+              </h2>
+              <p class="text-xs text-[#7e8486] mt-0.5" id="leaderboard-subtitle">เรียงลำดับตามอัตราส่วนความเสี่ยง (%)</p>
+            </div>
+            <div class="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-[#434647] font-mono" id="leaderboard-count-badge">Top 10</div>
           </div>
-          <div class="sm:col-span-2">
-            <label class="block text-sm font-medium text-[#171411] mb-1">ชื่อ - นามสกุล *</label>
-            <div class="flex gap-2">
-              <input type="text" id="pub_full_name" name="full_name" required placeholder="ระบุชื่อและนามสกุล" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <button type="button" id="mic-btn-pub_full_name" onclick="toggleVoiceInput('pub_full_name')" class="px-4 bg-[#eee5da] hover:bg-[#e2d5c8] border border-[#d6c5b2] rounded-xl text-[#171411] transition" title="พูดชื่อ-นามสกุล">
-                <svg class="w-5 h-5 text-[#a67b4f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-              </button>
+
+          <!-- Leaderboard Bar Chart -->
+          <div class="h-64 mb-4 relative">
+            <canvas id="ranking-chart"></canvas>
+          </div>
+
+          <!-- Leaderboard Table -->
+          <div class="flex-1 overflow-y-auto max-h-72 custom-scrollbar border border-slate-100 rounded-lg">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-[#effbff]/50 text-[#434647] font-semibold sticky top-0 border-b border-[#e8eff2]">
+                <tr>
+                  <th class="py-2 px-2.5 w-10 text-center">อันดับ</th>
+                  <th class="py-2 px-2.5">พื้นที่</th>
+                  <th class="py-2 px-2.5 text-right">คัดกรอง</th>
+                  <th class="py-2 px-2.5 text-right">เสี่ยง (คน)</th>
+                  <th class="py-2 px-2.5 text-right">อัตราเสี่ยง</th>
+                </tr>
+              </thead>
+              <tbody id="ranking-table-body" class="divide-y divide-slate-100">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Thailand GeoJSON Choropleth Map (7 Cols) -->
+        <div class="lg:col-span-7 bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs flex flex-col relative">
+          <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-100">
+            <div>
+              <h2 class="font-bold font-heading text-[#2a2c2d] text-sm flex items-center space-x-1.5">
+                <i data-lucide="map" class="w-4 h-4 text-moph"></i>
+                <span>แผนที่ภูมิศาสตร์ความชุกความเสี่ยง (Thailand Choropleth Map)</span>
+              </h2>
+              <p class="text-xs text-[#7e8486] mt-0.5">จำแนกตามรหัสจังหวัด มท. 2 หลัก พร้อมระดับความรุนแรง</p>
+            </div>
+            <!-- Legend Pill -->
+            <div class="flex items-center space-x-2 text-[11px] font-mono">
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-500"></span><span>&lt;5%</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-sm bg-amber-400"></span><span>5-15%</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-sm bg-orange-500"></span><span>15-25%</span></span>
+              <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-sm bg-rose-600"></span><span>&ge;25%</span></span>
+            </div>
+          </div>
+
+          <!-- D3 Map Container -->
+          <div id="choropleth-map-container" class="w-full h-[470px] flex items-center justify-center relative bg-[#effbff]/50/70 rounded-lg overflow-hidden border border-[#e8eff2]">
+            <svg id="thailand-map-svg" class="w-full h-full"></svg>
+            <div id="map-tooltip" class="map-tooltip opacity-0"></div>
+            <div id="map-loading" class="absolute inset-0 bg-white/70 flex items-center justify-center text-xs text-[#7e8486] font-medium">
+              <div class="flex items-center space-x-2">
+                <span class="w-3.5 h-3.5 border-2 border-moph border-t-transparent rounded-full animate-spin"></span>
+                <span>กำลังเรนเดอร์แผนที่...</span>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label class="block text-sm font-medium text-[#171411] mb-1">อายุ (ปี) *</label>
-          <input type="number" name="age" required min="1" max="130" placeholder="เช่น 68" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-[#171411] mb-1">ที่อยู่ (บ้านเลขที่ / หมู่ / ซอย / ถนน) *</label>
-          <div class="flex gap-2">
-            <textarea id="pub_address" name="address" required rows="2" placeholder="ระบุที่อยู่" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none"></textarea>
-            <button type="button" id="mic-btn-pub_address" onclick="toggleVoiceInput('pub_address')" class="px-4 bg-[#eee5da] hover:bg-[#e2d5c8] border border-[#d6c5b2] rounded-xl text-[#171411] self-stretch flex items-center justify-center transition" title="พูดที่อยู่">
-              <svg class="w-5 h-5 text-[#a67b4f]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+      <!-- 2D Multi-Domain Heatmap Matrix (Full Width) -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-4 border-b border-slate-100 gap-2">
+          <div>
+            <h2 class="font-bold font-heading text-[#2a2c2d] text-sm flex items-center space-x-1.5">
+              <i data-lucide="grid" class="w-4 h-4 text-indigo-500"></i>
+              <span>เมทริกซ์ความเสี่ยง 9 ด้าน (Multi-Domain Risk Heatmap Matrix)</span>
+            </h2>
+            <p class="text-xs text-[#7e8486] mt-0.5">ตารางเปรียบเทียบความชุกของทุกด้านคัดกรองตามหน่วยการปกครอง</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="heatmap-search" oninput="filterHeatmapTable()" placeholder="ค้นหาชื่อพื้นที่/จังหวัด..." class="text-xs px-3 py-1.5 rounded-lg border border-[#e8eff2] focus:outline-hidden focus:border-moph">
+            <button onclick="exportHeatmapCSV()" class="px-2.5 py-1.5 rounded-lg border border-[#e8eff2] hover:bg-[#effbff]/50 text-xs font-medium text-slate-700 flex items-center space-x-1 transition">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Export CSV</span>
             </button>
           </div>
         </div>
 
-        <!-- Cascading Address: Province > District > Sub-district -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">จังหวัด *</label>
-            <select id="pub_province" name="province" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
+        <!-- Heatmap Table Container -->
+        <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-lg max-h-96">
+          <table class="w-full text-left text-xs border-collapse" id="heatmap-table">
+            <thead class="bg-[#effbff]/50 text-slate-700 font-semibold sticky top-0 border-b border-[#e8eff2] z-10">
+              <tr>
+                <th class="py-2.5 px-3 whitespace-nowrap sticky left-0 bg-[#effbff]/50 z-20">หน่วยพื้นที่</th>
+                <th class="py-2.5 px-2.5 text-right whitespace-nowrap">เป้าหมาย</th>
+                <th class="py-2.5 px-2.5 text-right whitespace-nowrap">ครอบคลุม %</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="การมองเห็น">1.มองเห็น</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="การกลั้นปัสสาวะ">2.ปัสสาวะ</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="การได้ยิน">3.ได้ยิน</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="กิจวัตรประจำวัน ADL">4.ADL</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="ความคิดความจำ">5.ความจำ</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="ภาวะซึมเศร้า 2Q">6.ซึมเศร้า</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="การเคลื่อนไหวร่างกาย">7.เคลื่อนไหว</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="สุขภาพช่องปาก">8.ช่องปาก</th>
+                <th class="py-2.5 px-2 text-center whitespace-nowrap" title="ภาวะขาดสารอาหาร">9.สารอาหาร</th>
+              </tr>
+            </thead>
+            <tbody id="heatmap-tbody" class="divide-y divide-slate-100">
               <!-- Populated by JS -->
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">อำเภอ *</label>
-            <select id="pub_amphoe" name="amphoe" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="">-- เลือกอำเภอ --</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">ตำบล *</label>
-            <select id="pub_tambon" name="tambon" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="">-- เลือกตำบล --</option>
-            </select>
-          </div>
+            </tbody>
+          </table>
         </div>
+      </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">เบอร์โทรศัพท์ (ไม่บังคับ)</label>
-            <input type="tel" name="phone" placeholder="เช่น 0812345678" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">อีเมล (ไม่บังคับ)</label>
-            <input type="email" name="email" placeholder="example@email.com" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
-        </div>
-
-        <!-- สิ่งที่สนใจภายในงาน -->
-        <div>
-          <label class="block text-sm font-semibold text-[#171411] mb-2">สิ่งที่สนใจภายในงาน (เลือกได้มากกว่า 1 ข้อ)</label>
-          <div class="space-y-2 text-sm text-[#4a4239]">
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="พิธีเปิดและเสวนาช่วงเช้า" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>พิธีเปิดและเสวนาช่วงเช้า</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="การเสวนาวิชาการ ห้อง International (ต่างประเทศ)" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>การเสวนาวิชาการ ห้อง International (ต่างประเทศ)</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="การเสวนาวิชาการ ห้องบุคลาการทางการแพทย์และสาธารณสุข" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>การเสวนาวิชาการ ห้องบุคลากรทางการแพทย์และสาธารณสุข</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="การเสวนาวิชาการ ห้องสังคม เศรษฐกิจและสิ่งแวดล้อม" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>การเสวนาวิชาการ ห้องสังคม เศรษฐกิจและสิ่งแวดล้อม</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="ชมนิทรรศการ/บูธ" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>ชมนิทรรศการ/บูธนวัตกรรมสุขภาพ</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="pt-4 flex gap-3">
-          <button type="submit" class="flex-1 py-4 bg-[#171614] hover:bg-[#2c2621] text-white rounded-full font-bold text-base transition-colors shadow-md">
-            ยืนยันการลงทะเบียน
-          </button>
-          <button type="button" onclick="closeRegistrationModal('publicModal')" class="px-6 py-4 bg-[#eee5da] hover:bg-[#e2d5c8] text-[#171411] border border-[#d6c5b2] rounded-full font-medium transition-colors">
-            ยกเลิก
-          </button>
-        </div>
-      </form>
-    </div>
+    </main>
   </div>
 
-  <!-- ======================================================== -->
-  <!-- MODAL 2: บุคลากรทางการแพทย์และสาธารณสุข (1.2)           -->
-  <!-- ======================================================== -->
-  <div id="medicalModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-[#171411]/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#f5f0e9] text-[#171411] rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative border border-[#d6c5b2] max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-start pb-4 border-b border-[#dfd4c8]">
-        <div>
-          <span class="text-xs font-semibold px-3 py-1 bg-[#a67b4f]/15 text-[#825b30] border border-[#a67b4f]/30 rounded-full">ฟอร์ม 1.2</span>
-          <h2 class="text-xl sm:text-2xl font-bold text-[#171411] mt-2">ลงทะเบียนบุคลากรทางการแพทย์และสาธารณสุข</h2>
+  <!-- ===================================================================== -->
+  <!-- TAB 2: DEMOGRAPHICS 5 YEARS (2565–2569)                               -->
+  <!-- ===================================================================== -->
+  <div id="tab-demographics" class="tab-panel flex-1">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Top Demographics Cards (8 KPI Cards) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ประชากรสูงอายุปี 2569</div>
+          <div class="text-3xl font-extrabold font-mono text-[#2a2c2d] mt-2">14,964,000</div>
+          <div class="text-xs text-emerald-600 font-semibold mt-1">คิดเป็น 22.87% ของประชากรรวม</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">Super-Aged Society (สังคมสูงวัยระดับสุดยอด)</div>
         </div>
-        <button type="button" onclick="closeRegistrationModal('medicalModal')" class="text-[#7d7267] hover:text-[#171411] p-2 text-2xl font-bold leading-none">&times;</button>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ดัชนีการสูงวัย (Aging Index)</div>
+          <div class="text-3xl font-extrabold font-mono text-amber-600 mt-2">162.48</div>
+          <div class="text-xs text-amber-700 font-semibold mt-1">ผู้สูงอายุ 162 คน ต่อเด็ก 100 คน</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">เพิ่มขึ้นจาก 118.58 ในปี 2565 (+37.0%)</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">อัตราส่วนพึ่งพิงสูงอายุ (OADR)</div>
+          <div class="text-3xl font-extrabold font-mono text-[#2a2c2d] mt-2">36.28</div>
+          <div class="text-xs text-[#434647] font-semibold mt-1">แรงงาน 100 คน ดูแลผู้สูงอายุ 36 คน</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">เพิ่มขึ้นจาก 28.45 ในปี 2565</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ศักยภาพการเกื้อหนุน (Support Ratio)</div>
+          <div class="text-3xl font-extrabold font-mono text-rose-600 mt-2">2.75 : 1</div>
+          <div class="text-xs text-rose-600 font-semibold mt-1">คนทำงานไม่ถึง 3 คน ดูแลผู้สูงอายุ 1 คน</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ลดลงจาก 3.51 ในปี 2565</div>
+        </div>
       </div>
 
-      <!-- Accommodation Form Download Quick Button -->
-      <div class="my-4 p-4 bg-[#eee5da] border border-[#d6c5b2] rounded-2xl flex items-center justify-between gap-3">
-        <div class="text-xs sm:text-sm text-[#4a4239]">
-          <span class="font-bold text-[#171411]">แบบฟอร์มจองที่พัก:</span> สามารถดาวน์โหลดแบบฟอร์มสำรองโรงแรมราคาพิเศษสำหรับบุคลากรได้ที่นี่
+      <!-- Secondary Metrics Row -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-4 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">สัดส่วนเพศ (หญิง : ชาย)</div>
+          <div class="text-2xl font-bold font-mono text-[#1d1f20] mt-1">1.39 : 1</div>
+          <div class="text-xs text-[#7e8486] mt-0.5">หญิง 8.71M (58.2%) : ชาย 6.25M (41.8%)</div>
         </div>
-        <a href="/api/content/documents/1/download" target="_blank" class="px-4 py-2 bg-[#171614] hover:bg-[#2c2621] text-white font-bold rounded-full text-xs shrink-0 transition shadow-sm">
-          ดาวน์โหลดใบจองห้องพัก
-        </a>
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-4 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">อายุขัยเฉลี่ย (Life Expectancy)</div>
+          <div class="text-2xl font-bold font-mono text-emerald-700 mt-1">ญ 80.7 / ช 73.8 ปี</div>
+          <div class="text-xs text-[#7e8486] mt-0.5">ผู้หญิงอายุยืนกว่าผู้ชายเฉลี่ย 6.9 ปี</div>
+        </div>
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-4 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">อัตราเจริญพันธุ์รวม (TFR)</div>
+          <div class="text-2xl font-bold font-mono text-rose-600 mt-1">1.14 คน/สตรี</div>
+          <div class="text-xs text-[#7e8486] mt-0.5">ต่ำกว่าระดับทดแทนประชากร 2.1 อย่างวิกฤต</div>
+        </div>
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-4 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ผู้สูงวัยตอนปลาย (80 ปีขึ้นไป)</div>
+          <div class="text-2xl font-bold font-mono text-amber-700 mt-1">1.86 ล้านคน</div>
+          <div class="text-xs text-[#7e8486] mt-0.5">คิดเป็น 13.5% ของผู้สูงอายุ เสี่ยงติดบ้าน/เตียงสูง</div>
+        </div>
       </div>
 
-      <form id="medicalRegisterForm" onsubmit="handleMedicalSubmit(event)" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <!-- 5-Year Structural Transition Strip -->
+      <div class="bg-indigo-50/70 border border-indigo-200/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div class="flex items-center space-x-2.5">
+          <span class="p-1.5 rounded-lg bg-indigo-600 text-white"><i data-lucide="trending-up" class="w-4 h-4"></i></span>
           <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">คำนำหน้าชื่อ *</label>
-            <select name="title" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="นาย">นาย</option>
-              <option value="นาง">นาง</option>
-              <option value="นางสาว">นางสาว</option>
-              <option value="นพ.">นพ.</option>
-              <option value="พญ.">พญ.</option>
-              <option value="พว.">พว. (พยาบาลวิชาชีพ)</option>
-              <option value="ทพ.">ทพ.</option>
-              <option value="ภก.">ภก.</option>
-            </select>
+            <div class="font-bold text-[#2a2c2d] text-xs sm:text-sm">สรุปการเปลี่ยนแปลงเชิงโครงสร้าง 5 ปี (พ.ศ. 2565 &rarr; 2569)</div>
+            <div class="text-[11px] text-[#7e8486]">อัตราเร่งของการเปลี่ยนผ่านสู่สังคมสูงวัยระดับสุดยอดของประเทศไทย (Super-Aged Society)</div>
           </div>
-          <div class="sm:col-span-2">
-            <label class="block text-sm font-medium text-[#171411] mb-1">ชื่อ นามสกุล *</label>
-            <input type="text" name="full_name" required placeholder="ระบุชื่อและนามสกุล" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5 font-mono">
+          <div class="bg-white px-3 py-1.5 rounded-lg border border-[#e8eff2] shadow-2xs">
+            <span class="text-slate-400 text-2xs block">ประชากรสูงวัยเพิ่มขึ้น</span>
+            <span class="text-emerald-700 font-bold">+2.44 ล้านคน (+19.5%)</span>
+          </div>
+          <div class="bg-white px-3 py-1.5 rounded-lg border border-[#e8eff2] shadow-2xs">
+            <span class="text-slate-400 text-2xs block">ดัชนีสูงวัย (Aging Index)</span>
+            <span class="text-amber-700 font-bold">118.6 &rarr; 162.5 (+37.0%)</span>
+          </div>
+          <div class="bg-white px-3 py-1.5 rounded-lg border border-[#e8eff2] shadow-2xs">
+            <span class="text-slate-400 text-2xs block">แรงงานดูแลผู้สูงอายุ (PSR)</span>
+            <span class="text-rose-600 font-bold">3.51 &rarr; 2.75 คน/ผู้สูงอายุ 1 คน</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demographics Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-8 bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs">
+          <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-1">แนวโน้มจำนวนและสัดส่วนประชากรสูงอายุไทย 5 ปี (พ.ศ. 2565 – 2569)</h3>
+          <p class="text-xs text-[#7e8486] mb-4">แสดงอัตราการก้าวเข้าสู่สังคมสูงวัยระดับสุดยอด (Super-Aged Society) พร้อมสัดส่วน %</p>
+          <div class="h-80 relative">
+            <canvas id="demographics-chart"></canvas>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">ตำแหน่ง *</label>
-            <select name="position" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="แพทย์">แพทย์</option>
-              <option value="พยาบาล">พยาบาล</option>
-              <option value="นักวิชาการสาธารณสุข">นักวิชาการสาธารณสุข</option>
-              <option value="นักกายภาพ">นักกายภาพ</option>
-              <option value="นักกิจกรรม">นักกิจกรรม</option>
-              <option value="นักสังคมสงเคราะห์">นักสังคมสงเคราะห์</option>
-              <option value="แพทย์แผนไทย">แพทย์แผนไทย</option>
-              <option value="อื่นๆ">อื่นๆ (โปรดระบุ)</option>
-            </select>
+        <div class="lg:col-span-4 bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs flex flex-col">
+          <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-1">โครงสร้างประชากรสูงอายุ 3 ช่วงวัย (ปี 2569)</h3>
+          <p class="text-xs text-[#7e8486] mb-4">สัดส่วนผู้สูงอายุวัยต้น วัยกลาง และวัยปลาย</p>
+          <div class="h-64 relative flex-1">
+            <canvas id="age-group-chart"></canvas>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">เลขขอหน่วยกิต (CME, CNEU, อื่นๆ....)</label>
-            <input type="text" name="nursing_license_no" placeholder="โปรดตรวจสอบความถูกต้อง" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
+          <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-100 text-center text-2xs font-mono">
+            <div>
+              <span class="text-slate-400 block">วัยต้น 60-69</span>
+              <strong class="text-[#1d1f20]">56.4% (7.78M)</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 block">วัยกลาง 70-79</span>
+              <strong class="text-[#1d1f20]">30.1% (4.15M)</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 block">วัยปลาย 80+</span>
+              <strong class="text-[#1d1f20]">13.5% (1.86M)</strong>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label class="block text-sm font-medium text-[#171411] mb-1">หน่วยงาน / โรงพยาบาล / สสจ. *</label>
-          <input type="text" name="organization" required placeholder="ระบุชื่อหน่วยงานต้นสังกัด" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-        </div>
-
-        <!-- Health Region Cascading: Region (1-12) -> Province -> District -> Sub-district -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">เขตบริการสุขภาพ *</label>
-            <select id="med_health_region" name="health_region" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
+      <!-- Demographics Data Table -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-3">ตารางสถิติมิเตอร์ประชากรสูงอายุไทย 5 ปี (พ.ศ. 2565 – 2569)</h3>
+        <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-lg">
+          <table class="w-full text-left text-xs border-collapse" id="demographics-table">
+            <thead class="bg-[#effbff]/50 text-slate-700 font-semibold border-b border-[#e8eff2]">
+              <tr>
+                <th class="py-2.5 px-3">ปี พ.ศ.</th>
+                <th class="py-2.5 px-3 text-right">ประชากรรวม</th>
+                <th class="py-2.5 px-3 text-right">ผู้สูงอายุ (คน)</th>
+                <th class="py-2.5 px-3 text-right">สัดส่วน (%)</th>
+                <th class="py-2.5 px-3 text-right">Aging Index</th>
+                <th class="py-2.5 px-3 text-right">พึ่งพิง (OADR)</th>
+                <th class="py-2.5 px-3 text-right">เกื้อหนุน (PSR)</th>
+                <th class="py-2.5 px-3 text-right">หญิง : ชาย</th>
+                <th class="py-2.5 px-3 text-right">อายุขัย ญ/ช</th>
+                <th class="py-2.5 px-3">สถานะสังคมสูงวัย</th>
+              </tr>
+            </thead>
+            <tbody id="demographics-tbody" class="divide-y divide-slate-100 font-mono">
               <!-- Populated by JS -->
-            </select>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 3: CHRONIC DISEASES (NCDs) PREVALENCE                             -->
+  <!-- ===================================================================== -->
+  <div id="tab-ncd" class="tab-panel flex-1">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Top NCD Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-1">
+            <span class="text-xs font-heading font-semibold uppercase">มีหลายโรคเรื้อรัง (Multimorbidity)</span>
+            <span class="p-1.5 bg-rose-50 text-rose-600 rounded-lg"><i data-lucide="layers" class="w-4 h-4"></i></span>
           </div>
+          <div class="text-3xl font-extrabold font-mono text-rose-600 mt-1">68.4%</div>
+          <div class="text-xs font-mono text-[#434647] mt-1">9,432,360 คน (ผู้สูงอายุเกือบ 7 ใน 10)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">มีโรคประจำตัวตั้งแต่ 2 โรคขึ้นไปพร้อมกัน</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-1">
+            <span class="text-xs font-heading font-semibold uppercase">1. ความดันโลหิตสูง (HT: I10)</span>
+            <span class="p-1.5 bg-rose-50 text-rose-600 rounded-lg"><i data-lucide="heart" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-3xl font-extrabold font-mono text-[#2a2c2d] mt-1">52.4%</div>
+          <div class="text-xs font-mono text-[#434647] mt-1">7,225,960 คน (อันดับ 1 ของประเทศ)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ปัจจัยเสี่ยงหลักของโรคหลอดเลือดสมองและไตวาย</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-1">
+            <span class="text-xs font-heading font-semibold uppercase">2. ภาวะไขมันในเลือดสูง (E78)</span>
+            <span class="p-1.5 bg-amber-50 text-amber-600 rounded-lg"><i data-lucide="activity" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-3xl font-extrabold font-mono text-amber-600 mt-1">48.6%</div>
+          <div class="text-xs font-mono text-[#434647] mt-1">6,701,940 คน (พบในครึ่งหนึ่ง)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">เร่งการตีบตันของหลอดเลือดหัวใจและสมอง</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="flex items-center justify-between text-[#7e8486] mb-1">
+            <span class="text-xs font-heading font-semibold uppercase">3. โรคเบาหวาน (DM: E11)</span>
+            <span class="p-1.5 bg-orange-50 text-orange-600 rounded-lg"><i data-lucide="droplet" class="w-4 h-4"></i></span>
+          </div>
+          <div class="text-3xl font-extrabold font-mono text-orange-600 mt-1">24.1%</div>
+          <div class="text-xs font-mono text-[#434647] mt-1">3,323,390 คน (พบใน 1 ใน 4 คน)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">เสี่ยงต่อภาวะแทรกซ้อนเบาหวานลงไตและจอประสาทตา</div>
+        </div>
+      </div>
+
+      <!-- NCD Chart & Clinical Priority Matrix -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs flex flex-col justify-between">
           <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">จังหวัด (ตามเขตสุขภาพ) *</label>
-            <select id="med_province" name="province" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="">-- เลือกเขตสุขภาพก่อน --</option>
-            </select>
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <div>
+                <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-0.5">อัตราความชุก 10 โรคไม่ติดต่อเรื้อรัง (NCDs) สำคัญในผู้สูงอายุไทย</h3>
+                <p class="text-xs text-[#7e8486]">จัดอันดับตามสัดส่วนร้อยละความชุกในประชากรสูงวัย 60 ปีขึ้นไป</p>
+              </div>
+              <!-- Sorting Toggle -->
+              <div class="flex items-center bg-slate-100 rounded-lg p-0.5 text-xs font-mono">
+                <button onclick="sortNCD('pct')" id="btn-ncd-pct" class="px-2.5 py-1 rounded-md font-medium bg-moph text-white shadow-2xs">ความชุก %</button>
+                <button onclick="sortNCD('count')" id="btn-ncd-count" class="px-2.5 py-1 rounded-md font-medium text-[#434647] hover:text-[#2a2c2d] transition">จำนวนผู้ป่วย</button>
+              </div>
+            </div>
+            
+            <!-- Category Filter Pills -->
+            <div class="flex flex-wrap items-center gap-1.5 mb-3 text-2xs font-mono">
+              <button onclick="filterNCDCategory('all')" id="btn-ncd-cat-all" class="px-2.5 py-1 rounded-full bg-slate-800 text-white font-bold transition">ทั้งหมด (10 โรค)</button>
+              <button onclick="filterNCDCategory('cardio')" id="btn-ncd-cat-cardio" class="px-2.5 py-1 rounded-full bg-slate-100 text-[#434647] hover:bg-slate-200 transition">หัวใจ &amp; หลอดเลือด</button>
+              <button onclick="filterNCDCategory('bone')" id="btn-ncd-cat-bone" class="px-2.5 py-1 rounded-full bg-slate-100 text-[#434647] hover:bg-slate-200 transition">ข้อ &amp; เคลื่อนไหว</button>
+              <button onclick="filterNCDCategory('neuro')" id="btn-ncd-cat-neuro" class="px-2.5 py-1 rounded-full bg-slate-100 text-[#434647] hover:bg-slate-200 transition">สมอง &amp; จิตใจ</button>
+            </div>
+          </div>
+          <div class="h-80 relative flex-1">
+            <canvas id="ncd-chart"></canvas>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">อำเภอ *</label>
-            <select id="med_amphoe" name="amphoe" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="">-- เลือกอำเภอ --</option>
-            </select>
+        <div class="lg:col-span-5 bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs flex flex-col">
+          <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-1">จุดเน้นการดูแลทางคลินิก (Clinical Focus)</h3>
+          <p class="text-xs text-[#7e8486] mb-3">เป้าหมายเชิงนโยบายเพื่อลดความพิการและอัตราการเสียชีวิต</p>
+          <div class="flex-1 overflow-y-auto space-y-2.5 custom-scrollbar max-h-96" id="ncd-clinical-cards">
+            <!-- Populated by JS -->
           </div>
+        </div>
+      </div>
+
+      <!-- NCD Full Table -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-3">ตารางรายละเอียด 10 อันดับโรคเรื้อรังในผู้สูงอายุไทย (รหัส ICD-10 &amp; จำนวนผู้ป่วย)</h3>
+        <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-lg">
+          <table class="w-full text-left text-xs border-collapse" id="ncd-table">
+            <thead class="bg-[#effbff]/50 text-slate-700 font-semibold border-b border-[#e8eff2]">
+              <tr>
+                <th class="py-2.5 px-3 text-center">อันดับ</th>
+                <th class="py-2.5 px-3">รหัส ICD-10</th>
+                <th class="py-2.5 px-3">ชื่อโรค (ภาษาไทย)</th>
+                <th class="py-2.5 px-3">Disease Name (EN)</th>
+                <th class="py-2.5 px-3 text-right">ความชุก (%)</th>
+                <th class="py-2.5 px-3 text-right">ผู้ป่วยประเมิน (คน)</th>
+                <th class="py-2.5 px-3">จุดเน้นการดูแลรักษา</th>
+              </tr>
+            </thead>
+            <tbody id="ncd-tbody" class="divide-y divide-slate-100">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 4: MORBIDITY OPD & IPD 5-YEAR SITUATION                           -->
+  <!-- ===================================================================== -->
+  <div id="tab-morbidity" class="tab-panel flex-1">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Top Morbidity Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">OPD รับบริการสูงสุดอันดับ 1</div>
+          <div class="text-2xl font-bold font-mono text-[#2a2c2d] mt-2">24.51 ล้านครั้ง</div>
+          <div class="text-xs text-rose-600 font-semibold mt-1">โรคความดันโลหิตสูง (I10)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">อัตรา 183,500 ต่อแสนประชากรสูงวัย</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">IPD นอน รพ. สูงสุดอันดับ 1</div>
+          <div class="text-2xl font-bold font-mono text-rose-600 mt-2">185,400 ราย</div>
+          <div class="text-xs text-rose-700 font-semibold mt-1">ปอดอักเสบ/ปอดบวม (J12-J18)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ภาวะติดเชื้อทางเดินหายใจเฉียบพลันรุนแรง</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">IPD โรคหลอดเลือดสมอง &amp; หัวใจ</div>
+          <div class="text-2xl font-bold font-mono text-amber-600 mt-2">280,700 ราย</div>
+          <div class="text-xs text-[#434647] font-semibold mt-1">หัวใจล้มเหลว 142.5k + Stroke 138.2k</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ต้องการเตียงวิกฤตและห้องดูแลโรคหลอดเลือดสมอง</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">IPD กระดูกสะโพกหัก (หกล้ม)</div>
+          <div class="text-2xl font-bold font-mono text-indigo-600 mt-2">45,200 ราย</div>
+          <div class="text-xs text-[#434647] font-semibold mt-1">Fracture of Femur (S72)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ต้องผ่าตัดเร่งด่วนใน 48 ชม. เพื่อลดการติดเตียง</div>
+        </div>
+      </div>
+
+      <!-- Morbidity Chart Container with Mode Switcher -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-3 border-b border-slate-100 gap-2">
           <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">ตำบล *</label>
-            <select id="med_tambon" name="tambon" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="">-- เลือกตำบล --</option>
-            </select>
+            <h3 class="font-bold font-heading text-[#2a2c2d] text-sm" id="morbidity-chart-title">10 อันดับการรับบริการผู้ป่วยนอก (OPD) 2565–2569</h3>
+            <p class="text-xs text-[#7e8486] mt-0.5">เปรียบเทียบสถิติการรับบริการผู้ป่วยนอก (OPD) และการนอนรักษาในโรงพยาบาล (IPD)</p>
+          </div>
+          <!-- Switchers Group -->
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- OPD / IPD Mode Switcher -->
+            <div class="flex items-center bg-slate-100 rounded-lg p-0.5 text-xs font-mono">
+              <button onclick="switchMorbidityType('OPD')" id="btn-morb-opd" class="px-3 py-1.5 rounded-md font-medium bg-moph text-white shadow-2xs">ผู้ป่วยนอก (OPD 10 อันดับ)</button>
+              <button onclick="switchMorbidityType('IPD')" id="btn-morb-ipd" class="px-3 py-1.5 rounded-md font-medium text-[#434647] hover:text-[#2a2c2d] transition">ผู้ป่วยใน (IPD 10 อันดับ)</button>
+            </div>
+            <!-- Metric Toggle -->
+            <div class="flex items-center bg-slate-100 rounded-lg p-0.5 text-xs font-mono">
+              <button onclick="switchMorbidityMetric('cases')" id="btn-morb-cases" class="px-2.5 py-1.5 rounded-md font-medium bg-slate-800 text-white shadow-2xs">จำนวนครั้ง/ราย</button>
+              <button onclick="switchMorbidityMetric('rate')" id="btn-morb-rate" class="px-2.5 py-1.5 rounded-md font-medium text-[#434647] hover:text-[#2a2c2d] transition">อัตราต่อแสน</button>
+            </div>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- System Contrast Insight Callout -->
+        <div id="morbidity-insight-pill" class="mb-4 bg-[#effbff]/50 border border-[#e8eff2] rounded-lg p-2.5 text-2xs font-mono text-[#434647] flex items-center space-x-2">
+          <i data-lucide="info" class="w-3.5 h-3.5 text-moph shrink-0"></i>
+          <span id="morbidity-insight-text">กำลังแสดงข้อมูลผู้ป่วยนอก (OPD): มุ่งเน้นการติดตามควบคุมโรคเรื้อรังระดับปฐมภูมิ</span>
+        </div>
+
+        <div class="h-80 relative">
+          <canvas id="morbidity-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- Morbidity Table -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold font-heading text-[#2a2c2d] text-sm" id="morbidity-table-title">ตารางสถิติ 10 อันดับการรับบริการผู้ป่วยนอก (OPD) ย้อนหลัง 5 ปี (2565–2569)</h3>
+          <span class="text-xs text-slate-400 font-mono">หน่วย: ครั้ง / ราย</span>
+        </div>
+        <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-lg">
+          <table class="w-full text-left text-xs border-collapse" id="morbidity-table">
+            <thead class="bg-[#effbff]/50 text-slate-700 font-semibold border-b border-[#e8eff2]">
+              <tr>
+                <th class="py-2.5 px-3 text-center">อันดับ</th>
+                <th class="py-2.5 px-3">ICD-10</th>
+                <th class="py-2.5 px-3">กลุ่มโรค / อาการ (ภาษาไทย)</th>
+                <th class="py-2.5 px-3">Condition Name (EN)</th>
+                <th class="py-2.5 px-2.5 text-right">ปี 2565</th>
+                <th class="py-2.5 px-2.5 text-right">ปี 2566</th>
+                <th class="py-2.5 px-2.5 text-right">ปี 2567</th>
+                <th class="py-2.5 px-2.5 text-right">อัตรา/แสน (2567)</th>
+                <th class="py-2.5 px-2.5 text-right">เติบโต (%)</th>
+                <th class="py-2.5 px-3">ข้อสังเกตทางคลินิก</th>
+              </tr>
+            </thead>
+            <tbody id="morbidity-tbody" class="divide-y divide-slate-100 font-mono">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 5: TOP 10 MORTALITY CAUSES                                        -->
+  <!-- ===================================================================== -->
+  <div id="tab-mortality" class="tab-panel flex-1">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Top Mortality Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">สาเหตุการเสียชีวิตอันดับ 1</div>
+          <div class="text-2xl font-bold font-mono text-rose-600 mt-2">65,420 ราย</div>
+          <div class="text-xs text-rose-700 font-semibold mt-1">โรคมะเร็งและเนื้องอกร้าย (C00-C97)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">สัดส่วน 24.8% ของการตาย | 490.4 ต่อแสน</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">สาเหตุการเสียชีวิตอันดับ 2</div>
+          <div class="text-2xl font-bold font-mono text-[#2a2c2d] mt-2">42,180 ราย</div>
+          <div class="text-xs text-[#434647] font-semibold mt-1">โรคหลอดเลือดสมอง (Stroke: I60-I69)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">สัดส่วน 16.0% ของการตาย | 316.2 ต่อแสน</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">สาเหตุการเสียชีวิตอันดับ 3</div>
+          <div class="text-2xl font-bold font-mono text-amber-600 mt-2">38,940 ราย</div>
+          <div class="text-xs text-amber-700 font-semibold mt-1">โรคปอดอักเสบ (Pneumonia: J12-J18)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">สัดส่วน 14.8% ของการตาย | 291.9 ต่อแสน</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">สาเหตุการเสียชีวิตอันดับ 4</div>
+          <div class="text-2xl font-bold font-mono text-orange-600 mt-2">34,120 ราย</div>
+          <div class="text-xs text-[#434647] font-semibold mt-1">โรคหัวใจขาดเลือด (IHD: I20-I25)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">สัดส่วน 12.9% ของการตาย | 255.8 ต่อแสน</div>
+        </div>
+      </div>
+
+      <!-- Pareto Mortality Concentration Callout Strip -->
+      <div class="bg-rose-50/80 border border-rose-200/90 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs shadow-2xs">
+        <div class="flex items-center space-x-2.5">
+          <span class="p-1.5 rounded-lg bg-rose-600 text-white"><i data-lucide="alert-triangle" class="w-4 h-4"></i></span>
           <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">เบอร์โทรศัพท์ (ไม่บังคับ)</label>
-            <input type="tel" name="phone" placeholder="08xxxxxxxx" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
+            <h4 class="font-bold text-xs sm:text-sm font-heading text-rose-900">การกระจุกตัวของมรณกรรม (Mortality Concentration): 4 โรคหลักคิดเป็น 68.5% ของการตายทั้งหมด</h4>
+            <p class="text-[11px] text-rose-800 mt-0.5">ผู้สูงอายุไทยเสียชีวิตจาก มะเร็ง (24.8%), หลอดเลือดสมอง (16.0%), ปอดอักเสบ (14.8%), และหัวใจขาดเลือด (12.9%) เป็นสัดส่วนสูงสุด</p>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">E-mail (ไม่บังคับ)</label>
-            <input type="email" name="email" placeholder="official@moph.mail.go.th" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
+        </div>
+        <div class="flex items-center space-x-2 font-mono font-bold bg-white px-3 py-1.5 rounded-lg border border-rose-200 text-xs">
+          <span class="text-rose-600">Top 4 มรณกรรมรวม:</span>
+          <span class="text-[#2a2c2d]">180,660 ราย (68.5%)</span>
+        </div>
+      </div>
+
+      <!-- Mortality Charts Row -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-7 bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs">
+          <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-1">จำนวนผู้เสียชีวิต 10 อันดับแรกของผู้สูงอายุไทย (ปี 2567)</h3>
+          <p class="text-xs text-[#7e8486] mb-4">ข้อมูลจากฐานข้อมูลทะเบียนราษฎร กรมการปกครอง และกองยุทธศาสตร์และแผนงาน สธ.</p>
+          <div class="h-80 relative">
+            <canvas id="mortality-bar-chart"></canvas>
           </div>
         </div>
 
-        <!-- สิ่งที่สนใจ -->
+        <div class="lg:col-span-5 bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs flex flex-col">
+          <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-1">สัดส่วนร้อยละสาเหตุการเสียชีวิต (Mortality Share %)</h3>
+          <p class="text-xs text-[#7e8486] mb-4">สัดส่วนของผู้สูงอายุไทยที่เสียชีวิตจากแต่ละโรค</p>
+          <div class="h-64 relative flex-1">
+            <canvas id="mortality-pie-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mortality Data Table -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-3">ตารางสถิติ 10 สาเหตุการเสียชีวิตสูงสุดของผู้สูงอายุไทย 5 ปี (พ.ศ. 2565 – 2569)</h3>
+        <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-lg">
+          <table class="w-full text-left text-xs border-collapse" id="mortality-table">
+            <thead class="bg-[#effbff]/50 text-slate-700 font-semibold border-b border-[#e8eff2]">
+              <tr>
+                <th class="py-2.5 px-3 text-center">อันดับ</th>
+                <th class="py-2.5 px-3">รหัส ICD-10</th>
+                <th class="py-2.5 px-3">สาเหตุการเสียชีวิต (ภาษาไทย)</th>
+                <th class="py-2.5 px-3">Cause of Death (EN)</th>
+                <th class="py-2.5 px-2.5 text-right">ปี 2565</th>
+                <th class="py-2.5 px-2.5 text-right">ปี 2566</th>
+                <th class="py-2.5 px-2.5 text-right">ปี 2567</th>
+                <th class="py-2.5 px-2.5 text-right">อัตรา/แสน (2567)</th>
+                <th class="py-2.5 px-2.5 text-right">สัดส่วน (%)</th>
+                <th class="py-2.5 px-2.5 text-right">เติบโต (%)</th>
+                <th class="py-2.5 px-3">ข้อสังเกต</th>
+              </tr>
+            </thead>
+            <tbody id="mortality-tbody" class="divide-y divide-slate-100 font-mono">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 6: BURDEN OF DISEASE (DALYs & BOD)                                -->
+  <!-- ===================================================================== -->
+  <div id="tab-dalys" class="tab-panel flex-1">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      
+      <!-- Top DALYs Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ภาระโรคสูงสุดอันดับ 1 (รวม)</div>
+          <div class="text-2xl font-bold font-mono text-rose-600 mt-2">485,200 DALYs</div>
+          <div class="text-xs text-rose-700 font-semibold mt-1">โรคหลอดเลือดสมอง (Stroke)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ตายก่อนวัย (YLL) 71.4% : พิการ (YLD) 28.6%</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ภาระโรคสูงสุดอันดับ 2 (รวม)</div>
+          <div class="text-2xl font-bold font-mono text-[#2a2c2d] mt-2">392,100 DALYs</div>
+          <div class="text-xs text-[#434647] font-semibold mt-1">โรคหัวใจขาดเลือด (IHD)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">ตายก่อนวัย (YLL) 83.2% : พิการ (YLD) 16.8%</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ภาระความพิการ (YLD) สูงสุด</div>
+          <div class="text-2xl font-bold font-mono text-indigo-600 mt-2">235,600 DALYs</div>
+          <div class="text-xs text-indigo-700 font-semibold mt-1">โรคข้อเข่าเสื่อม (OA Knee)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">100% ภาระความพิการ (ไม่ตายแต่ทำลายคุณภาพชีวิต)</div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+          <div class="text-xs font-heading font-semibold text-[#7e8486] uppercase">ภาระความพิการทางสมอง</div>
+          <div class="text-2xl font-bold font-mono text-purple-600 mt-2">192,700 DALYs</div>
+          <div class="text-xs text-purple-700 font-semibold mt-1">ภาวะสมองเสื่อม (Dementia)</div>
+          <div class="text-[11px] text-slate-400 mt-3 pt-2 border-t border-slate-100">80.0% YLD อยู่กับความพิการและการพึ่งพิงผู้อื่น</div>
+        </div>
+      </div>
+
+      <!-- DALYs Concept Banner -->
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-4 text-xs text-indigo-950 flex items-start space-x-3 shadow-2xs">
+        <i data-lucide="help-circle" class="w-5 h-5 text-indigo-600 shrink-0 mt-0.5"></i>
         <div>
-          <label class="block text-sm font-semibold text-[#171411] mb-2">สิ่งที่สนใจภายในงาน</label>
-          <div class="space-y-2 text-sm text-[#4a4239]">
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="พิธีเปิดและเสวนาช่วงเช้า" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>พิธีเปิดและเสวนาช่วงเช้า</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="การเสวนาวิชาการ ห้อง International (ต่างประเทศ)" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>การเสวนาวิชาการ ห้อง International (ต่างประเทศ)</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="การเสวนาวิชาการ ห้องบุคลาการทางการแพทย์และสาธารณสุข" checked class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>การเสวนาวิชาการ ห้องบุคลากรทางการแพทย์และสาธารณสุข</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="การเสวนาวิชาการ ห้องสังคม เศรษฐกิจและสิ่งแวดล้อม" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>การเสวนาวิชาการ ห้องสังคม เศรษฐกิจและสิ่งแวดล้อม</span>
-            </label>
-            <label class="flex items-center gap-2 p-2 rounded-lg hover:bg-[#eee5da] cursor-pointer">
-              <input type="checkbox" name="interests" value="ชมนิทรรศการ/บูธ" class="w-5 h-5 text-[#a67b4f] rounded border-[#d6c5b2] focus:ring-[#a67b4f]">
-              <span>ชมนิทรรศการ/บูธ</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="pt-4 flex gap-3">
-          <button type="submit" class="flex-1 py-4 bg-[#171614] hover:bg-[#2c2621] text-white rounded-full font-bold text-base transition-colors shadow-md">
-            ยืนยันการลงทะเบียนบุคลากร
-          </button>
-          <button type="button" onclick="closeRegistrationModal('medicalModal')" class="px-6 py-4 bg-[#eee5da] hover:bg-[#e2d5c8] text-[#171411] border border-[#d6c5b2] rounded-full font-medium transition-colors">
-            ยกเลิก
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ======================================================== -->
-  <!-- MODAL 3: ASEAN Member States (1.3)                       -->
-  <!-- ======================================================== -->
-  <div id="aseanModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-[#171411]/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#f5f0e9] text-[#171411] rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative border border-[#d6c5b2] max-h-[92vh] overflow-y-auto">
-      <div class="flex justify-between items-start pb-4 border-b border-[#dfd4c8]">
-        <div>
-          <span class="text-xs font-semibold px-3 py-1 bg-[#eee5da] text-[#9a744d] border border-[#d6c5b2] rounded-full">Form 1.3</span>
-          <h2 class="text-xl sm:text-2xl font-bold text-[#171411] mt-2">ASEAN Member States Registration</h2>
-        </div>
-        <button type="button" onclick="closeRegistrationModal('aseanModal')" class="text-[#7d7267] hover:text-[#171411] p-2 text-2xl font-bold leading-none">&times;</button>
-      </div>
-
-      <!-- Accommodation Notice Box per Specification -->
-      <div class="my-4 p-5 bg-[#eee5da] border border-[#d6c5b2] rounded-2xl space-y-2">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-[#9a744d]">Accommodation Booking Notice</h4>
-        <ul class="text-xs text-[#4a4239] space-y-1.5 list-disc list-inside">
-          <li>Participants are required to book directly with the hotel using the reservation form provided.</li>
-          <li>Alternatively, participants may choose to stay at any hotel of their choice near the event venue.</li>
-          <li><strong>Please note:</strong> Participants are responsible for covering their own accommodation costs.</li>
-        </ul>
-        <div class="pt-2">
-          <a href="/api/content/documents/1/download" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-[#171614] hover:bg-[#2c2621] text-white rounded-full text-xs font-bold transition-colors shadow-sm">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Download Hotel Reservation Form
-          </a>
+          <h4 class="font-bold text-sm font-heading text-indigo-900">นิยามภาระโรคและความสูญเสียทางสุขภาวะ (Disability-Adjusted Life Years: DALYs)</h4>
+          <p class="mt-1 leading-relaxed">
+            <strong>DALYs = YLL (ปีที่สูญเสียจากการเสียชีวิตก่อนวัยอันควร) + YLD (ปีที่สูญเสียจากการมีชีวิตอยู่ด้วยความพิการ/ทุพพลภาพ)</strong>:
+            การวัดด้วย DALYs ช่วยให้เห็นภาพจริงว่าโรคใดคร่าชีวิตอย่างฉับพลัน (เน้น YLL สูง เช่น มะเร็งตับ 95.4%, หัวใจขาดเลือด 83.2%) เทียบกับโรคที่บั่นทอนร่างกายและสร้างภาระการดูแลระยะยาว (เน้น YLD สูง เช่น ข้อเข่าเสื่อม 100%, สมองเสื่อม 80%, เบาหวาน 55.6%)
+          </p>
         </div>
       </div>
 
-      <form id="aseanRegisterForm" onsubmit="handleAseanSubmit(event)" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <!-- DALYs Stacked Bar Chart -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-6 shadow-xs">
+        <div class="flex flex-wrap items-center justify-between pb-3 mb-4 border-b border-slate-100 gap-2">
           <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">Country *</label>
-            <select name="country" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="Brunei Darussalam">Brunei Darussalam</option>
-              <option value="Cambodia">Cambodia</option>
-              <option value="Indonesia">Indonesia</option>
-              <option value="Lao PDR">Lao PDR</option>
-              <option value="Malaysia">Malaysia</option>
-              <option value="Myanmar">Myanmar</option>
-              <option value="Philippines">Philippines</option>
-              <option value="Singapore">Singapore</option>
-              <option value="Thailand">Thailand</option>
-              <option value="Viet Nam">Viet Nam</option>
-              <option value="Other">Other (please specify)</option>
-            </select>
+            <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-0.5" id="dalys-chart-title">เปรียบเทียบภาระโรค 10 อันดับ: การเสียชีวิตก่อนวัยอันควร (YLL) vs การอยู่อย่างทุพพลภาพ (YLD)</h3>
+            <p class="text-xs text-[#7e8486]">แสดงสัดส่วนปีสุขภาวะที่สูญเสีย (DALYs) จำแนกระหว่างการตายเฉียบพลันและความพิการเรื้อรัง</p>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">Title *</label>
-            <select name="title" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="Prof.">Prof.</option>
-              <option value="Dr.">Dr.</option>
-              <option value="Mr.">Mr.</option>
-              <option value="Ms.">Ms.</option>
-              <option value="Miss">Miss</option>
-              <option value="Other">Other</option>
-            </select>
+          <!-- View Switcher -->
+          <div class="flex items-center bg-slate-100 rounded-lg p-0.5 text-xs font-mono">
+            <button onclick="switchDALYsView('absolute')" id="btn-dalys-abs" class="px-3 py-1.5 rounded-md font-medium bg-moph text-white shadow-2xs">จำนวนปีรวม (DALYs)</button>
+            <button onclick="switchDALYsView('percent')" id="btn-dalys-pct" class="px-3 py-1.5 rounded-md font-medium text-[#434647] hover:text-[#2a2c2d] transition">สัดส่วน 100% (YLL vs YLD)</button>
           </div>
         </div>
+        <div class="h-96 relative">
+          <canvas id="dalys-chart"></canvas>
+        </div>
+      </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">First / Given Name *</label>
-            <input type="text" name="first_name" required placeholder="First name" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">Last / Family Name *</label>
-            <input type="text" name="last_name" required placeholder="Family name" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
+      <!-- DALYs Data Table -->
+      <section class="bg-white rounded-xl border border-[#e8eff2] p-5 shadow-xs">
+        <h3 class="font-bold font-heading text-[#2a2c2d] text-sm mb-3">ตาราง 10 อันดับภาระโรคของผู้สูงอายุไทย (โครงการประเมินภาระโรคแห่งประเทศไทย: BOD Thailand)</h3>
+        <div class="overflow-x-auto custom-scrollbar border border-slate-100 rounded-lg">
+          <table class="w-full text-left text-xs border-collapse" id="dalys-table">
+            <thead class="bg-[#effbff]/50 text-slate-700 font-semibold border-b border-[#e8eff2]">
+              <tr>
+                <th class="py-2.5 px-3 text-center">อันดับ</th>
+                <th class="py-2.5 px-3">ภาวะโรค / สุขภาพ (ภาษาไทย)</th>
+                <th class="py-2.5 px-3">Condition Name (EN)</th>
+                <th class="py-2.5 px-3 text-right">DALYs รวม (ปี)</th>
+                <th class="py-2.5 px-3 text-right">YLL ตายก่อนวัย (ปี)</th>
+                <th class="py-2.5 px-3 text-right">สัดส่วน YLL (%)</th>
+                <th class="py-2.5 px-3 text-right">YLD พิการ (ปี)</th>
+                <th class="py-2.5 px-3 text-right">สัดส่วน YLD (%)</th>
+                <th class="py-2.5 px-3 text-center">อัตราส่วน YLL:YLD</th>
+                <th class="py-2.5 px-3">ลักษณะภาระโรค</th>
+              </tr>
+            </thead>
+            <tbody id="dalys-tbody" class="divide-y divide-slate-100 font-mono">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
         </div>
+      </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">Gender *</label>
-            <select name="gender" required class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Prefer not to say">Prefer not to say</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">Position *</label>
-            <input type="text" name="position" required placeholder="e.g. Director / Medical Officer" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-[#171411] mb-1">Organization *</label>
-          <input type="text" name="organization" required placeholder="Institution / Hospital / Ministry" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">Telephone Number *</label>
-            <input type="tel" name="phone" required placeholder="+xx xxxxxxxx" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-[#171411] mb-1">E-mail *</label>
-            <input type="email" name="email" required placeholder="delegate@domain.com" class="w-full p-3 rounded-xl border border-[#d6c5b2] bg-white text-[#171411] placeholder-[#9c9184] focus:border-[#a67b4f] focus:ring-2 focus:ring-[#a67b4f]/20 outline-none">
-          </div>
-        </div>
-
-        <div class="pt-4 flex gap-3">
-          <button type="submit" class="flex-1 py-4 bg-[#171614] hover:bg-[#2c2621] text-white rounded-full font-bold text-base transition-colors shadow-md">
-            Submit Registration
-          </button>
-          <button type="button" onclick="closeRegistrationModal('aseanModal')" class="px-6 py-4 bg-[#eee5da] hover:bg-[#e2d5c8] text-[#171411] border border-[#d6c5b2] rounded-full font-medium transition-colors">
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+    </main>
   </div>
 
-  <!-- ======================================================== -->
-  <!-- MODAL 4: Success Confirmation Dialog                     -->
-  <!-- ======================================================== -->
-  <div id="registrationSuccessModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-[#171411]/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-[#f5f0e9] text-[#171411] rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative border border-[#d6c5b2] text-center">
-      <div class="w-16 h-16 bg-[#a67b4f]/15 text-[#a67b4f] rounded-full flex items-center justify-center mx-auto mb-4 border border-[#a67b4f]/30">
-        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-      </div>
+  <!-- Footer -->
+  <footer class="bg-white border-t border-[#e8eff2] py-4 text-center text-xs text-[#7e8486] mt-auto">
+    <p>&copy; 2026 Analyze Aging &bull; กรมการแพทย์ กระทรวงสาธารณสุข &bull; ข้อมูลจากคลังข้อมูลสุขภาพ (Health Data Center: HDC)</p>
+  </footer>
 
-      <h3 id="modalSuccessTitle" class="text-2xl font-bold text-[#171411]">
-        ลงทะเบียนสำเร็จเรียบร้อยแล้ว
-      </h3>
-      <p id="modalSuccessMessage" class="text-[#6e6459] text-sm mt-1">
-        ข้อมูลของท่านได้รับการบันทึกลงสู่ระบบเรียบร้อยแล้ว
-      </p>
-
-      <div class="my-6 p-5 bg-[#eee5da] rounded-2xl border border-[#d6c5b2]">
-        <span class="text-xs text-[#7d7267] uppercase tracking-wider block font-mono">รหัสอ้างอิงการลงทะเบียน</span>
-        <span id="modalSuccessRegCode" class="text-2xl sm:text-3xl font-mono font-extrabold text-[#a67b4f] block my-1">
-          PUB-2026-0001
-        </span>
-        <span id="modalSuccessName" class="text-sm font-semibold text-[#171411] block">
-          นายสมหมาย ใจดี
-        </span>
-        <span id="modalSuccessNote" class="text-xs text-[#6e6459] block mt-1">
-          ท่านสามารถใช้ชื่อ-นามสกุลเพื่อตรวจสอบสถานะได้ตลอดเวลา
-        </span>
-      </div>
-
-      <button type="button" onclick="closeSuccessModal()" class="w-full py-4 bg-[#171614] hover:bg-[#2c2621] text-white rounded-full font-bold text-base transition-colors shadow-md">
-        ตกลงและปิดหน้าต่าง
-      </button>
-    </div>
-  </div>
-
-  <!-- ======================================================== -->
-  <!-- Lightbox Modal for A4 Schedule Image Zoom                -->
-  <!-- ======================================================== -->
-  <div id="scheduleLightboxModal" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-4" onclick="closeFullscreenSchedule()">
-    <div class="relative max-w-4xl max-h-[96vh] w-full flex items-center justify-center">
-      <img id="scheduleLightboxImg" src="" alt="กำหนดการขนาดเต็ม A4" class="max-w-full max-h-[92vh] object-contain rounded-xl shadow-2xl">
-      <button type="button" onclick="closeFullscreenSchedule()" class="absolute top-2 right-2 text-white bg-black/60 hover:bg-black p-2.5 rounded-full text-xl font-bold leading-none border border-white/20">&times;</button>
-    </div>
-  </div>
-
-  <script>
-    function openRegistrationModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function closeRegistrationModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
-  </script>
-  <script src="js/thai_address_data.js"></script>
-  <script src="js/app.js"></script>
+  <!-- App Scripts (Embedded Data + Interactive Logic) -->
+  <script src="js/aging_data_embedded.js"></script>
+  <script src="js/aging_app.js"></script>
 </body>
 </html>

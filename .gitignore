@@ -33,6 +33,10 @@ Thumbs.db
 .agents/
 .codex/
 .impeccable/
+.gemini/
+scratch/
+dms-dashboard-repo/
+.next/
 skills-lock.json
 
 # Scratch & Temporary transcripts

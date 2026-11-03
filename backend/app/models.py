@@ -1,5 +1,6 @@
 import datetime
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, Float, ForeignKey
+from sqlalchemy.orm import relationship
 from .database import Base
 
 class AttendeePublic(Base):
@@ -126,3 +127,61 @@ class AdminUser(Base):
     full_name = Column(String(255), nullable=False)
     role = Column(String(50), default="superadmin")
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+# ==========================================
+# Analyze Aging: 9-Domain Screening Models
+# ==========================================
+
+class Zone(Base):
+    __tablename__ = "health_zones"
+    
+    zone_id = Column(String(10), primary_key=True, index=True)  # "01" - "13", "TH"
+    zone_name = Column(String(100), nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    provinces = relationship("Province", back_populates="zone", cascade="all, delete-orphan")
+
+
+class Province(Base):
+    __tablename__ = "provinces"
+    
+    province_code = Column(String(10), primary_key=True, index=True)  # 2-digit MOI code, e.g. "10", "50"
+    province_name_th = Column(String(100), nullable=False, index=True)
+    province_name_en = Column(String(100), nullable=True)
+    zone_id = Column(String(10), ForeignKey("health_zones.zone_id"), nullable=False, index=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    zone = relationship("Zone", back_populates="provinces")
+
+
+class Screening9D(Base):
+    __tablename__ = "screening_9d_records"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    fiscal_year = Column(String(10), nullable=False, index=True)  # "2567", "2568", "2569"
+    entity_type = Column(String(20), nullable=False, index=True)  # "province", "zone", "national"
+    entity_id = Column(String(10), nullable=False, index=True)    # province_code or zone_id
+    entity_name = Column(String(100), nullable=False)
+    zone_id = Column(String(10), nullable=True, index=True)
+    target_pop = Column(Integer, default=0)
+    screened_9d = Column(Integer, default=0)
+    screened_9d_pct = Column(Float, default=0.0)
+    domains_data = Column(Text, nullable=False)  # JSON-encoded dictionary of all 9 domains metrics
+    is_validated = Column(Boolean, default=True)
+    validation_notes = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class AnomalyAudit(Base):
+    __tablename__ = "anomaly_audits"
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    rule_name = Column(String(100), nullable=False, index=True)
+    severity = Column(String(20), default="WARNING")  # "INFO", "WARNING", "ERROR", "CRITICAL"
+    fiscal_year = Column(String(10), nullable=True, index=True)
+    entity_id = Column(String(50), nullable=True)
+    details = Column(Text, nullable=False)
+    resolution_action = Column(String(255), nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+

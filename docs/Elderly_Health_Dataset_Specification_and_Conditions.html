@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>มาตรฐานชุดข้อมูลสุขภาพผู้สูงอายุและขั้นตอนการดูแลรักษา (Elderly Health Data Set & Care Pathways)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #0f766e;
+            --accent: #d97706;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --table-header: #1e3a8a;
+            --table-alt: #f8fafc;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 24px 16px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f766e 100%);
+            color: white;
+            padding: 36px 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.2);
+            margin-bottom: 28px;
+        }
+        header h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        header p {
+            font-size: 15px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            overflow-x: auto;
+        }
+        .nav-tab {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .card h2 {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+        }
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .framework-box {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid #cbd5e1;
+            transition: transform 0.2s;
+        }
+        .framework-box:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-light);
+        }
+        .framework-box .step-title {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 15px;
+            margin-bottom: 6px;
+        }
+        .framework-box .step-desc {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            text-align: left;
+        }
+        th {
+            background-color: var(--table-header);
+            color: white;
+            font-weight: 600;
+            padding: 12px 14px;
+            white-space: nowrap;
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tr:nth-child(even) td {
+            background-color: var(--table-alt);
+        }
+        tr:hover td {
+            background-color: #f1f5f9;
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-family: inherit;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 12.5px;
+            overflow-x: auto;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+        .rule-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .rule-list li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .rule-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        .pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 1px;
+        }
+        .pill-blue { background: #dbeafe; color: #1e40af; }
+        .pill-green { background: #d1fae5; color: #065f46; }
+        .pill-amber { background: #fef3c7; color: #92400e; }
+        .pill-red { background: #fee2e2; color: #991b1b; }
+        .footer {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>คู่มือมาตรฐานชุดข้อมูลสุขภาพผู้สูงอายุและขั้นตอนการดูแลรักษา (Data Set & Care Pathways)</h1>
+            <p>สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข</p>
+            <div class="badge">เชื่อมโยงระบบ 43 แฟ้มมาตรฐาน สธ. • เครื่องมือ DMS Care Tools • Care Pathway s1 ถึง s7</div>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('matrix')">📊 16 หมวดตารางแมพ (s1 - s7)</button>
+            <button class="nav-tab" onclick="switchTab('dictionary')">📁 โครงสร้างฟิลด์ 43 แฟ้ม</button>
+            <button class="nav-tab" onclick="switchTab('conditions')">⚙️ กฎและเงื่อนไข (Business Rules)</button>
+            <button class="nav-tab" onclick="switchTab('sql')">💻 แม่แบบคำสั่ง SQL</button>
+        </div>
+
+        <!-- TAB 1: 16-Domain Matrix -->
+        <div id="matrix" class="tab-content active">
+            <div class="card">
+                <h2>ขั้นตอนการประมวลผลสุขภาพผู้สูงอายุ (Pathway Framework: s1 – s7)</h2>
+                <div class="framework-grid">
+                    <div class="framework-box">
+                        <div class="step-title">s1 คัดกรองเบื้องต้น</div>
+                        <div class="step-desc">รหัสบริการคัดกรองเบื้องต้นในชุมชน (อสม./รพ.สต.) ผ่านแฟ้ม SPECIALPP</div>
+                    </div>
+                    <div class="framework-box">
+                        <div class="step-title">s2 ผลคัดกรอง</div>
+                        <div class="step-desc">จำแนกผลปกติและกลุ่มที่มีความเสี่ยง</div>
+                    </div>
+                    <div class="framework-box">
+                        <div class="step-title">s3 ประเมินละเอียด</div>
+                        <div class="step-desc">เครื่องมือประเมินเชิงลึก MMSE, MoCA, SPPB, 9Q, TGDS 30, MNA, OSTA</div>
+                    </div>
+                    <div class="framework-box">
+                        <div class="step-title">s4 จัดการ/ดูแล</div>
+                        <div class="step-desc">การให้คำปรึกษา จัดทำ Care Plan และการส่งต่อแพทย์เฉพาะทาง</div>
+                    </div>
+                    <div class="framework-box">
+                        <div class="step-title">s5 วินิจฉัยโรค</div>
+                        <div class="step-desc">การวินิจฉัยโรคหลัก (Principal Dx) ตามรหัสสากล ICD-10</div>
+                    </div>
+                    <div class="framework-box">
+                        <div class="step-title">s6 รักษา/ติดตาม</div>
+                        <div class="step-desc">การสั่งยาเฉพาะทาง, หัตถการ 7 หลัก, ICD-9-CM, แฟ้ม DENTAL, นัด apdiag</div>
+                    </div>
+                    <div class="framework-box">
+                        <div class="step-title">s7 ผลลัพธ์สุขภาพ</div>
+                        <div class="step-desc">การเกิดอุบัติการณ์เฉียบพลัน กระดูกหัก ฆ่าตัวตาย และการเสียชีวิต (DEATH)</div>
+                    </div>
+                </div>
+
+                <input type="text" id="searchInput" class="search-box" placeholder="🔍 พิมพ์ค้นหาหมวดโรค, รหัส ICD-10, รหัส Special PP หรือชื่อยา..." onkeyup="filterTable()">
+
+                <div class="table-responsive">
+                    <table id="domainTable">
+                        <thead>
+                            <tr>
+                                <th>หมวดสุขภาพผู้สูงอายุ</th>
+                                <th>s1/s2 คัดกรองเบื้องต้น</th>
+                                <th>s3 ประเมินละเอียด</th>
+                                <th>s4 จัดการ/ส่งต่อ</th>
+                                <th>s5 วินิจฉัย (ICD-10)</th>
+                                <th>s6 รักษา/ติดตาม (ยา, หัตถการ, นัด)</th>
+                                <th>s7 ผลลัพธ์สุขภาพ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. ข้อมูลทั่วไป</strong></td>
+                                <td>แฟ้ม PERSON, HOME</td>
+                                <td>-</td>
+                                <td>จัดกลุ่มพื้นที่/สิทธิ</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>แฟ้ม DEATH (ตัดจำหน่าย/ตายทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. สมรรถภาพสมอง</strong></td>
+                                <td><span class="pill pill-blue">1B122</span> <span class="pill pill-green">1B1220 ปกติ</span><br><span class="pill pill-amber">1B1221, 1B1223 เสี่ยง</span><br>Mini-Cog: <span class="pill pill-green">1B1020 ปกติ</span> <span class="pill pill-amber">1B1021, 1B1022 เสี่ยง</span></td>
+                                <td>MMSE: <span class="pill pill-green">1B1224 ปกติ</span> <span class="pill pill-amber">1B1225, 1B1226, 1B1229</span><br>MoCA: <span class="pill pill-green">1B1030 ปกติ</span> <span class="pill pill-red">1B1031, 1B1032, 1B1039</span></td>
+                                <td>1B1221, 1B1223, 1B1225, 1B1226, 1B1031, 1B1032</td>
+                                <td><strong>F00 (G30), F01, F02</strong> (G31, A81, G10, G20, B22), <strong>F03, F06.7, G31.8, G23.1</strong></td>
+                                <td><strong>ยา:</strong> Donepezil, Rivastigmine, Memantine<br><strong>หัตถการ:</strong> 9349642, 9000020, 9420201<br><strong>ICD-9:</strong> 94.02<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. หกล้ม/การเคลื่อนไหว</strong></td>
+                                <td><span class="pill pill-blue">1B120</span> <span class="pill pill-green">1B1200 ปกติ</span><br><span class="pill pill-amber">1B1201-1B1203, 1B1209</span><br>คัดกรอง: Z13.9</td>
+                                <td>SPPB: <span class="pill pill-green">1B1050 ปกติ</span> <span class="pill pill-amber">1B1051, 1B1052</span> <span class="pill pill-red">1B1053, 1B1059</span><br>OSTA: 1B1011, 1B1012<br>FRAX: 1B1091</td>
+                                <td>1B1201, 1B1202, 1B1203</td>
+                                <td><strong>R26, R29.6, R54, M62.5</strong><br>กระดูกสะโพกหัก: <strong>S72.0 - S72.9</strong><br>กระดูกพรุน: <strong>M80, M81</strong></td>
+                                <td><strong>ยา:</strong> Ergocalciferol, Alendronate, Calcitriol, Zoledronic Acid, Alfacalcidol, Teriparatide, Raloxifene<br><strong>หัตถการ:</strong> 9379654, 9379657, 9379659<br><strong>ICD-9:</strong> 93.22, 81.52, 81.51, 78.05<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td><span class="pill pill-red">W00–W19 + S72</span><br>(หกล้มกระดูกสะโพกหัก)<br>เสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. ภาวะซึมเศร้า</strong></td>
+                                <td>2Q: <span class="pill pill-green">1B0280 ปกติ</span> <span class="pill pill-amber">1B0281 เสี่ยง</span><br>2Q+: 1B0212, 1B0210, 1B0211, 1B130, 1B131</td>
+                                <td>9Q: <span class="pill pill-green">1B0282 ปกติ</span> <span class="pill pill-amber">1B0283, 1B0284</span> <span class="pill pill-red">1B0285</span><br>8Q: <span class="pill pill-green">1B0270</span> <span class="pill pill-amber">1B0271-2</span> <span class="pill pill-red">1B0273</span><br>TGDS 30: <span class="pill pill-green">1B1040 ปกติ</span> <span class="pill pill-amber">1B1041-3</span></td>
+                                <td>9Q: 1B0283 - 1B0285<br>8Q: 1B0271 - 1B0273<br>TGDS: 1B1041 - 1B1043</td>
+                                <td><strong>F32</strong> (F32.0-F32.9), <strong>F33</strong> (F33.0-F33.9), <strong>F34.1, F38, F39</strong><br>ติดตาม: Z09.8</td>
+                                <td><strong>ยา:</strong> Sertraline, Trazodone, Fluoxetine, Mirtazapine, Escitalopram, Duloxetine, Venlafaxine, TCA (Amitriptyline, Nortriptyline)<br><strong>หัตถการ:</strong> 9009509, 9420201, 9429917<br><strong>ICD-9:</strong> 94.38, 94.02<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td><span class="pill pill-red">X60–X84</span><br>(ทำร้ายตนเอง/ฆ่าตัวตาย)<br>เสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. การกลั้นปัสสาวะ</strong></td>
+                                <td><span class="pill pill-blue">1B1283</span> <span class="pill pill-green">1B1284 ปกติ</span> <span class="pill pill-amber">1B1285 มีปัญหา</span></td>
+                                <td>จำแนกชนิด (Stress, Urge, Mixed, Overflow)</td>
+                                <td>1B1285</td>
+                                <td><strong>N39.3</strong> (Stress), <strong>N39.4</strong> (Urge), <strong>R32</strong> (Unspecified), <strong>N31.0 - N31.9, R35</strong></td>
+                                <td><strong>ยา:</strong> Oxybutynin, Trospium, Solifenacin, Tolterodine<br><strong>หัตถการ:</strong> 9289605 (Pelvic floor training), 4811000, 4811200<br><strong>ICD-9:</strong> 57.94, 57.95, 96.48<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>6. ภาวะโภชนาการ</strong></td>
+                                <td>ชุด 1K: <span class="pill pill-blue">1K1</span> <span class="pill pill-green">1K10 ปกติ</span> <span class="pill pill-amber">1K11-1K16</span><br>MNA-SF: <span class="pill pill-green">1B1000 ปกติ</span> <span class="pill pill-amber">1B1001, 1B1002</span></td>
+                                <td>MNA-Full: <span class="pill pill-green">1B1003 ปกติ</span> <span class="pill pill-amber">1B1004, 1B1005</span><br>MSRA-5: <span class="pill pill-green">1B1080 ปกติ</span> <span class="pill pill-amber">1B1081, 1B1082</span></td>
+                                <td>1K12, 1K13 (Care plan), 1K15, 1K16</td>
+                                <td><strong>E40 - E46</strong> (Protein-energy malnutrition), <strong>R63.0, R63.4, R63.6, R64, Z68.1, Z71.3</strong></td>
+                                <td><strong>ยา/อาหาร:</strong> Enteral, Oral nutrition, Ensure, Glucerna<br><strong>หัตถการ:</strong> 4413360 (PEG), 9008105 (TPN), 4413308<br><strong>ICD-9:</strong> 89.39, 94.49, 99.15, 96.6, 43.19<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>7. การมองเห็น</strong></td>
+                                <td><span class="pill pill-green">1B700 ปกติ</span> <span class="pill pill-amber">1B701 เสี่ยง</span></td>
+                                <td>ระยะใกล้: 1B1240-2<br>ระยะไกล: 1B1243-5, 1B1249<br>ต้อกระจก: 1B1250-2<br>ต้อหิน: 1B1253-5<br>จอประสาทตา: 1B1256-9</td>
+                                <td>1B1241, 1B1242, 1B1244, 1B1245, 1B1251, 1B1252, 1B1254, 1B1255, 1B1257, 1B1258</td>
+                                <td>ต้อกระจก: <strong>H25, H26, H27, H28</strong><br>ต้อหิน: <strong>H40</strong><br>จอเสื่อม: <strong>H35, H35.3-4</strong><br>ต้อเนื้อ: <strong>H11.0</strong><br>เบาหวานขึ้นตา: <strong>H36.0</strong><br>ตาบอด/เลือนราง: <strong>H54.0-9</strong></td>
+                                <td><strong>ยา:</strong> Latanoprost, Timolol, Acetazolamide, Brimonidine, Brinzolamide, Pilocarpine, Bimatoprost, Travoprost<br><strong>หัตถการ:</strong> 9390200, 9390140, 1722720<br><strong>ICD-9:</strong> 95.09, 95.11, OP9001-4, 13.41, 13.71<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>8. การได้ยิน</strong></td>
+                                <td><span class="pill pill-green">1B710 ปกติ</span> <span class="pill pill-amber">1B711 เสี่ยง</span><br>FMHT: <span class="pill pill-green">1B1060 ปกติ</span> <span class="pill pill-amber">1B1061, 1B1069</span></td>
+                                <td>Audiometry: 95.41<br>เครื่องช่วยฟัง: Z46.1</td>
+                                <td>1B711, 1B1061</td>
+                                <td><strong>H90.0 - H90.8, H91.0 - H91.9, Z46.1</strong></td>
+                                <td><strong>หัตถการ:</strong> 9400202 (Audiometry), 9401600 (Fitting hearing aids), 9400201<br><strong>ICD-9:</strong> 95.41, 95.43, 95.48<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>9. กิจวัตรประจำวัน (ADL)</strong></td>
+                                <td><span class="pill pill-green">1B720 ปกติ</span> <span class="pill pill-amber">1B721 เสี่ยง</span></td>
+                                <td>Barthel ADL: <span class="pill pill-green">1B1280 (12-20 ติดสังคม)</span><br><span class="pill pill-amber">1B1281 (5-11 ติดบ้าน)</span><br><span class="pill pill-red">1B1282 (0-4 ติดเตียง)</span><br>Frail: 1B1070-9<br>LTC: 1B1273-5</td>
+                                <td>1B1281, 1B1282, 1B1274, 1B1275</td>
+                                <td><strong>Z74.0 - Z74.9</strong> (ภาวะพึ่งพิง), <strong>Z73.6, R54</strong></td>
+                                <td><strong>หัตถการ:</strong> 9009684 (Home management), 9379657, 9009681 (ADL training)<br><strong>ICD-9:</strong> 93.22, 93.83 (Occupational therapy)<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>10. สุขภาพช่องปาก</strong></td>
+                                <td><span class="pill pill-green">1B730 ปกติ</span> <span class="pill pill-amber">1B731 เสี่ยง</span></td>
+                                <td>ตรวจช่องปาก: 1B126, 1B1260-4, 1B1269<br>ปากแห้ง: K11.70, K11.71, R68.2<br>แฟ้ม DENTAL: PTEETH >= 20, PERMANENT_PAIR >= 4</td>
+                                <td>1B1261, 1B1263, 1B1264, 1B731</td>
+                                <td>ฟันผุ: <strong>K02</strong>, โพรงประสาท: <strong>K04</strong><br>ปริทันต์: <strong>K05</strong>, สูญเสียฟัน: <strong>K08.1, K08.2</strong><br>มะเร็งช่องปาก: <strong>C00 - C10</strong><br>รอยโรคก่อนมะเร็ง: <strong>K13.2, L43, L93</strong></td>
+                                <td><strong>หัตถการ:</strong> 2330011, 2338610, 2338611<br><strong>ICD-9:</strong> 23.09, 96.54, 23.41, 23.6, 23.2, 23.3<br><strong>แฟ้ม DENTAL:</strong> ทุกแถว<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (ทุกสาเหตุ)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>11. โรคเบาหวาน</strong></td>
+                                <td>NCDSCREEN: BSTEST 1/2, BSLEVEL >= 126/200, WAIST_CM, BMI</td>
+                                <td>HbA1c (LABFU), ติดตามภาวะแทรกซ้อน (CHRONIC_FU: FOOT, RETINA)</td>
+                                <td>ทะเบียน CHRONIC</td>
+                                <td><strong>E10</strong> (Type 1), <strong>E11</strong> (Type 2), <strong>E12, E13, E14</strong> (ครอบคลุมภาวะแทรกซ้อน .0 ถึง .9)</td>
+                                <td><strong>ยา:</strong> Metformin, Glipizide, Insulin, SGLT2i, DPP4i<br><strong>หัตถการ:</strong> ตรวจเท้า, ถ่ายภาพจอประสาทตา OP9001<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>โรคแทรกซ้อนไตวาย (N18), เสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td><strong>12. โรคความดันโลหิตสูง</strong></td>
+                                <td>NCDSCREEN: SBP_1, DBP_1, SBP_2, DBP_2 >= 140/90</td>
+                                <td>ตรวจ EKG, ตรวจไต (BUN, Cr, eGFR)</td>
+                                <td>ทะเบียน CHRONIC</td>
+                                <td><strong>I10</strong> (Primary HT), <strong>I11</strong> (Heart), <strong>I12</strong> (Kidney), <strong>I13</strong> (Heart+Kidney), <strong>I15</strong> (Secondary)</td>
+                                <td><strong>ยา:</strong> Amlodipine, Losartan, Enalapril, HCTZ<br><strong>ควบคุม:</strong> SBP < 140, DBP < 90 ใน CHRONIC_FU<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>CVD Event, เสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td><strong>13. ความเสี่ยง CVD / หลอดเลือด</strong></td>
+                                <td>SPECIALPP: 1B1230 - 1B1239 (Thai CVD Risk Score)</td>
+                                <td>ประเมินความเสี่ยง 10 ปี (เสี่ยงสูง: 1B1232, 1B1234, 1B1235)</td>
+                                <td>1B1234, 1B1235 (ส่งต่อรักษาเข้มงวด)</td>
+                                <td><strong>STEMI (DIAGTYPE 1):</strong> I21.0, I21.1, I21.2, I21.3<br><strong>Stroke (DIAGTYPE 1):</strong> I60, I61, I62, I63, I64 (เฉียบพลัน), I65-I69 (เรื้อรัง)</td>
+                                <td><strong>ยา:</strong> Aspirin, Clopidogrel, Atorvastatin<br><strong>หัตถการ:</strong> CAG, PCI, Thrombolytic therapy, กายภาพฟื้นฟู<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>เสียชีวิต (I60-I69, I21)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>14. โรคกระดูกพรุน</strong></td>
+                                <td>OSTA Index: <span class="pill pill-green">1B1010 (> -1 ปกติ)</span> <span class="pill pill-amber">1B1011</span> <span class="pill pill-red">1B1012 (< -4 เสี่ยงสูง)</span></td>
+                                <td>FRAX Score: <span class="pill pill-green">1B1090</span> <span class="pill pill-red">1B1091 (เสี่ยงสูง: Hip > 3%, Major > 20%)</span></td>
+                                <td>1B1012, 1B1091 (ส่งตรวจ DEXA scan)</td>
+                                <td><strong>M80</strong> (มีกระดูกหักพยาธิสภาพ), <strong>M81</strong> (ไม่มีกระดูกหัก), <strong>M82</strong>, กระดูกหัก <strong>S72, S52, S42, S22</strong></td>
+                                <td><strong>ยา:</strong> Alendronate, Zoledronic acid, Calcium+Vit D<br><strong>ตรวจ:</strong> DEXA Bone Mineral Density (BMD)<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>Fragility Fractures, เสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td><strong>15. โรคข้อเข่าเสื่อม</strong></td>
+                                <td><span class="pill pill-green">1B1270 ปกติ</span> <span class="pill pill-amber">1B1271 ผิดปกติ รักษา</span> <span class="pill pill-red">1B1272 ผิดปกติ ส่งต่อ</span></td>
+                                <td>X-ray ข้อเข่า (Knee AP/Lateral)</td>
+                                <td>1B1271, 1B1272</td>
+                                <td><strong>M17.0 - M17.9</strong> (Gonarthrosis ปฐมภูมิ/ทุติยภูมิ), <strong>M15, M19</strong></td>
+                                <td><strong>ยา:</strong> Paracetamol, NSAIDs, Glucosamine, Hyaluronic acid inj.<br><strong>หัตถการ:</strong> กายภาพบำบัด 93.x, ผ่าตัดเปลี่ยนข้อเข่า 81.54<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>สูญเสียสมรรถภาพ, เสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td><strong>16. ปัญหาการนอน</strong></td>
+                                <td>ซักประวัติสุขอนามัยการนอนเบื้องต้น</td>
+                                <td>แบบประเมินคุณภาพการนอน (PSQI / Thai Sleep Questionnaire)</td>
+                                <td>ส่งตรวจคลินิกการนอนหลับ</td>
+                                <td><strong>G47.0</strong> (นอนไม่หลับ), <strong>G47.3</strong> (หยุดหายใจขณะหลับ OSA), <strong>G47.4</strong> (Narcolepsy), <strong>F51.0</strong> (Nonorganic insomnia)</td>
+                                <td><strong>หัตถการ:</strong> 89.17 (Polysomnogram / Sleep Study), 89.14 (EEG)<br><strong>รักษา:</strong> CPAP therapy, ปรับพฤติกรรมการนอน<br><strong>นัด:</strong> apdiag = ICD s5</td>
+                                <td>CVD, เสียชีวิต</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: Data Dictionary -->
+        <div id="dictionary" class="tab-content">
+            <div class="card">
+                <h2>โครงสร้างฟิลด์จาก 43 แฟ้มมาตรฐานที่เกี่ยวข้อง (43 Folders Data Dictionary)</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>แฟ้มข้อมูล</th>
+                                <th>ชื่อฟิลด์</th>
+                                <th>ชนิดข้อมูล</th>
+                                <th>คำอธิบายฟิลด์</th>
+                                <th>เงื่อนไขการสกัดและการประมวลผล (Condition & Business Logic)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="7"><strong>PERSON</strong></td>
+                                <td><code>HOSPCODE</code></td>
+                                <td>VARCHAR(5)</td>
+                                <td>รหัสสถานพยาบาล</td>
+                                <td>รหัสสถานบริการปฐมภูมิหรือโรงพยาบาลที่รับผิดชอบ</td>
+                            </tr>
+                            <tr>
+                                <td><code>CID</code></td>
+                                <td>VARCHAR(13)</td>
+                                <td>เลขประจำตัวประชาชน 13 หลัก</td>
+                                <td>ใช้ระบุตัวตนข้ามสถานบริการ, ตรวจสอบสัญชาติไทย (NATION=99), ตัดคนซ้ำ (Deduplication) ยึดแถว D_UPDATE ล่าสุด</td>
+                            </tr>
+                            <tr>
+                                <td><code>PID</code></td>
+                                <td>VARCHAR(15)</td>
+                                <td>ทะเบียนบุคคลในสถานพยาบาล</td>
+                                <td>ใช้เชื่อมโยงข้อมูลภายในสถานพยาบาลเดียวกัน</td>
+                            </tr>
+                            <tr>
+                                <td><code>HID</code></td>
+                                <td>VARCHAR(14)</td>
+                                <td>รหัสบ้าน</td>
+                                <td>เชื่อมโยงกับแฟ้ม <code>HOME</code> เพื่อระบุตำแหน่งที่อยู่</td>
+                            </tr>
+                            <tr>
+                                <td><code>BIRTH</code></td>
+                                <td>DATE</td>
+                                <td>วันเดือนปีเกิด</td>
+                                <td>เงื่อนไข: เกิดไม่เกิน 30 ก.ย. 2509 (อายุครบ 60 ปีบริบูรณ์ในปีงบประมาณที่ประเมิน) <code>TIMESTAMPDIFF(YEAR, BIRTH, :eval_date) >= 60</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>TYPEAREA</code></td>
+                                <td>VARCHAR(1)</td>
+                                <td>สถานะบุคคลในเขตรับผิดชอบ</td>
+                                <td>1=ในเขตตัวอยู่จริง, 2=ในเขตนอกตัว, 3=นอกเขตตัวอยู่จริง, 4=นอกเขตนอกตัว (ครอบคลุมทุก Typearea หรือเน้น 1, 3)</td>
+                            </tr>
+                            <tr>
+                                <td><code>DISCHARGE</code></td>
+                                <td>VARCHAR(1)</td>
+                                <td>สถานะการจำหน่าย</td>
+                                <td>9=ยังอยู่/มีชีวิต, 1=เสียชีวิต, 2=ย้าย, 3=สาบสูญ (เงื่อนไขมีชีวิต: DISCHARGE = '9')</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3"><strong>HOME</strong></td>
+                                <td><code>HID</code></td>
+                                <td>VARCHAR(14)</td>
+                                <td>รหัสบ้าน</td>
+                                <td>เชื่อมกับ <code>PERSON.HID</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>HOUSE</code></td>
+                                <td>VARCHAR(75)</td>
+                                <td>บ้านเลขที่</td>
+                                <td>ที่อยู่ของผู้สูงอายุ</td>
+                            </tr>
+                            <tr>
+                                <td><code>TAMBON, AMPUR, CHANGWAT</code></td>
+                                <td>VARCHAR(2)</td>
+                                <td>ตำบล อำเภอ จังหวัด</td>
+                                <td>รหัสพื้นที่การปกครอง</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>DEATH</strong></td>
+                                <td><code>CID</code></td>
+                                <td>VARCHAR(13)</td>
+                                <td>เลขบัตรประชาชนผู้เสียชีวิต</td>
+                                <td>ใช้เชื่อมตัดรายชื่อผู้เสียชีวิต หรือวิเคราะห์ผลลัพธ์การเสียชีวิต (s7)</td>
+                            </tr>
+                            <tr>
+                                <td><code>DDEATH</code></td>
+                                <td>DATE</td>
+                                <td>วันที่เสียชีวิต</td>
+                                <td>วันที่ระบุการเสียชีวิต</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>SPECIALPP</strong></td>
+                                <td><code>PPSPECIAL</code></td>
+                                <td>VARCHAR(7)</td>
+                                <td>รหัสบริการส่งเสริมป้องกันเฉพาะ</td>
+                                <td>รหัสบริการคัดกรอง 9 ด้าน และ DMS Care Tools (1Bxxxx, 1Kxxxx)</td>
+                            </tr>
+                            <tr>
+                                <td><code>DATE_SERV</code></td>
+                                <td>DATE</td>
+                                <td>วันที่รับบริการ</td>
+                                <td>วันที่คัดกรองหรือประเมิน</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4"><strong>NCDSCREEN</strong></td>
+                                <td><code>BSLEVEL</code></td>
+                                <td>DECIMAL(4,0)</td>
+                                <td>ค่าน้ำตาลในเลือด (mg/dL)</td>
+                                <td>เงื่อนไข: Fasting >= 126 หรือ Random >= 200 สงสัยเบาหวาน</td>
+                            </tr>
+                            <tr>
+                                <td><code>BSTEST</code></td>
+                                <td>VARCHAR(1)</td>
+                                <td>ชนิดการตรวจน้ำตาล</td>
+                                <td>1=Fasting, 2=Random</td>
+                            </tr>
+                            <tr>
+                                <td><code>SBP_1, SBP_2, DBP_1, DBP_2</code></td>
+                                <td>DECIMAL(3,0)</td>
+                                <td>ความดันโลหิตครั้งที่ 1 และ 2</td>
+                                <td>เงื่อนไข: วัด 2 ครั้ง SBP >= 140 หรือ DBP >= 90 สงสัยความดันโลหิตสูง</td>
+                            </tr>
+                            <tr>
+                                <td><code>WAIST_CM</code></td>
+                                <td>DECIMAL(3,0)</td>
+                                <td>เส้นรอบเอว (ซม.)</td>
+                                <td>เกณฑ์อ้วนลงพุง (ชาย >= 90 ซม., หญิง >= 80 ซม.)</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>CHRONIC</strong></td>
+                                <td><code>CHRONIC</code></td>
+                                <td>VARCHAR(6)</td>
+                                <td>รหัสโรคเรื้อรัง (ICD-10)</td>
+                                <td>ทะเบียนผู้ป่วย: E10-E14 (เบาหวาน), I10-I15 (ความดัน)</td>
+                            </tr>
+                            <tr>
+                                <td><code>DATE_DIAG</code></td>
+                                <td>DATE</td>
+                                <td>วันที่วินิจฉัยครั้งแรก</td>
+                                <td>วันขึ้นทะเบียนโรคเรื้อรัง</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3"><strong>CHRONIC_FU</strong></td>
+                                <td><code>SBP, DBP</code></td>
+                                <td>DECIMAL(3,0)</td>
+                                <td>ความดันโลหิตในการติดตาม</td>
+                                <td>เกณฑ์ควบคุมได้: SBP < 140 AND DBP < 90 mmHg ในการตรวจครั้งล่าสุด</td>
+                            </tr>
+                            <tr>
+                                <td><code>FOOT</code></td>
+                                <td>VARCHAR(1)</td>
+                                <td>การตรวจเท้า</td>
+                                <td>1=ปกติ, 2=เสี่ยง, 3=มีแผล (เงื่อนไข: ตรวจอย่างน้อยปีละ 1 ครั้ง)</td>
+                            </tr>
+                            <tr>
+                                <td><code>RETINA</code></td>
+                                <td>VARCHAR(1)</td>
+                                <td>การตรวจตา</td>
+                                <td>1=ปกติ, 2=พบเบาหวานขึ้นตา, 3=ส่งต่อ (เงื่อนไข: ตรวจอย่างน้อยปีละ 1 ครั้ง)</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>DIAGNOSIS_OPD</strong></td>
+                                <td><code>DIAGCODE</code></td>
+                                <td>VARCHAR(6)</td>
+                                <td>รหัสการวินิจฉัยโรค (ICD-10)</td>
+                                <td>รหัสโรคตามมาตรฐาน ICD-10 (ตัดจุดและเว้นวรรคออก)</td>
+                            </tr>
+                            <tr>
+                                <td><code>DIAGTYPE</code></td>
+                                <td>VARCHAR(1)</td>
+                                <td>ประเภทการวินิจฉัย</td>
+                                <td>1=Principal Dx, 2=Comorbidity, 3=Complication, 4=Other Dx, 5=External Cause (W00-W19, X60-X84)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PROCEDURE_OPD</strong></td>
+                                <td><code>PROCEDURECODE</code></td>
+                                <td>VARCHAR(7)</td>
+                                <td>รหัสหัตถการ</td>
+                                <td>รหัสหัตถการมาตรฐาน ICD-9-CM หรือรหัส 7 หลักของ สธ./สปสช.</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><strong>DENTAL</strong></td>
+                                <td><code>PTEETH</code></td>
+                                <td>DECIMAL(2,0)</td>
+                                <td>จำนวนฟันแท้คงเหลือ (ซี่)</td>
+                                <td>เงื่อนไขฟันใช้งานได้: PTEETH >= 20 ซี่</td>
+                            </tr>
+                            <tr>
+                                <td><code>PERMANENT_PAIR</code></td>
+                                <td>DECIMAL(2,0)</td>
+                                <td>จำนวนคู่สบฟันแท้ (คู่)</td>
+                                <td>เงื่อนไขฟันใช้งานได้: PERMANENT_PAIR >= 4 คู่</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Business Rules -->
+        <div id="conditions" class="tab-content">
+            <div class="card">
+                <h2>กฎการให้รหัสและการประมวลผล (Business Rules & Conditions)</h2>
+                <ul class="rule-list">
+                    <li><strong>เกณฑ์ประชากรเป้าหมาย (Cohort Criteria):</strong> กลุ่ม CID ไทย (NATION=99) ที่เกิดไม่เกิน 30 ก.ย. 2509 (อายุครบ 60 ปีบริบูรณ์ในปีงบประมาณ 2569) ทุก Typearea โดยประมวลผล 1 แถว = คน (CID) × ปีงบประมาณ</li>
+                    <li><strong>กฎการวินิจฉัยกรณีหกล้ม (Fall & Hip Fracture Hierarchy):</strong>
+                        <ul style="margin: 8px 0 8px 20px; font-size: 13.5px; color: #475569;">
+                            <li><strong>กฎข้อ 1 (หกล้มกระดูกสะโพกหัก):</strong> ต้องบันทึกกระดูกหัก S72.0 - S72.9 เป็นโรคหลัก (DIAGTYPE = '1') ร่วมกับรหัสสาเหตุภายนอกการล้ม W00 - W19 (DIAGTYPE = '5') ในการรับบริการครั้งเดียวกัน</li>
+                            <li><strong>กฎข้อ 2 (ล้มโดยไม่มีกระดูกหัก/ไม่มีโรคอื่น):</strong> DIAGTYPE = '1' ใช้ R54 (Senility) และ DIAGTYPE = '4' ใช้ R29.6 (Tendency to fall), M62.5, Z13.9</li>
+                            <li><strong>กฎข้อ 3 (มีโรคประจำตัวที่เป็นสาเหตุล้ม):</strong> ให้โรคนั้นเป็นโรคหลัก DIAGTYPE = '1' (เช่น Stroke I63.x, Parkinson G20) และลง R29.6, M62.5, R54 เป็นโรคร่วม DIAGTYPE = '4'</li>
+                        </ul>
+                    </li>
+                    <li><strong>กฎการเชื่อมโยงความเสี่ยงหัวใจและหลอดเลือด (CVD Risk Linkage):</strong> ผู้ที่มีผลคัดกรองความเสี่ยงสูงมากใน SPECIALPP (1B1232, 1B1234, 1B1235) เชื่อมโยงตรวจสอบการเกิดโรคเฉียบพลัน Stroke (I60 - I69) หรือ STEMI (I21.0 - I21.3) ใน DIAGNOSIS_OPD (DIAGTYPE = '1') ภายใน 1 ปี</li>
+                    <li><strong>กฎการทำความสะอาดข้อมูล (Data Cleansing Rules):</strong> ตัดช่องว่าง (Space), Tab, จุด (.), Backslash (\) ออก แล้วแปลงเป็นตัวพิมพ์ใหญ่ (Upper case) ก่อนเปรียบเทียบเสมอ</li>
+                    <li><strong>การนัดตรวจติดตาม (Appointment Follow-up):</strong> ตรวจสอบจากแฟ้ม APPOINT โดยต้องมีเงื่อนไข <code>apdiag = ICD s5</code> (รหัสโรควินิจฉัยเดิม)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TAB 4: SQL Queries -->
+        <div id="sql" class="tab-content">
+            <div class="card">
+                <h2>แม่แบบคำสั่ง SQL สำหรับสกัดข้อมูลจากระบบ 43 แฟ้ม</h2>
+                <p style="margin-bottom: 12px; font-size: 14px;"><strong>1. สกัดประชากรฐานผู้สูงอายุ (Base Target Cohort)</strong></p>
+                <div class="code-block">SELECT 
+    p.HOSPCODE, p.CID, p.PID, p.PRENAME, p.NAME, p.LNAME, p.SEX, p.BIRTH,
+    TIMESTAMPDIFF(YEAR, p.BIRTH, '2026-09-30') AS AGE_YEAR,
+    p.TYPEAREA, h.HOUSE, h.VILLAGE, h.TAMBON, h.AMPUR, h.CHANGWAT,
+    p.DISCHARGE, d.DDEATH
+FROM person p
+LEFT JOIN home h ON p.HOSPCODE = h.HOSPCODE AND p.HID = h.HID
+LEFT JOIN death d ON p.CID = d.CID
+WHERE p.NATION = '99'
+  AND p.BIRTH &lt;= '1966-09-30'
+  AND p.DISCHARGE = '9'
+  AND (d.CID IS NULL OR d.DDEATH &gt; '2026-09-30');</div>
+
+                <p style="margin: 18px 0 12px; font-size: 14px;"><strong>2. สกัดข้อมูล Pathway หกล้มและกระดูกสะโพกหัก (Fall Pathway: s1 - s7)</strong></p>
+                <div class="code-block">SELECT 
+    p.CID,
+    sp.PPSPECIAL AS TUG_SCREEN_CODE,
+    sp.DATE_SERV AS TUG_DATE,
+    sppb.PPSPECIAL AS SPPB_CODE,
+    sppb.DATE_SERV AS SPPB_DATE,
+    dx_fx.DIAGCODE AS FRACTURE_ICD10,
+    dx_fall.DIAGCODE AS FALL_CAUSE_ICD10,
+    dx_fx.DATE_SERV AS INJURY_DATE,
+    proc.PROCEDURECODE AS REHAB_PROC_CODE,
+    d.DDEATH AS DEATH_DATE
+FROM person p
+LEFT JOIN specialpp sp 
+    ON p.HOSPCODE = sp.HOSPCODE AND p.PID = sp.PID 
+   AND sp.PPSPECIAL IN ('1B1200','1B1201','1B1202','1B1203')
+LEFT JOIN specialpp sppb 
+    ON p.HOSPCODE = sppb.HOSPCODE AND p.PID = sppb.PID 
+   AND sppb.PPSPECIAL IN ('1B1050','1B1051','1B1052','1B1053')
+LEFT JOIN diagnosis_opd dx_fx 
+    ON p.HOSPCODE = dx_fx.HOSPCODE AND p.PID = dx_fx.PID 
+   AND dx_fx.DIAGTYPE = '1' AND (dx_fx.DIAGCODE LIKE 'S72%' OR dx_fx.DIAGCODE IN ('S720','S721','S722'))
+LEFT JOIN diagnosis_opd dx_fall 
+    ON dx_fx.HOSPCODE = dx_fall.HOSPCODE AND dx_fx.PID = dx_fall.PID AND dx_fx.SEQ = dx_fall.SEQ 
+   AND dx_fall.DIAGTYPE = '5' AND (dx_fall.DIAGCODE BETWEEN 'W00' AND 'W19' OR dx_fall.DIAGCODE LIKE 'W%')
+LEFT JOIN procedure_opd proc 
+    ON p.HOSPCODE = proc.HOSPCODE AND p.PID = proc.PID 
+   AND proc.PROCEDURECODE IN ('9379654','9379657','9379659','9322','8152','8151')
+LEFT JOIN death d ON p.CID = d.CID
+WHERE p.NATION = '99' AND p.BIRTH &lt;= '1966-09-30';</div>
+
+                <p style="margin: 18px 0 12px; font-size: 14px;"><strong>3. สกัดข้อมูล Thai CVD Risk เชื่อมโยง Stroke / STEMI ใน 1 ปี</strong></p>
+                <div class="code-block">SELECT 
+    p.CID,
+    sp.DATE_SERV AS SCREEN_DATE,
+    sp.PPSPECIAL AS CVD_RISK_CODE,
+    ev.DATE_SERV AS EVENT_DATE,
+    ev.DIAGCODE AS EVENT_ICD10,
+    CASE 
+        WHEN ev.DIAGCODE BETWEEN 'I60' AND 'I69' THEN 'Stroke'
+        WHEN ev.DIAGCODE LIKE 'I21%' THEN 'STEMI'
+        ELSE 'Other CVD'
+    END AS EVENT_TYPE,
+    DATEDIFF(ev.DATE_SERV, sp.DATE_SERV) AS DAYS_UNTIL_EVENT
+FROM person p
+INNER JOIN specialpp sp 
+    ON p.HOSPCODE = sp.HOSPCODE AND p.PID = sp.PID
+   AND sp.PPSPECIAL IN ('1B1230','1B1231','1B1232','1B1234','1B1235')
+LEFT JOIN diagnosis_opd ev 
+    ON p.HOSPCODE = ev.HOSPCODE AND p.PID = ev.PID 
+   AND ev.DATE_SERV &gt;= sp.DATE_SERV 
+   AND ev.DATE_SERV &lt;= DATE_ADD(sp.DATE_SERV, INTERVAL 1 YEAR)
+   AND ev.DIAGTYPE = '1'
+   AND ((ev.DIAGCODE BETWEEN 'I60' AND 'I69') OR (ev.DIAGCODE LIKE 'I21%'))
+WHERE p.NATION = '99' AND p.BIRTH &lt;= '1966-09-30';</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            กลุ่มงานสารสนเทศระบบสุขภาพด้านผู้สูงอายุ สถาบันเวชศาสตร์สมเด็จพระสังฆราชญาณสังวรเพื่อผู้สูงอายุ กรมการแพทย์ กระทรวงสาธารณสุข
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function filterTable() {
+            const input = document.getElementById("searchInput");
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById("domainTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+                let found = false;
+                const tds = tr[i].getElementsByTagName("td");
+                for (let j = 0; j < tds.length; j++) {
+                    if (tds[j]) {
+                        const text = tds[j].textContent || tds[j].innerText;
+                        if (text.toUpperCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                tr[i].style.display = found ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
